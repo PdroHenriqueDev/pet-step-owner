@@ -11,7 +11,6 @@ const globalStyles = StyleSheet.create({
   text: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
     color: colors.text,
   },
   label: {
@@ -37,7 +36,7 @@ const globalStyles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderColor: colors.border,
     fontSize: 16,
-  }
+  },
 });
 
 export default globalStyles;

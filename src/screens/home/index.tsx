@@ -1,13 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Request from './components/request';
+import DogWalkerCardList from './components/dogWalkerCardList';
 import globalStyles from '../../styles/globalStyles';
+import styles from './styles';
 
 function Home() {
   return (
-    <View style={globalStyles.container}>
-      <Request />
-    </View>
+    <>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={globalStyles.container}>
+        <Request />
+        <DogWalkerCardList />
+      </View>
+    </ScrollView>
+    </>
   );
 }
 

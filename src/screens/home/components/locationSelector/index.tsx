@@ -9,18 +9,20 @@ import styles from './styles';
 import globalStyles from '../../../../styles/globalStyles';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LocationBottomSheet from './locationBottomSheet';
+import { Location } from '../../../../interfaces/location';
 
 function LocationSelector() {
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  const initialRegion = {
+  const [region, setRegion] = useState({
     latitude: -23.5505,
     longitude: -46.6333,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  }
+  });
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(true);
+  const [receivedLocation, setReceivedLocation] = useState<Location>();
   const navigation = useNavigation() as any;
 
   const handleSelectLocation = async () => {
@@ -47,13 +49,28 @@ function LocationSelector() {
     setSelectedLocation({ latitude, longitude })
   }
 
+  const onLocationReceived = (location: Location) => {
+    const { latitude, longitude } = location;
+    setReceivedLocation(location);
+
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitude,
+      longitude,
+    }));
+  };
+
+  const onConfirmLocation = () => {
+    console.log('got here onConfirmLocation => ')
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          initialRegion={initialRegion}
+          region={region}
           onRegionChange={handleRegionChange}
           showsUserLocation={true}
         />
@@ -67,7 +84,7 @@ function LocationSelector() {
           />
         </View>
 
-        <LocationBottomSheet/>
+        <LocationBottomSheet onLocationReceived={onLocationReceived} onConfirmLocation={onConfirmLocation}/>
       </View>
       </GestureHandlerRootView>
   );

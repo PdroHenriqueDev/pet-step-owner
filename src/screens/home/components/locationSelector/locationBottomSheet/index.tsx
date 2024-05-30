@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import globalStyles from '../../../../../styles/globalStyles';
-import { GooglePlacesAutocomplete, GooglePlacesAutocompleteRef, Place } from 'react-native-google-places-autocomplete';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef, Place } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 import styles from './styles';
+import { Location } from '../../../../../interfaces/location';
 
-function LocationBottomSheet() {
+function LocationBottomSheet({ onLocationReceived, onConfirmLocation }: any) {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
+  
   const [showInputPlaces, setShowInputPlaces] = useState(true);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -16,6 +18,20 @@ function LocationBottomSheet() {
   }, []);
 
   const snapPoints = useMemo(() => ['10%', '95%'], []);
+
+  const handleLocation = (data: GooglePlaceData, detail: GooglePlaceDetail) => {
+    const { description }  = data;
+    const { geometry }  = detail;
+
+    const location: Location = {
+      description,
+      latitude: geometry.location.lat,
+      longitude: geometry.location.lng,
+    }
+
+    onLocationReceived(location);
+    bottomSheetRef.current?.snapToIndex(0);
+  }
 
   useEffect(() => {
     if (showInputPlaces) {
@@ -25,7 +41,10 @@ function LocationBottomSheet() {
     }
   }, [showInputPlaces]);
 
-  const handleSelectLocation = async () => {}
+  const confirmLocation = () => {
+    onConfirmLocation();
+  }
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -49,9 +68,7 @@ function LocationBottomSheet() {
                 keepResultsAfterBlur={true}
                 enableHighAccuracyLocation={true}
                 isRowScrollable={false}
-                onPress={(data, details = null) => {
-                    console.log(details?.geometry?.location);
-                }}
+                onPress={(data, detail) => handleLocation(data, detail)}
                 query={{
                     key: GOOGLE_MAPS_API_KEY,
                     language: 'pt-BR',
@@ -68,9 +85,8 @@ function LocationBottomSheet() {
         {
           !showInputPlaces && 
           <View style={{ width: '90%'}}>
-            <TouchableOpacity onPress={handleSelectLocation} style={{
+            <TouchableOpacity onPress={confirmLocation} style={{
               ...globalStyles.button,
-              
               marginBottom: 20,
             }}>
               <Text style={globalStyles.buttonText}>Confirmar Localização</Text>

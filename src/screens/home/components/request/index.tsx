@@ -11,7 +11,6 @@ const { Title } = Card;
 const times = [
   {id: 1, displayName: '15 min', value: '15'},
   {id: 2, displayName: '30 min', value: '30'},
-  {id: 3, displayName: '45 min', value: '45'},
   {id: 4, displayName: '60 min', value: '60'},
 ];
 

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 import colors from '../../../../styles/colors';
 import styles from './styles';
-import globalStyles from '../../../../styles/globalStyles';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LocationBottomSheet from './locationBottomSheet';
 import { Location } from '../../../../interfaces/location';
@@ -16,8 +15,8 @@ function LocationSelector() {
   const [region, setRegion] = useState({
     latitude: -23.5505,
     longitude: -46.6333,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: 0.003,
+    longitudeDelta: 0.003,
   });
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);

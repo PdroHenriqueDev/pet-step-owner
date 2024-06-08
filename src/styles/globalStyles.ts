@@ -9,12 +9,12 @@ const globalStyles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
     color: colors.text,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.text,
   },
   button: {
@@ -24,7 +24,7 @@ const globalStyles = StyleSheet.create({
   },
   buttonText: {
     color: colors.buttonText,
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
   },
   card: {

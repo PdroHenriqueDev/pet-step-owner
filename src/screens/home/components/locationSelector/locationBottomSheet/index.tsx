@@ -1,13 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import globalStyles from '../../../../../styles/globalStyles';
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 import styles from './styles';
 import { Location } from '../../../../../interfaces/location';
+import colors from '../../../../../styles/colors';
+import { useLocation } from '../../../../../contexts/LocationContext';
 
-function LocationBottomSheet({ onLocationReceived, onConfirmLocation }: any) {
+function LocationBottomSheet({ onLocationSelected, onConfirmLocation }: any) {
+  const { onLocationReceived } = useLocation();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
   
@@ -16,21 +19,23 @@ function LocationBottomSheet({ onLocationReceived, onConfirmLocation }: any) {
   const handleSheetChanges = useCallback((index: number) => {
     setShowInputPlaces(index !== 0);
   }, []);
+  
+  const snapPoints = useMemo(() => [80, '95%',], []);
 
-  const snapPoints = useMemo(() => ['10%', '95%'], []);
-
-  const handleLocation = (data: GooglePlaceData, detail: GooglePlaceDetail) => {
+  const handleLocation = (data: GooglePlaceData, detail: GooglePlaceDetail | null) => {
     const { description }  = data;
-    const { geometry }  = detail;
+    if (detail) {
+      const { geometry }  = detail;
+      const location: Location = {
+        description,
+        latitude: geometry.location.lat,
+        longitude: geometry.location.lng,
+      }
 
-    const location: Location = {
-      description,
-      latitude: geometry.location.lat,
-      longitude: geometry.location.lng,
+      onLocationSelected(location);
+      onLocationReceived(location);
+      bottomSheetRef.current?.snapToIndex(0);
     }
-
-    onLocationReceived(location);
-    bottomSheetRef.current?.snapToIndex(0);
   }
 
   useEffect(() => {
@@ -75,10 +80,19 @@ function LocationBottomSheet({ onLocationReceived, onConfirmLocation }: any) {
                 }}
                 styles={{
                   textInputContainer: {
-                    // flex: 1,
-                    color: '#000000',
+                    color: colors.primary,
+                  },
+                  textInput: {
+                    color: colors.primary,
                   }
                 }}
+                inbetweenCompo={
+                  <TouchableOpacity
+                    onPress={() => bottomSheetRef.current?.snapToIndex(0)}
+                  >
+                    <Text style={{ marginLeft: 12 }}>Selecionar no mapa</Text>
+                  </TouchableOpacity>
+                }
               />
           </View>
         }

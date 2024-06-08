@@ -5,6 +5,7 @@ import globalStyles from '../../../../styles/globalStyles';
 import colors from '../../../../styles/colors';
 import styles from './styles';
 import { Controller, useForm } from 'react-hook-form';
+import { useLocation } from '../../../../contexts/LocationContext';
 
 const { Title } = Card;
 
@@ -21,6 +22,8 @@ const dogCounts = [
 ];
 
 function Request({ address, navigation }: any) {  
+  const { receivedLocation } = useLocation();
+
   const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       startLocation: '',
@@ -80,7 +83,7 @@ function Request({ address, navigation }: any) {
                 }
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={receivedLocation?.description}
                 editable={false}
               />
             )}

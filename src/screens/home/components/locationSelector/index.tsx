@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -9,48 +9,70 @@ import styles from './styles';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LocationBottomSheet from './locationBottomSheet';
 import { Location } from '../../../../interfaces/location';
+import { useLocation } from '../../../../contexts/LocationContext';
 
 function LocationSelector() {
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const { receivedLocation, onLocationReceived } = useLocation();
+
   const [region, setRegion] = useState({
     latitude: -23.5505,
     longitude: -46.6333,
     latitudeDelta: 0.003,
     longitudeDelta: 0.003,
   });
-  const [address, setAddress] = useState('');
+
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(true);
-  const [receivedLocation, setReceivedLocation] = useState<Location>();
+  
   const navigation = useNavigation() as any;
+  
+  const animation = useRef(new Animated.Value(1)).current;
+  const animationLoop = useRef<any>(null);
 
-  const handleSelectLocation = async () => {
-    if (!selectedLocation) return;
-    const { latitude, longitude } = selectedLocation;
+  const startAnimation = () => {
+    animationLoop.current = Animated.loop(
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1.5,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ])
+    ) as any;
+    animationLoop.current.start();
+  };
 
-    setLoading(true);
-    try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`);
-      const data = await response.json();
-      console.log('got here', data.results[0].formatted_address)
-      const formattedAddress = data.results[0].formatted_address;
-      setAddress(formattedAddress);
-      navigation.navigate('Home', { selectedLocation, address: formattedAddress });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+  const stopAnimation = () => {
+    if (animationLoop.current) {
+      animationLoop.current.stop();
+      animation.setValue(1);
     }
   };
 
   const handleRegionChange = (event: Region) => {
+    // stopAnimation();
     const { latitude, longitude } = event;
-    setSelectedLocation({ latitude, longitude })
+  
+    const location = {
+      ...receivedLocation,
+      longitude,
+      latitude,
+    };
+    onLocationReceived(location);
   }
 
-  const onLocationReceived = (location: Location) => {
-    const { latitude, longitude } = location;
-    setReceivedLocation(location);
+  const handleRegionChangeComplete = (event: Region) => {
+    // startAnimation();
+    stopAnimation();
+  }
+
+  const handleOnLocationReceived = (location: Location) => {
+    const { latitude, longitude, description } = location;
+    onLocationReceived(location);
 
     setRegion((prevRegion) => ({
       ...prevRegion,
@@ -59,8 +81,19 @@ function LocationSelector() {
     }));
   };
 
-  const onConfirmLocation = () => {
-    console.log('got here onConfirmLocation => ')
+  const onConfirmLocation = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${receivedLocation?.latitude},${receivedLocation?.longitude}&key=${GOOGLE_MAPS_API_KEY}`);
+      const data = await response.json();
+      const formattedAddress = data.results[0].formatted_address;
+
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -71,9 +104,12 @@ function LocationSelector() {
           style={styles.map}
           region={region}
           onRegionChange={handleRegionChange}
+          onRegionChangeComplete={handleRegionChangeComplete}
+          onPanDrag={startAnimation}
           showsUserLocation={true}
         />
         <View style={styles.markerFixed}>
+        <Animated.View style={{ transform: [{ scale: animation }] }}>
           <Icon
               style={styles.marker}
               type='font-awesome-6'
@@ -81,9 +117,10 @@ function LocationSelector() {
               size={40}
               color={colors.primary}
           />
+        </Animated.View>
         </View>
 
-        <LocationBottomSheet onLocationReceived={onLocationReceived} onConfirmLocation={onConfirmLocation}/>
+        <LocationBottomSheet onLocationSelected={handleOnLocationReceived}  onConfirmLocation={onConfirmLocation}/>
       </View>
       </GestureHandlerRootView>
   );

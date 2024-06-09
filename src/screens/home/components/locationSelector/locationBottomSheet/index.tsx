@@ -10,7 +10,7 @@ import colors from '../../../../../styles/colors';
 import { useLocation } from '../../../../../contexts/LocationContext';
 
 function LocationBottomSheet({ onLocationSelected, onConfirmLocation }: any) {
-  const { onLocationReceived } = useLocation();
+  const { receivedLocation, onLocationReceived } = useLocation();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
   

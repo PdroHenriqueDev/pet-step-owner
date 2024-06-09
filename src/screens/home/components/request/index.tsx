@@ -50,15 +50,27 @@ function Request({ address, navigation }: any) {
     setTotalPrice(calculatePrice());
   }, [selectedTime, selectedDogCount]);
 
-  const onSubmit = (data: any) => {
+  useEffect(() => {
+    if (receivedLocation) {
+      const { description } = receivedLocation;
+      if (description) setValue('startLocation', description);
+    }
+  }, [receivedLocation, setValue]);
+
+  const onSubmit = (formData: any) => {
+    if (!receivedLocation) return;
+
+    const { selectedDogCount, selectedTime } = formData;
+    const { longitude, latitude } = receivedLocation;
+
+    const data = {
+      selectedDogCount,
+      selectedTime,
+      longitude,
+      latitude
+    }
     console.log(data);
   };
-
-  useEffect(() => {
-    if (address) {
-      setValue('startLocation', address);
-    }
-  }, [address, setValue]);
 
   return (
     <View style={styles.container}>

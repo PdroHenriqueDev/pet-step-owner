@@ -1,14 +1,14 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from 'react-native';
+import globalStyles from '../../styles/globalStyles';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1, 
-        justifyContent: 'center', 
-        alignItems: 'center',
-    },
-    scrollContainer: {
-        flexGrow: 1,
-    }
+  scrollContainer: {
+    flexGrow: 1,
+  },
+  container: {
+    ...globalStyles.container,
+    padding: 10,
+  },
 });
 
 export default styles;

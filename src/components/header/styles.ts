@@ -4,7 +4,7 @@ import colors from '../../styles/colors';
 const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-end',
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   badgeText: {
-    color: colors.secondary,
+    color: colors.primary,
     fontSize: 10,
     fontWeight: 'bold',
   },

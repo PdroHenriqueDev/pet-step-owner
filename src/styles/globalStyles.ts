@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import colors from './colors';
 
 const globalStyles = StyleSheet.create({
@@ -6,7 +6,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
   },
   text: {
     fontSize: 18,
@@ -33,9 +33,13 @@ const globalStyles = StyleSheet.create({
     borderColor: colors.border,
   },
   input: {
-    backgroundColor: colors.secondary,
+    width: '100%',
+    backgroundColor: colors.primary,
+    borderWidth: 1,
     borderColor: colors.border,
     fontSize: 16,
+    borderRadius: 5,
+    paddingLeft: 16,
   },
 });
 

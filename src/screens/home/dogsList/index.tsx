@@ -4,6 +4,7 @@ import styles from './styles';
 import {CheckBox, Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import {Dog} from '../../../interfaces/dog';
+import CustomButton from '../../../components/customButton';
 
 function DogsList() {
   const [checkedItems, setCheckedItems] = useState<{[key: number]: boolean}>(
@@ -96,6 +97,7 @@ function DogsList() {
             keyExtractor={item => item.id.toString()}
           />
         </View>
+        <CustomButton title="Solicitar passeio" />
       </View>
     </>
   );

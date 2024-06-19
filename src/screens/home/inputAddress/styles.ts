@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 5,
+    marginBottom: 20,
   },
   icon: {
     marginRight: 16,

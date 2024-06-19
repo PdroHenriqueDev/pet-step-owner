@@ -4,7 +4,7 @@ const colors = {
   accent: '#BDBDBD',
   danger: '#E80B26',
   dark: '#000000',
-  text: '#333333',
+  text: '#000000',
   buttonText: '#FFFFFF',
   border: '#F2F2F2',
 };

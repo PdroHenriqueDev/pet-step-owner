@@ -6,6 +6,7 @@ import globalStyles from '../../styles/globalStyles';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 import InputAddress from './inputAddress';
+import DogsList from './dogsList';
 
 function Home() {
   const navigation = useNavigation();
@@ -15,6 +16,7 @@ function Home() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
           <InputAddress />
+          <DogsList />
           {/* <Request navigation={navigation} />
           <DogWalkerCardList /> */}
         </View>

@@ -1,7 +1,6 @@
 import React from 'react';
 import {TextInput, View} from 'react-native';
 import {Icon} from '@rneui/base';
-import globalStyles from '../../../styles/globalStyles';
 import styles from './styles';
 import colors from '../../../styles/colors';
 

@@ -2,11 +2,12 @@ import {StyleSheet} from 'react-native';
 import colors from './colors';
 
 const globalStyles = StyleSheet.create({
-  container: {
+  backgroudContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: colors.primary,
+    padding: 10,
   },
   text: {
     fontSize: 18,
@@ -14,7 +15,7 @@ const globalStyles = StyleSheet.create({
     color: colors.text,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.text,
   },
   button: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {Avatar, Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
@@ -90,49 +90,6 @@ function DogWalkerList() {
     },
   ];
 
-  const renderItem = ({item, index}: {item: DogWalker; index: number}) => {
-    const isOnline = item.isOnline;
-    const isLastItem = index === dogWalkers.length - 1;
-
-    return (
-      <View
-        style={!isLastItem && styles.itemMargin}
-        className="flex-row justify-between">
-        <View className="flex-row">
-          <Avatar
-            rounded
-            source={{
-              uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-            }}>
-            <View
-              style={[
-                styles.statusIndicator,
-                isOnline ? styles.online : styles.offline,
-              ]}
-            />
-          </Avatar>
-          <View className="flex-col ml-2">
-            <View className="flex-row items-center">
-              <Text className="mr-3" style={styles.name}>
-                {item.name}
-              </Text>
-              <Icon type="feather" name="star" size={14} color={colors.dark} />
-              <Text style={styles.rate} className="ml-2">
-                {item.rate}
-              </Text>
-            </View>
-            <Text style={styles.info}>
-              {item.date}, {item.time}, {item.distance}
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Contratar</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>
@@ -148,11 +105,49 @@ function DogWalkerList() {
           />
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={dogWalkers}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+      {dogWalkers.map((item, index) => (
+        <View
+          key={item.id}
+          style={index !== dogWalkers.length - 1 && styles.itemMargin}
+          className="flex-row justify-between">
+          <View className="flex-row">
+            <Avatar
+              rounded
+              source={{
+                uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+              }}>
+              <View
+                style={[
+                  styles.statusIndicator,
+                  item.isOnline ? styles.online : styles.offline,
+                ]}
+              />
+            </Avatar>
+            <View className="flex-col ml-2">
+              <View className="flex-row items-center">
+                <Text className="mr-3" style={styles.name}>
+                  {item.name}
+                </Text>
+                <Icon
+                  type="feather"
+                  name="star"
+                  size={14}
+                  color={colors.dark}
+                />
+                <Text style={styles.rate} className="ml-2">
+                  {item.rate}
+                </Text>
+              </View>
+              <Text style={styles.info}>
+                {item.date}, {item.time}, {item.distance}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Contratar</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
       <View />
     </View>
   );

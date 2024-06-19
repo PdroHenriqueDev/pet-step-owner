@@ -3,9 +3,6 @@ import globalStyles from '../../styles/globalStyles';
 import colors from '../../styles/colors';
 
 const styles = StyleSheet.create({
-  // scrollContainer: {
-  //   flexGrow: 1,
-  // },
   container: {
     ...globalStyles.backgroudContainer,
   },

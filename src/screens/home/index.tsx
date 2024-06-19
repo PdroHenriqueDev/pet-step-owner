@@ -16,8 +16,10 @@ function Home() {
     <>
       {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
       <View style={styles.container}>
-        <InputAddress />
-        <DogsList />
+        <View style={styles.requestContainer}>
+          <InputAddress />
+          <DogsList />
+        </View>
         <DogWalkerList />
         {/* <Request navigation={navigation} />
           <DogWalkerCardList /> */}

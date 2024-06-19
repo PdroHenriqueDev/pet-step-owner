@@ -7,20 +7,22 @@ import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 import InputAddress from './inputAddress';
 import DogsList from './dogsList';
+import DogWalkerList from './dogWalkersList';
 
 function Home() {
   const navigation = useNavigation();
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          <InputAddress />
-          <DogsList />
-          {/* <Request navigation={navigation} />
+      {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
+      <View style={styles.container}>
+        <InputAddress />
+        <DogsList />
+        <DogWalkerList />
+        {/* <Request navigation={navigation} />
           <DogWalkerCardList /> */}
-        </View>
-      </ScrollView>
+      </View>
+      {/* </ScrollView> */}
     </>
   );
 }

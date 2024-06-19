@@ -5,6 +5,7 @@ import colors from '../../../styles/colors';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    marginBottom: 20,
   },
   label: {
     ...globalStyles.label,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   },
   dogInfo: {
     fontSize: 12,
-    color: 'rgba(0, 0, 0, 0.3)',
+    color: colors.darkOpacity,
     marginBottom: 8,
   },
   checkBox: {

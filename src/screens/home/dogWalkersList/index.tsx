@@ -61,6 +61,33 @@ function DogWalkerList() {
       rate: 4.5,
       isOnline: false,
     },
+    {
+      id: '8',
+      name: 'Pedro Henrique',
+      date: '10 abr',
+      time: '13h',
+      distance: '5km',
+      rate: 4.5,
+      isOnline: false,
+    },
+    {
+      id: '81',
+      name: 'Pedro Henrique',
+      date: '10 abr',
+      time: '13h',
+      distance: '5km',
+      rate: 4.5,
+      isOnline: false,
+    },
+    {
+      id: '812',
+      name: 'Pedro Henrique',
+      date: '10 abr',
+      time: '13h',
+      distance: '5km',
+      rate: 4.5,
+      isOnline: false,
+    },
   ];
 
   const renderItem = ({item, index}: {item: DogWalker; index: number}) => {

@@ -54,10 +54,17 @@ function DogsList() {
         onPress={() => handleCheckBoxPress(item.id)}>
         <View style={styles.dog}>
           <View style={styles.checkBoxContainer}>
-            <Text style={styles.dogName}>{item.name}</Text>
+            <View className="flex-row items-center">
+              <Text className="mr-2" style={styles.dogName}>
+                {item.name}
+              </Text>
+              <Icon type="font-awesome" name="paw" size={10} />
+            </View>
             <Text style={styles.dogInfo}>
               {item.breed}, {item.year} {item.year === 1 ? 'ano' : 'anos'}
             </Text>
+          </View>
+          <View className="items-center">
             <CheckBox
               right
               checkedIcon="dot-circle-o"
@@ -69,13 +76,10 @@ function DogsList() {
               containerStyle={styles.checkBox}
               size={17}
             />
+            <Text style={styles.selectText}>
+              {checkedItems[item.id] ? 'Selecionado' : 'Não selecionado'}
+            </Text>
           </View>
-          <Icon
-            type="material-community"
-            name="dog-side"
-            size={24}
-            color={colors.dark}
-          />
         </View>
       </TouchableOpacity>
     );

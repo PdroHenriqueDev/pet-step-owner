@@ -19,11 +19,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFDB6A',
     borderRadius: 17,
     padding: 16,
-    height: 75,
+    height: 60,
   },
   checkBoxContainer: {
     alignItems: 'flex-start',
-    // borderWidth: 1,
   },
   dogName: {
     fontSize: 14,
@@ -31,20 +30,22 @@ const styles = StyleSheet.create({
   },
   dogInfo: {
     fontSize: 12,
-    color: colors.darkOpacity,
+    color: colors.accent,
     marginBottom: 8,
   },
   checkBox: {
     backgroundColor: 'transparent',
     margin: 0,
     padding: 0,
-    width: 6,
   },
   listContainer: {
     maxHeight: 200,
   },
   itemMargin: {
     marginBottom: 10,
+  },
+  selectText: {
+    fontSize: 10,
   },
 });
 

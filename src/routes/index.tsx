@@ -1,36 +1,40 @@
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabHeaderProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import Account from '../screens/account';
-import {Icon} from '@rneui/themed';
 import colors from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
 import HomeStackNavigator from '../screens/home/routes';
 import Header from '../components/header';
-
+import HomeIcon from './icons/home';
 const {Navigator, Screen} = createBottomTabNavigator();
+
+const CustomHeader = (props: BottomTabHeaderProps) => <Header {...props} />;
 
 function Routes() {
   return (
     <NavigationContainer>
       <Navigator
         screenOptions={() => ({
-          tabBarActiveTintColor: colors.primary,
+          tabBarActiveTintColor: colors.dark,
           tabBarInactiveTintColor: colors.accent,
-          tabBarLabelStyle: globalStyles.label,
-          header: props => <Header {...props} />,
+          tabBarStyle: {
+            backgroundColor: colors.secondary,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            paddingVertical: 2,
+          },
+          tabBarLabelStyle: globalStyles.tabBarLabel,
+          header: CustomHeader,
         })}>
         <Screen
           name="Inicio"
           component={HomeStackNavigator}
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                type="feather"
-                name="map-pin"
-                size={22}
-                color={focused ? colors.primary : colors.accent}
-              />
-            ),
+            tabBarIcon: HomeIcon,
           }}
         />
         <Screen name="Conta" component={Account} />

@@ -90,8 +90,8 @@ function DogsList() {
             </TouchableOpacity>
           ))}
         </ScrollView>
+        <CustomButton title="Solicitar passeio" />
       </View>
-      <CustomButton title="Solicitar passeio" />
     </View>
   );
 }

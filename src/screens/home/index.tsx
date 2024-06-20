@@ -7,7 +7,7 @@ import DogWalkerList from './dogWalkersList';
 
 function Home() {
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollViewContainer}>
       <View style={styles.container}>
         <View style={styles.requestContainer}>
           <InputAddress />

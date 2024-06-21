@@ -5,18 +5,18 @@ import {CheckBox, Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import CustomButton from '../../../components/customButton';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useDialog} from '../../../contexts/dialogContext';
 
 function DogsList() {
-  const [checkedItems, setCheckedItems] = useState<{[key: number]: boolean}>(
-    {},
-  );
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const {showDialog, hideDialog} = useDialog();
 
   const dogs = [
     {
       id: 1,
       name: 'Laika',
       breed: 'Chow Chow',
-      year: 4,
+      year: 8,
     },
     {
       id: 2,
@@ -39,10 +39,32 @@ function DogsList() {
   ];
 
   const handleCheckBoxPress = (id: number) => {
-    setCheckedItems(prev => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setCheckedItems(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      }
+
+      return [...prev, id];
+    });
+  };
+
+  const handleClick = () => {
+    if (checkedItems.length === 0 || checkedItems.length > 3) {
+      showDialog({
+        title:
+          checkedItems.length === 0
+            ? 'É preciso no mínimo 1 dog'
+            : 'Só é permitido no máximo 3 dogs',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+    console.log('Selected Dogs:', checkedItems);
   };
 
   return (
@@ -75,7 +97,7 @@ function DogsList() {
                     right
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
-                    checked={!!checkedItems[item.id]}
+                    checked={checkedItems.includes(item.id)}
                     onPress={() => handleCheckBoxPress(item.id)}
                     checkedColor={colors.dark}
                     uncheckedColor={colors.dark}
@@ -83,14 +105,16 @@ function DogsList() {
                     size={17}
                   />
                   <Text style={styles.selectText}>
-                    {checkedItems[item.id] ? 'Selecionado' : 'Não selecionado'}
+                    {checkedItems.includes(item.id)
+                      ? 'Selecionado'
+                      : 'Não selecionado'}
                   </Text>
                 </View>
               </View>
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <CustomButton title="Solicitar passeio" />
+        <CustomButton onPress={handleClick} title="Solicitar passeio" />
       </View>
     </View>
   );

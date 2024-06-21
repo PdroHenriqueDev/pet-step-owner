@@ -12,7 +12,7 @@ import {GOOGLE_MAPS_API_KEY} from '@env';
 import styles from './styles';
 import {Location} from '../../../../../interfaces/location';
 import colors from '../../../../../styles/colors';
-import {useLocation} from '../../../../../contexts/LocationContext';
+import {useLocation} from '../../../../../contexts/locationContext';
 
 function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
   const {receivedLocation, onLocationReceived} = useLocation();

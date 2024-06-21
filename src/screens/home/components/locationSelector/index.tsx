@@ -9,7 +9,7 @@ import styles from './styles';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LocationBottomSheet from './locationBottomSheet';
 import { Location } from '../../../../interfaces/location';
-import { useLocation } from '../../../../contexts/LocationContext';
+import { useLocation } from '../../../../contexts/locationContext';
 
 function LocationSelector() {
   const { receivedLocation, onLocationReceived } = useLocation();

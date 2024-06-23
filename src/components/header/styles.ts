@@ -31,6 +31,20 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
+  headerInvisible: {
+    padding: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  backIconContainer: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    backgroundColor: colors.dark,
+  },
 });
 
 export default styles;

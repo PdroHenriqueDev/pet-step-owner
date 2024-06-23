@@ -42,6 +42,21 @@ const globalStyles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 16,
   },
+  tabar: {
+    backgroundColor: colors.secondary,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingVertical: 2,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  tabBarContainerStyle: {
+    backgroundColor: 'red',
+  },
   tabBarLabel: {
     fontSize: 14,
   },

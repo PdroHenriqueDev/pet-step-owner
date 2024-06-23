@@ -1,49 +1,33 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {
-  BottomTabHeaderProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import Account from '../screens/account';
-import colors from '../styles/colors';
-import globalStyles from '../styles/globalStyles';
-import HomeStackNavigator from '../screens/home/routes';
-import Header from '../components/header';
-import HomeIcon from './icons/home';
-const {Navigator, Screen} = createBottomTabNavigator();
+import HomeTabs from './homeTabs';
+import LocationSelector from '../screens/home/components/locationSelector';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const CustomHeader = (props: BottomTabHeaderProps) => <Header {...props} />;
+const {Navigator, Screen} = createStackNavigator();
 
 function Routes() {
   return (
     <NavigationContainer>
-      <Navigator
-        screenOptions={() => ({
-          tabBarActiveTintColor: colors.dark,
-          tabBarInactiveTintColor: colors.accent,
-          tabBarStyle: {
-            backgroundColor: colors.secondary,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            paddingVertical: 2,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          tabBarLabelStyle: globalStyles.tabBarLabel,
-          header: CustomHeader,
-        })}>
+      <Navigator screenOptions={{headerShown: false}}>
+        <Screen name="Inicio" component={HomeTabs} />
         <Screen
-          name="Inicio"
-          component={HomeStackNavigator}
+          name="LocationSelector"
+          component={LocationSelector}
           options={{
-            tabBarIcon: HomeIcon,
+            title: 'Selecionar localização',
+            // headerBackImage: () => (
+            //   <View style={{marginLeft: 10}}>
+            //     <Icon
+            //       type="material"
+            //       name="arrow-back"
+            //       size={26}
+            //       color={colors.primary}
+            //     />
+            //   </View>
+            // ),
           }}
         />
-        <Screen name="Conta" component={Account} />
       </Navigator>
     </NavigationContainer>
   );

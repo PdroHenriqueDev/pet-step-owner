@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import HomeTabs from './homeTabs';
-import LocationSelector from '../screens/home/components/locationSelector';
+import LocationSelector from '../screens/home/locationSelector';
 import {StackHeaderProps, createStackNavigator} from '@react-navigation/stack';
 import Header from '../components/header';
 

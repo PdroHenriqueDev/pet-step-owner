@@ -14,6 +14,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 16,
   },
+  input: {
+    color: colors.dark,
+  },
 });
 
 export default styles;

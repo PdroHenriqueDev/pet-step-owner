@@ -4,11 +4,11 @@ import MapView, {PROVIDER_GOOGLE, Region} from 'react-native-maps';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {GOOGLE_MAPS_API_KEY} from '@env';
-import colors from '../../../../styles/colors';
-import styles from './styles';
+import {useLocation} from '../../../contexts/locationContext';
+import {Location} from '../../../interfaces/location';
+import colors from '../../../styles/colors';
 import LocationBottomSheet from './locationBottomSheet';
-import {Location} from '../../../../interfaces/location';
-import {useLocation} from '../../../../contexts/locationContext';
+import styles from './styles';
 
 function LocationSelector() {
   const {receivedLocation, onLocationReceived} = useLocation();
@@ -101,7 +101,7 @@ function LocationSelector() {
       );
       const data = await response.json();
       const formattedAddress = data.results[0].formatted_address;
-
+      console.log('got here formattedAddress =>', formattedAddress);
       navigation.navigate('Home');
     } catch (error) {
       console.error(error);

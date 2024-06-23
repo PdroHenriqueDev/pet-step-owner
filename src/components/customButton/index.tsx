@@ -4,7 +4,7 @@ import styles from './styles';
 import colors from '../../styles/colors';
 
 function CustomButton({
-  title,
+  label,
   onPress,
   backgroundColor = colors.secondary,
   textColor = colors.dark,
@@ -14,7 +14,7 @@ function CustomButton({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.button, {backgroundColor}, style]}>
-      <Text style={[styles.buttonText, {color: textColor}]}>{title}</Text>
+      <Text style={[styles.buttonText, {color: textColor}]}>{label}</Text>
     </TouchableOpacity>
   );
 }

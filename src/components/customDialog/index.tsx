@@ -34,13 +34,13 @@ function CustomDialog({
       <View className="flex-col">
         {confirm && confirm.confirmLabel && confirm.onConfirm && (
           <CustomButton
-            title={confirm.confirmLabel}
+            label={confirm.confirmLabel}
             onPress={confirm.onConfirm}
           />
         )}
         {cancel && cancel.cancelLabel && cancel.onCancel && (
           <CustomButton
-            title={cancel.cancelLabel}
+            label={cancel.cancelLabel}
             onPress={cancel.onCancel}
             backgroundColor={colors.primary}
           />

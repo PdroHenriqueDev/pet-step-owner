@@ -4,8 +4,6 @@ const colors = {
   accent: 'rgba(0, 0, 0, 0.3)',
   danger: '#E80B26',
   dark: '#000000',
-  text: '#000000',
-  buttonText: '#FFFFFF',
   border: '#F2F2F2',
 };
 

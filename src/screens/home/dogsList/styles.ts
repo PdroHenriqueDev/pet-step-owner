@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
   selectText: {
     fontSize: 10,
   },
+  buttonContainer: {
+    marginTop: 16,
+  },
 });
 
 export default styles;

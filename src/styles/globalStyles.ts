@@ -12,19 +12,19 @@ const globalStyles = StyleSheet.create({
   text: {
     fontSize: 18,
     textAlign: 'center',
-    color: colors.text,
+    color: colors.dark,
   },
   label: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.dark,
   },
   button: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.secondary,
     padding: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: colors.buttonText,
+    color: colors.dark,
     fontSize: 14,
     textAlign: 'center',
   },

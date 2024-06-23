@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  buttonContainer: {
+    width: '90%',
+  },
 });
 
 export default styles;

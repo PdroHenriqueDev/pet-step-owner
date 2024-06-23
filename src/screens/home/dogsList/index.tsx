@@ -113,7 +113,9 @@ function DogsList() {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <CustomButton onPress={handleClick} title="Solicitar passeio" />
+        <View style={styles.buttonContainer}>
+          <CustomButton onPress={handleClick} label="Solicitar passeio" />
+        </View>
       </View>
     </View>
   );

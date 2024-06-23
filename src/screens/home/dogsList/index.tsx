@@ -64,7 +64,6 @@ function DogsList() {
       });
       return;
     }
-    console.log('Selected Dogs:', checkedItems);
   };
 
   return (

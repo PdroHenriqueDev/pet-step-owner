@@ -3,6 +3,7 @@ import React from 'react';
 import CustomButton from '../customButton';
 import styles from './styles';
 import {View} from 'react-native';
+import colors from '../../styles/colors';
 
 function CustomDialog({
   isVisible = false,
@@ -23,8 +24,6 @@ function CustomDialog({
   };
   onBackdropPress?: () => void;
 }) {
-  const {Actions} = Dialog;
-
   return (
     <Dialog
       overlayStyle={styles.dialog}
@@ -32,22 +31,21 @@ function CustomDialog({
       onBackdropPress={onBackdropPress}>
       <Dialog.Title titleStyle={styles.title} title={title} />
 
-      <Actions>
-        <View className="flex-col w-full">
-          {confirm && confirm.confirmLabel && confirm.onConfirm && (
-            <CustomButton
-              title={confirm.confirmLabel}
-              onPress={confirm.onConfirm}
-            />
-          )}
-          {cancel && cancel.cancelLabel && cancel.onCancel && (
-            <CustomButton
-              title={cancel.cancelLabel}
-              onPress={cancel.onCancel}
-            />
-          )}
-        </View>
-      </Actions>
+      <View className="flex-col">
+        {confirm && confirm.confirmLabel && confirm.onConfirm && (
+          <CustomButton
+            title={confirm.confirmLabel}
+            onPress={confirm.onConfirm}
+          />
+        )}
+        {cancel && cancel.cancelLabel && cancel.onCancel && (
+          <CustomButton
+            title={cancel.cancelLabel}
+            onPress={cancel.onCancel}
+            backgroundColor={colors.primary}
+          />
+        )}
+      </View>
     </Dialog>
   );
 }

@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {Animated, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, Platform, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Region} from 'react-native-maps';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
@@ -9,6 +9,9 @@ import {Location} from '../../../interfaces/location';
 import colors from '../../../styles/colors';
 import LocationBottomSheet from './locationBottomSheet';
 import styles from './styles';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import {PlataformEnum} from '../../../enums/platform.enum';
+import GetLocation from 'react-native-get-location';
 
 function LocationSelector() {
   const {receivedLocation, onLocationReceived} = useLocation();
@@ -109,6 +112,50 @@ function LocationSelector() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const getLocationAndUpdateRegion = async () => {
+      // if (isRequestingLocation) {
+      //   return;
+      // }
+
+      // setIsRequestingLocation(true);
+      try {
+        const location = await GetLocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 60000,
+        });
+
+        const {latitude, longitude} = location;
+        const newRegion = {
+          latitude,
+          longitude,
+          latitudeDelta: region.latitudeDelta,
+          longitudeDelta: region.longitudeDelta,
+        };
+        console.log('got here newRegion', newRegion);
+        setRegion(newRegion);
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        // setIsRequestingLocation(false);
+      }
+    };
+
+    const requestLocationPermission = async () => {
+      const requestResponse = await request(
+        Platform.OS === PlataformEnum.IOS
+          ? PERMISSIONS.IOS.LOCATION_ALWAYS
+          : PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+      );
+
+      if (requestResponse === 'granted') {
+        await getLocationAndUpdateRegion();
+      }
+    };
+
+    requestLocationPermission();
+  }, [region.latitudeDelta, region.longitudeDelta]);
 
   return (
     <View style={styles.container}>

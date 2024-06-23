@@ -15,7 +15,7 @@ import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
 
 function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
-  const {receivedLocation, onLocationReceived} = useLocation();
+  const {onLocationReceived} = useLocation();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
 
@@ -25,7 +25,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
     setShowInputPlaces(index !== 0);
   }, []);
 
-  const snapPoints = useMemo(() => [80, '95%'], []);
+  const snapPoints = useMemo(() => [80, '85%'], []);
 
   const handleLocation = (
     data: GooglePlaceData,
@@ -71,11 +71,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
             <View style={{flex: 1, width: '100%'}}>
               <GooglePlacesAutocomplete
                 ref={googlePlacesRef}
-                placeholder={
-                  receivedLocation?.description
-                    ? receivedLocation?.description
-                    : 'Digite o endereço do inicio do passeio'
-                }
+                placeholder="Digite o endereço do inicio do passeio"
                 currentLocationLabel="Lugares perto de você"
                 debounce={1000}
                 currentLocation={true}

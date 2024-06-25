@@ -97,20 +97,7 @@ function LocationSelector() {
   };
 
   const onConfirmLocation = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${receivedLocation?.latitude},${receivedLocation?.longitude}&key=${GOOGLE_MAPS_API_KEY}`,
-      );
-      const data = await response.json();
-      const formattedAddress = data.results[0].formatted_address;
-      console.log('got here formattedAddress =>', formattedAddress);
-      navigation.navigate('Home');
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    navigation.navigate('Home');
   };
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import styles from './styles';
 import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 import {useLocation} from '../../../contexts/locationContext';
+import {truncateText} from '../../../utils/textUtils';
 
 function InputAddress() {
   const navigation = useNavigation() as any;
@@ -12,19 +13,6 @@ function InputAddress() {
 
   const handlePress = () => {
     navigation.navigate('LocationSelector');
-  };
-
-  const truncateText = ({
-    text,
-    maxLength,
-  }: {
-    text: string;
-    maxLength: number;
-  }) => {
-    if (text.length > maxLength) {
-      return `${text.substring(0, maxLength - 3)}...`;
-    }
-    return text;
   };
 
   return (

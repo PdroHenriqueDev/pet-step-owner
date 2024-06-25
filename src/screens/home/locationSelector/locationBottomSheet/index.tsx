@@ -13,9 +13,10 @@ import {useLocation} from '../../../../contexts/locationContext';
 import {Location} from '../../../../interfaces/location';
 import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
+import {truncateText} from '../../../../utils/textUtils';
 
 function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
-  const {onLocationReceived} = useLocation();
+  const {receivedLocation, onLocationReceived} = useLocation();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
 
@@ -25,7 +26,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
     setShowInputPlaces(index !== 0);
   }, []);
 
-  const snapPoints = useMemo(() => [80, '85%'], []);
+  const snapPoints = useMemo(() => [140, '85%'], []);
 
   const handleLocation = (
     data: GooglePlaceData,
@@ -44,6 +45,10 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
       onLocationReceived(location);
       bottomSheetRef.current?.snapToIndex(0);
     }
+  };
+
+  const handleEdit = () => {
+    bottomSheetRef.current?.snapToIndex(1);
   };
 
   useEffect(() => {
@@ -103,6 +108,20 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
           )}
           {!showInputPlaces && (
             <View style={styles.buttonContainer}>
+              <View className="flex-row justify-between p-4 items-center">
+                <Text style={styles.location}>
+                  {truncateText({
+                    text: receivedLocation?.description || '',
+                    maxLength: 40,
+                  })}
+                </Text>
+
+                <TouchableOpacity
+                  onPress={handleEdit}
+                  style={styles.editContainer}>
+                  <Text>editar</Text>
+                </TouchableOpacity>
+              </View>
               <CustomButton
                 onPress={confirmLocation}
                 label="Confirmar Localização"

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import colors from '../../../../styles/colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,7 +14,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    width: '90%',
+    width: '100%',
+    paddingHorizontal: 15,
+  },
+  location: {
+    color: colors.dark,
+  },
+  editContainer: {
+    padding: 5,
+    backgroundColor: colors.accent,
+    borderRadius: 5,
+    color: colors.dark,
   },
 });
 

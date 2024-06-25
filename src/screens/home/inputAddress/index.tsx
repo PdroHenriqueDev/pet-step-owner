@@ -1,15 +1,15 @@
 import React from 'react';
-import {TextInput, TouchableOpacity, View} from 'react-native';
+import {TextInput, TouchableOpacity} from 'react-native';
 import {Icon} from '@rneui/base';
 import styles from './styles';
 import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
-import {useLocation} from '../../../contexts/locationContext';
+import {useRequest} from '../../../contexts/requestContext';
 import {truncateText} from '../../../utils/textUtils';
 
 function InputAddress() {
   const navigation = useNavigation() as any;
-  const {receivedLocation} = useLocation();
+  const {receivedLocation} = useRequest();
 
   const handlePress = () => {
     navigation.navigate('LocationSelector');

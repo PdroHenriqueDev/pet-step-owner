@@ -8,7 +8,7 @@ import colors from '../../../../styles/colors';
 import styles from './styles';
 import LocationBottomSheet from './locationBottomSheet';
 import {Location} from '../../../../interfaces/location';
-import {useLocation} from '../../../../contexts/locationContext';
+import {useLocation} from '../../../../contexts/requestContext';
 
 function LocationSelector() {
   const {receivedLocation, onLocationReceived} = useLocation();

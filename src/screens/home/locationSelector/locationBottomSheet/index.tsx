@@ -9,14 +9,14 @@ import {
 } from 'react-native-google-places-autocomplete';
 import {GOOGLE_MAPS_API_KEY} from '@env';
 import styles from './styles';
-import {useLocation} from '../../../../contexts/locationContext';
+import {useRequest} from '../../../../contexts/requestContext';
 import {Location} from '../../../../interfaces/location';
 import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
 import {truncateText} from '../../../../utils/textUtils';
 
 function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
-  const {receivedLocation, onLocationReceived} = useLocation();
+  const {receivedLocation, onLocationReceived} = useRequest();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
 

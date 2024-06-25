@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 10,
   },
+  buttonContainer: {
+    marginVertical: 16,
+  },
 });
 
 export default styles;

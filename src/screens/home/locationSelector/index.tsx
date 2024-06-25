@@ -4,7 +4,7 @@ import MapView, {PROVIDER_GOOGLE, Region} from 'react-native-maps';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {GOOGLE_MAPS_API_KEY} from '@env';
-import {useLocation} from '../../../contexts/locationContext';
+import {useRequest} from '../../../contexts/requestContext';
 import {Location} from '../../../interfaces/location';
 import colors from '../../../styles/colors';
 import LocationBottomSheet from './locationBottomSheet';
@@ -14,7 +14,7 @@ import {PlataformEnum} from '../../../enums/platform.enum';
 import GetLocation from 'react-native-get-location';
 
 function LocationSelector() {
-  const {receivedLocation, onLocationReceived} = useLocation();
+  const {receivedLocation, onLocationReceived} = useRequest();
 
   const [region, setRegion] = useState({
     latitude: -23.5505,

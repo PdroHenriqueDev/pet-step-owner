@@ -5,7 +5,6 @@ import colors from '../../../styles/colors';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 20,
   },
   label: {
     ...globalStyles.label,
@@ -46,9 +45,6 @@ const styles = StyleSheet.create({
   },
   selectText: {
     fontSize: 10,
-  },
-  buttonContainer: {
-    marginTop: 16,
   },
 });
 

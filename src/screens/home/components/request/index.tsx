@@ -4,7 +4,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import globalStyles from '../../../../styles/globalStyles';
 import styles from './styles';
 import {Controller, useForm} from 'react-hook-form';
-import {useLocation} from '../../../../contexts/locationContext';
+import {useLocation} from '../../../../contexts/requestContext';
 import {getNearestsDogWalkers} from '../../../../services/dogWalkerService';
 
 const {Title} = Card;

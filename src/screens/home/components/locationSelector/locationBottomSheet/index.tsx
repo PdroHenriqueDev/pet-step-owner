@@ -12,10 +12,10 @@ import {GOOGLE_MAPS_API_KEY} from '@env';
 import styles from './styles';
 import {Location} from '../../../../../interfaces/location';
 import colors from '../../../../../styles/colors';
-import {useLocation} from '../../../../../contexts/locationContext';
+import {useRequest} from '../../../../../contexts/requestContext';
 
 function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
-  const {receivedLocation, onLocationReceived} = useLocation();
+  const {receivedLocation, onLocationReceived} = useRequest();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
 

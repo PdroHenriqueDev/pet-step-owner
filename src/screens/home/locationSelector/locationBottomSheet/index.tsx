@@ -72,7 +72,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
         index={1}
         style={styles.bottomSheet}>
         <BottomSheetView style={styles.contentContainer}>
-          {showInputPlaces && (
+          {showInputPlaces ? (
             <View style={{flex: 1, width: '100%'}}>
               <GooglePlacesAutocomplete
                 ref={googlePlacesRef}
@@ -105,10 +105,9 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
                 }
               />
             </View>
-          )}
-          {!showInputPlaces && (
+          ) : (
             <View style={styles.buttonContainer}>
-              <View className="flex-row justify-between p-4 items-center">
+              <View className="flex-row justify-between p-4 mb-1 items-center">
                 <Text style={styles.location}>
                   {truncateText({
                     text: receivedLocation?.description || '',

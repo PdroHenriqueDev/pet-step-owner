@@ -22,6 +22,19 @@ export const getNearestsDogWalkers = async (): Promise<DogWalker[]> => {
   }
 };
 
+export const getRecommedDogWalkers = async (): Promise<DogWalker[]> => {
+  try {
+    const response = await api.get<DogWalker[]>(
+      '/dog-walker/recommed?longitude=-10.185915528635675&latitude=-48.31857916699725',
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching dog walkers:', error);
+    throw error;
+  }
+};
+
 export const getDogWalkerById = async (id: string): Promise<DogWalker> => {
   try {
     const response = await api.get<DogWalker>(`/dogwalkers/${id}`);

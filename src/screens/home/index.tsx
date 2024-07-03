@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, View} from 'react-native';
 import styles from './styles';
 import InputAddress from './inputAddress';
@@ -7,8 +7,11 @@ import DogWalkerList from './dogWalkersList';
 import CustomButton from '../../components/customButton';
 import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
+import {useOwner} from '../../contexts/ownerContext';
+import {getOwner} from '../../services/ownerService';
 
 function Home() {
+  const {setOwner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds} = useRequest();
 
@@ -29,6 +32,19 @@ function Home() {
       return;
     }
   };
+
+  useEffect(() => {
+    const fetchOwner = async () => {
+      try {
+        const ownerData = await getOwner('6685a46cc8ccd21d41f50991');
+        setOwner(ownerData);
+      } catch (error) {
+        console.error('Failed to fetch owner data:', error);
+      }
+    };
+
+    fetchOwner();
+  }, [setOwner]);
 
   return (
     <ScrollView style={styles.scrollViewContainer}>

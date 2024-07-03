@@ -5,38 +5,13 @@ import {CheckBox, Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useRequest} from '../../../contexts/requestContext';
+import {useOwner} from '../../../contexts/ownerContext';
 
 function DogsList() {
+  const {owner} = useOwner();
   const {selectedDogIds, onDogSelectionChanged} = useRequest();
 
-  const dogs = [
-    {
-      id: 1,
-      name: 'Laika',
-      breed: 'Chow Chow',
-      year: 8,
-    },
-    {
-      id: 2,
-      name: 'Luke',
-      breed: 'Labrador',
-      year: 4,
-    },
-    {
-      id: 3,
-      name: 'Bela',
-      breed: 'Pinscher',
-      year: 4,
-    },
-    {
-      id: 4,
-      name: 'Test',
-      breed: 'Test',
-      year: 4,
-    },
-  ];
-
-  const handleCheckBoxPress = (id: number) => {
+  const handleCheckBoxPress = (id: string) => {
     onDogSelectionChanged(prev => {
       if (prev.includes(id)) {
         return prev.filter(item => item !== id);
@@ -50,14 +25,14 @@ function DogsList() {
       <Text style={styles.label}>Qual Dog vai passear?</Text>
       <View style={styles.listContainer}>
         <ScrollView>
-          {dogs.map((item, index) => (
+          {owner?.dogs.map((item, index) => (
             <TouchableOpacity
-              key={item.id}
+              key={item._id}
               style={[
                 styles.checkBoxContainer,
-                index !== dogs.length - 1 && styles.itemMargin,
+                index !== owner?.dogs.length - 1 && styles.itemMargin,
               ]}
-              onPress={() => handleCheckBoxPress(item.id)}>
+              onPress={() => handleCheckBoxPress(item._id)}>
               <View style={styles.dog}>
                 <View style={styles.checkBoxContainer}>
                   <View className="flex-row items-center">
@@ -75,15 +50,15 @@ function DogsList() {
                     right
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
-                    checked={selectedDogIds.includes(item.id)}
-                    onPress={() => handleCheckBoxPress(item.id)}
+                    checked={selectedDogIds.includes(item._id)}
+                    onPress={() => handleCheckBoxPress(item._id)}
                     checkedColor={colors.dark}
                     uncheckedColor={colors.dark}
                     containerStyle={styles.checkBox}
                     size={17}
                   />
                   <Text style={styles.selectText}>
-                    {selectedDogIds.includes(item.id)
+                    {selectedDogIds.includes(item._id)
                       ? 'Selecionado'
                       : 'Não selecionado'}
                   </Text>

@@ -1,14 +1,5 @@
-import {API_BASE_URL} from '@env';
 import api from './api';
-
-interface DogWalker {
-  id: string;
-  name: string;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-}
+import {DogWalker} from '../interfaces/dogWalker';
 
 export const getDogWalkers = async (): Promise<DogWalker[]> => {
   try {

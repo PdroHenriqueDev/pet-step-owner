@@ -42,7 +42,7 @@ function DogsList() {
                     <Icon type="font-awesome" name="paw" size={10} />
                   </View>
                   <Text style={styles.dogInfo}>
-                    {item.breed}, {item.year} {item.year === 1 ? 'ano' : 'anos'}
+                    {item.breed}, {item.age} {item.age === 1 ? 'ano' : 'anos'}
                   </Text>
                 </View>
                 <View className="items-center">

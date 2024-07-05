@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.dark,
   },
+  disabledButton: {
+    backgroundColor: '#E0E0E0',
+  },
+  buttonDisabledText: {
+    color: colors.accent,
+  },
   itemMargin: {
     marginBottom: 24,
   },

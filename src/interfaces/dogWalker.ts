@@ -1,5 +1,5 @@
 export interface DogWalker {
-  id: string;
+  _id: string;
   name: string;
   rate: number;
   distance: string;

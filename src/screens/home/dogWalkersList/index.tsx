@@ -44,7 +44,7 @@ function DogWalkerList() {
       ) : (
         dogWalkers.map((item, index) => (
           <View
-            key={item.id}
+            key={item._id}
             style={index !== dogWalkers.length - 1 && styles.itemMargin}
             className="flex-row justify-between">
             <View className="flex-row">
@@ -78,8 +78,16 @@ function DogWalkerList() {
                 <Text style={styles.info}>{item.distance}</Text>
               </View>
             </View>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Contratar</Text>
+            <TouchableOpacity
+              disabled={!item.isOnline}
+              style={[styles.button, !item.isOnline && styles.disabledButton]}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  !item.isOnline && styles.buttonDisabledText,
+                ]}>
+                Contratar
+              </Text>
             </TouchableOpacity>
           </View>
         ))

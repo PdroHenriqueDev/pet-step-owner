@@ -13,9 +13,22 @@ import {getOwner} from '../../services/ownerService';
 function Home() {
   const {setOwner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
-  const {selectedDogIds} = useRequest();
+  const {selectedDogIds, receivedLocation} = useRequest();
 
   const handleClick = () => {
+    if (!receivedLocation) {
+      showDialog({
+        title: 'É preciso selecionar o início do passeio',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+
     if (selectedDogIds.length === 0 || selectedDogIds.length > 3) {
       showDialog({
         title:

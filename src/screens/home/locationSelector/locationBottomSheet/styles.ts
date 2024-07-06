@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: colors.dark,
   },
+  indicator: {
+    backgroundColor: colors.dark,
+  },
 });
 
 export default styles;

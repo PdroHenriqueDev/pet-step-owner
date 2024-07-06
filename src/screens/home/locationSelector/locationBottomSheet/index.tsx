@@ -48,7 +48,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
   };
 
   const handleEdit = () => {
-    bottomSheetRef.current?.snapToIndex(1);
+    bottomSheetRef.current?.expand();
   };
 
   useEffect(() => {
@@ -70,6 +70,8 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
         onChange={handleSheetChanges}
         snapPoints={snapPoints}
         index={1}
+        enablePanDownToClose={false}
+        handleIndicatorStyle={styles.indicator}
         style={styles.bottomSheet}>
         <BottomSheetView style={styles.contentContainer}>
           {showInputPlaces ? (

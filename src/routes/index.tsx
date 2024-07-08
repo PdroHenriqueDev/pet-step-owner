@@ -4,6 +4,7 @@ import HomeTabs from './homeTabs';
 import LocationSelector from '../screens/home/locationSelector';
 import {StackHeaderProps, createStackNavigator} from '@react-navigation/stack';
 import Header from '../components/header';
+import WalkRequest from '../screens/home/walkRequest';
 
 const {Navigator, Screen} = createStackNavigator();
 const CustomHeader = (props: StackHeaderProps) => <Header {...props} />;
@@ -20,6 +21,14 @@ function Routes() {
           component={LocationSelector}
           options={{
             title: 'Selecionar localização',
+            headerShown: true,
+            headerTransparent: true,
+          }}
+        />
+        <Screen
+          name="WalkRequest"
+          component={WalkRequest}
+          options={{
             headerShown: true,
             headerTransparent: true,
           }}

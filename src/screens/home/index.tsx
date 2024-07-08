@@ -9,11 +9,13 @@ import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
 import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
+import {useNavigation} from '@react-navigation/native';
 
 function Home() {
   const {setOwner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation} = useRequest();
+  const navigation = useNavigation() as any;
 
   const handleClick = () => {
     if (!receivedLocation) {
@@ -44,6 +46,8 @@ function Home() {
       });
       return;
     }
+
+    navigation.navigate('WalkRequest');
   };
 
   useEffect(() => {

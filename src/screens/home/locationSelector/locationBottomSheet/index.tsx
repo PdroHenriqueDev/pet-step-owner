@@ -71,8 +71,7 @@ function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
         snapPoints={snapPoints}
         index={1}
         enablePanDownToClose={false}
-        handleIndicatorStyle={styles.indicator}
-        style={styles.bottomSheet}>
+        handleIndicatorStyle={styles.indicator}>
         <BottomSheetView style={styles.contentContainer}>
           {showInputPlaces ? (
             <View style={{flex: 1, width: '100%'}}>

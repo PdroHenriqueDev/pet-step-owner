@@ -1,8 +1,8 @@
 import React from 'react';
+import styles from './styles';
 import {Icon} from '@rneui/base';
 import colors from '../../styles/colors';
 import {View} from 'react-native';
-import styles from './styles';
 
 function Marker() {
   return (

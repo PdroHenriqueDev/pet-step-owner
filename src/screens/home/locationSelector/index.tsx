@@ -12,6 +12,7 @@ import styles from './styles';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {PlataformEnum} from '../../../enums/platform.enum';
 import GetLocation from 'react-native-get-location';
+import Marker from '../../../components/marker';
 
 function LocationSelector() {
   const {receivedLocation, onLocationReceived} = useRequest();
@@ -155,17 +156,7 @@ function LocationSelector() {
         onPanDrag={startAnimation}
         showsUserLocation={true}
       />
-      <View style={styles.markerFixed}>
-        <Animated.View style={{transform: [{scale: animation}]}}>
-          <Icon
-            style={styles.marker}
-            type="font-awesome-6"
-            name="location-pin"
-            size={40}
-            color={colors.dark}
-          />
-        </Animated.View>
-      </View>
+      <Marker />
 
       <LocationBottomSheet
         onLocationSelected={handleOnLocationReceived}

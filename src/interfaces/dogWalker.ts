@@ -6,4 +6,5 @@ export interface DogWalker {
   isOnline: boolean;
   date: string;
   time: string;
+  profileUrl: string;
 }

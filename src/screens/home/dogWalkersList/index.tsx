@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
-import {Avatar, Icon} from '@rneui/base';
+import {Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import {DogWalker} from '../../../interfaces/dogWalker';
 import {getRecommedDogWalkers} from '../../../services/dogWalkerService';
+import DogWalkerCard from '../../../components/dogWalkerCard';
 
 function DogWalkerList() {
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
@@ -42,54 +43,12 @@ function DogWalkerList() {
           Ainda não há nenhum dog waker recomendado
         </Text>
       ) : (
-        dogWalkers.map((item, index) => (
-          <View
-            key={item._id}
-            style={index !== dogWalkers.length - 1 && styles.itemMargin}
-            className="flex-row justify-between">
-            <View className="flex-row">
-              <Avatar
-                rounded
-                source={{
-                  uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                }}>
-                <View
-                  style={[
-                    styles.statusIndicator,
-                    item.isOnline ? styles.online : styles.offline,
-                  ]}
-                />
-              </Avatar>
-              <View className="flex-col ml-2">
-                <View className="flex-row items-center">
-                  <Text className="mr-3" style={styles.name}>
-                    {item.name}
-                  </Text>
-                  <Icon
-                    type="feather"
-                    name="star"
-                    size={14}
-                    color={colors.dark}
-                  />
-                  <Text style={styles.rate} className="ml-2">
-                    {item.rate}
-                  </Text>
-                </View>
-                <Text style={styles.info}>{item.distance}</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              disabled={!item.isOnline}
-              style={[styles.button, !item.isOnline && styles.disabledButton]}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  !item.isOnline && styles.buttonDisabledText,
-                ]}>
-                Contratar
-              </Text>
-            </TouchableOpacity>
-          </View>
+        dogWalkers.map((dogWalker, index) => (
+          <DogWalkerCard
+            key={dogWalker._id}
+            dogWalker={dogWalker}
+            isLastItem={index === dogWalkers.length - 1}
+          />
         ))
       )}
       <View />

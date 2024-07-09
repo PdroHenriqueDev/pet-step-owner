@@ -6,14 +6,24 @@ import colors from '../../../styles/colors';
 import {DogWalker} from '../../../interfaces/dogWalker';
 import {getRecommedDogWalkers} from '../../../services/dogWalkerService';
 import DogWalkerCard from '../../../components/dogWalkerCard';
+import globalStyles from '../../../styles/globalStyles';
+import {useRequest} from '../../../contexts/requestContext';
 
 function DogWalkerList() {
+  const {receivedLocation} = useRequest();
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
 
   useEffect(() => {
     const fetchOwner = async () => {
+      if (!receivedLocation) {
+        return;
+      }
+
       try {
-        const ownerData = await getRecommedDogWalkers();
+        const ownerData = await getRecommedDogWalkers({
+          latitude: receivedLocation?.latitude,
+          longitude: receivedLocation?.longitude,
+        });
         setDogWalkers(ownerData);
       } catch (error) {
         console.error('Failed to fetch owner data:', error);
@@ -21,7 +31,7 @@ function DogWalkerList() {
     };
 
     fetchOwner();
-  }, []);
+  }, [receivedLocation]);
 
   return (
     <View style={styles.container}>
@@ -39,8 +49,10 @@ function DogWalkerList() {
         </TouchableOpacity>
       </View>
       {dogWalkers.length === 0 ? (
-        <Text style={styles.info}>
-          Ainda não há nenhum dog waker recomendado
+        <Text style={globalStyles.infoText}>
+          {!receivedLocation
+            ? 'Selecione o inicio do passeio para podermos mostrar os dog walkers recomendados'
+            : 'Ainda não há nenhum dog waker recomendado para você'}
         </Text>
       ) : (
         dogWalkers.map((dogWalker, index) => (

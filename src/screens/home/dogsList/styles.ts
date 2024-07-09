@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   itemMargin: {
     marginBottom: 10,
   },
-  selectText: {
+  selectedText: {
     fontSize: 10,
   },
 });

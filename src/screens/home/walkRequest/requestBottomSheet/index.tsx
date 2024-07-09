@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
@@ -7,6 +7,7 @@ import {getNearestsDogWalkers} from '../../../../services/dogWalkerService';
 import {DogWalker} from '../../../../interfaces/dogWalker';
 import DogWalkerCard from '../../../../components/dogWalkerCard';
 import globalStyles from '../../../../styles/globalStyles';
+import SummarySection from './summarySection';
 
 function RequestBottomSheet() {
   const {receivedLocation} = useRequest();
@@ -52,26 +53,29 @@ function RequestBottomSheet() {
         handleIndicatorStyle={styles.indicator}>
         <BottomSheetView>
           <View style={styles.contentContainer}>
-            <Text style={styles.titleText}>Dog walkers nas proximidades</Text>
-            {recommededDogWalkers.length === 0 ? (
-              <Text style={globalStyles.infoText}>
-                Não há Dog Walkers disponíveis
-              </Text>
-            ) : (
-              recommededDogWalkers.map((dogWalker, index) => (
-                <DogWalkerCard
-                  key={dogWalker._id}
-                  dogWalker={dogWalker}
-                  isSelect={true}
-                  isLastItem={index === recommededDogWalkers.length - 1}
-                  isSelected={dogWalker._id === selectedDogWalkerId}
-                  onSelect={handleSelect}
-                />
-              ))
-            )}
+            <ScrollView>
+              <Text style={styles.titleText}>Dog walkers nas proximidades</Text>
+              {recommededDogWalkers.length === 0 ? (
+                <Text style={globalStyles.infoText}>
+                  Não há Dog Walkers disponíveis
+                </Text>
+              ) : (
+                recommededDogWalkers.map((dogWalker, index) => (
+                  <DogWalkerCard
+                    key={dogWalker._id}
+                    dogWalker={dogWalker}
+                    isSelect={true}
+                    isLastItem={index === recommededDogWalkers.length - 1}
+                    isSelected={dogWalker._id === selectedDogWalkerId}
+                    onSelect={handleSelect}
+                  />
+                ))
+              )}
+            </ScrollView>
           </View>
         </BottomSheetView>
       </BottomSheet>
+      <SummarySection />
     </View>
   );
 }

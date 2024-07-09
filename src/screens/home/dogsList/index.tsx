@@ -57,7 +57,7 @@ function DogsList() {
                     containerStyle={styles.checkBox}
                     size={17}
                   />
-                  <Text style={styles.selectText}>
+                  <Text style={styles.selectedText}>
                     {selectedDogIds.includes(item._id)
                       ? 'Selecionado'
                       : 'Não selecionado'}

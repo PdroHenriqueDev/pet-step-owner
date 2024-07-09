@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
   buttonDisabledText: {
     color: colors.accent,
   },
-  price: {
+  selectedText: {
     color: colors.dark,
     alignSelf: 'center',
+    fontSize: 10,
   },
   selectedBorder: {
     borderWidth: 1,

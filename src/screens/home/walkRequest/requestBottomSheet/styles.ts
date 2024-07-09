@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: 20,
+    paddingBottom: 100,
   },
   indicator: {
     backgroundColor: colors.dark,

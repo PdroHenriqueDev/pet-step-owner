@@ -21,9 +21,9 @@ function WalkRequest() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}
-        // onRegionChange={handleRegionChange}
-        // onRegionChangeComplete={handleRegionChangeComplete}
-        // onPanDrag={startAnimation}
+        scrollEnabled={false}
+        zoomEnabled={false}
+        rotateEnabled={false}
         showsUserLocation={false}
       />
       <View style={styles.markerFixed}>

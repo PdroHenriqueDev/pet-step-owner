@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: colors.dark,
     fontSize: 16,
+    marginBottom: 10,
   },
 });
 

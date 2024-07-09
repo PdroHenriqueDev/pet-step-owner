@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
-import colors from '../../../styles/colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,10 +30,6 @@ const styles = StyleSheet.create({
   icon: {
     marginTop: 2,
     marginLeft: 10,
-  },
-  info: {
-    fontSize: 12,
-    color: colors.accent,
   },
 });
 

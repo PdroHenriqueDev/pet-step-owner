@@ -60,6 +60,10 @@ const globalStyles = StyleSheet.create({
   tabBarLabel: {
     fontSize: 14,
   },
+  infoText: {
+    fontSize: 12,
+    color: colors.accent,
+  },
 });
 
 export default globalStyles;

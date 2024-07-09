@@ -3,10 +3,14 @@ import {View} from 'react-native';
 import styles from './styles';
 import CustomButton from '../../../../../components/customButton';
 
-export default function SummarySection() {
+interface SummarySectionProps {
+  onConfirm: () => void;
+}
+
+export default function SummarySection({onConfirm}: SummarySectionProps) {
   return (
     <View style={styles.fixedFooter}>
-      <CustomButton label={'Confirmar'} />
+      <CustomButton label={'Confirmar'} onPress={onConfirm} />
     </View>
   );
 }

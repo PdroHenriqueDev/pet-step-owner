@@ -5,9 +5,9 @@ import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {getNearestsDogWalkers} from '../../../../services/dogWalkerService';
 import {DogWalker} from '../../../../interfaces/dogWalker';
-import DogWalkerCard from '../../../../components/dogWalkerCard';
-import globalStyles from '../../../../styles/globalStyles';
 import SummarySection from './summarySection';
+import NearestDogWalkers from './nearestDogWalkers';
+import TimeSelector from './timeSelector';
 
 function RequestBottomSheet() {
   const {receivedLocation} = useRequest();
@@ -18,6 +18,7 @@ function RequestBottomSheet() {
   const [selectedDogWalkerId, setSelectedDogWalkerId] = useState<string | null>(
     null,
   );
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
   useEffect(() => {
     const fetchRecommededDogWalkers = async () => {
@@ -42,6 +43,12 @@ function RequestBottomSheet() {
     setSelectedDogWalkerId(id);
   };
 
+  const handleConfirm = () => {
+    if (currentStep < 1 && selectedDogWalkerId) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -53,29 +60,25 @@ function RequestBottomSheet() {
         handleIndicatorStyle={styles.indicator}>
         <BottomSheetView>
           <View style={styles.contentContainer}>
+            <Text style={styles.titleText}>
+              {currentStep === 0
+                ? 'Dog walkers nas proximidades'
+                : 'Tempo de passeio'}
+            </Text>
             <ScrollView>
-              <Text style={styles.titleText}>Dog walkers nas proximidades</Text>
-              {recommededDogWalkers.length === 0 ? (
-                <Text style={globalStyles.infoText}>
-                  Não há Dog Walkers disponíveis
-                </Text>
-              ) : (
-                recommededDogWalkers.map((dogWalker, index) => (
-                  <DogWalkerCard
-                    key={dogWalker._id}
-                    dogWalker={dogWalker}
-                    isSelect={true}
-                    isLastItem={index === recommededDogWalkers.length - 1}
-                    isSelected={dogWalker._id === selectedDogWalkerId}
-                    onSelect={handleSelect}
-                  />
-                ))
+              {currentStep === 0 && (
+                <NearestDogWalkers
+                  recommededDogWalkers={recommededDogWalkers}
+                  selectedDogWalkerId={selectedDogWalkerId}
+                  handleSelect={handleSelect}
+                />
               )}
+              {currentStep === 1 && <TimeSelector />}
             </ScrollView>
           </View>
         </BottomSheetView>
       </BottomSheet>
-      <SummarySection />
+      <SummarySection onConfirm={handleConfirm} />
     </View>
   );
 }

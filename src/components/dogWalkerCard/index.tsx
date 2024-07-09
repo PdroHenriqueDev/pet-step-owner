@@ -3,23 +3,32 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {Avatar, Icon} from '@rneui/base';
 import styles from './styles';
 import colors from '../../styles/colors';
-import {DogWalker} from '../../interfaces/dogWalker';
+import globalStyles from '../../styles/globalStyles';
+import {truncateText} from '../../utils/textUtils';
+import {DogWalkerCardProps} from '../../interfaces/dogWalkerCard';
 
-interface DogWalkerCardProps {
-  dogWalker: DogWalker;
-  isLastItem: boolean;
-  onPress?: () => void;
-}
-
-const DogWalkerCard: React.FC<DogWalkerCardProps> = ({
+export default function DogWalkerCard({
   dogWalker,
   isLastItem,
-  onPress,
-}) => {
+  isSelect,
+  isSelected,
+  onSelect,
+}: DogWalkerCardProps) {
+  const handlePress = () => {
+    if (isSelect && onSelect) {
+      onSelect(dogWalker._id);
+    }
+  };
+
   return (
-    <View
-      style={[!isLastItem && styles.itemMargin]}
-      className="flex-row justify-between">
+    <TouchableOpacity
+      style={[
+        !isLastItem && styles.itemMargin,
+        isSelected && styles.selectedBorder,
+      ]}
+      className="flex-row justify-between"
+      onPress={handlePress}
+      activeOpacity={isSelected ? 0.7 : 1}>
       <View className="flex-row">
         <Avatar
           rounded
@@ -38,30 +47,35 @@ const DogWalkerCard: React.FC<DogWalkerCardProps> = ({
         <View className="flex-col ml-2">
           <View className="flex-row items-center">
             <Text className="mr-3" style={styles.name}>
-              {dogWalker.name}
+              {truncateText({
+                text: dogWalker.name || '',
+                maxLength: 15,
+              })}
             </Text>
             <Icon type="feather" name="star" size={14} color={colors.dark} />
             <Text style={styles.rate} className="ml-2">
               {dogWalker.rate}
             </Text>
           </View>
-          <Text style={styles.info}>{dogWalker.distance}</Text>
+          <Text style={globalStyles.infoText}>{dogWalker.distance} km</Text>
         </View>
       </View>
-      <TouchableOpacity
-        disabled={!dogWalker.isOnline}
-        style={[styles.button, !dogWalker.isOnline && styles.disabledButton]}
-        onPress={onPress}>
-        <Text
-          style={[
-            styles.buttonText,
-            !dogWalker.isOnline && styles.buttonDisabledText,
-          ]}>
-          Contratar
-        </Text>
-      </TouchableOpacity>
-    </View>
+      {isSelect ? (
+        <Text style={styles.price}>R$ 20,40</Text>
+      ) : (
+        <TouchableOpacity
+          disabled={!dogWalker.isOnline}
+          style={[styles.button, !dogWalker.isOnline && styles.disabledButton]}
+          onPress={handlePress}>
+          <Text
+            style={[
+              styles.buttonText,
+              !dogWalker.isOnline && styles.buttonDisabledText,
+            ]}>
+            Contratar
+          </Text>
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
   );
-};
-
-export default DogWalkerCard;
+}

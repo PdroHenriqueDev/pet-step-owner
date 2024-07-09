@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 const styles = StyleSheet.create({
   itemMargin: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   statusIndicator: {
     width: 12,
@@ -28,10 +28,6 @@ const styles = StyleSheet.create({
   rate: {
     color: colors.dark,
   },
-  info: {
-    fontSize: 12,
-    color: colors.accent,
-  },
   button: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -48,6 +44,16 @@ const styles = StyleSheet.create({
   },
   buttonDisabledText: {
     color: colors.accent,
+  },
+  price: {
+    color: colors.dark,
+    alignSelf: 'center',
+  },
+  selectedBorder: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: 8,
   },
 });
 

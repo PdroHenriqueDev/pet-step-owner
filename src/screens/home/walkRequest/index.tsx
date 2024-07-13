@@ -35,8 +35,9 @@ function WalkRequest() {
           color={colors.dark}
         />
       </View>
-
-      <RequestBottomSheet />
+      <View style={styles.bottomSheetContainer}>
+        <RequestBottomSheet />
+      </View>
     </View>
   );
 }

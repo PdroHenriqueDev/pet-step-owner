@@ -1,12 +1,6 @@
 import React, {createContext, useState, useContext, ReactNode} from 'react';
 import {Location} from '../interfaces/location';
-
-interface RequestContextProps {
-  receivedLocation: Location | null;
-  onLocationReceived: (location: Location) => void;
-  selectedDogIds: string[];
-  onDogSelectionChanged: (dogIds: (prev: string[]) => string[]) => void;
-}
+import {RequestContextProps} from '../interfaces/request';
 
 const RequestContext = createContext<RequestContextProps | undefined>(
   undefined,
@@ -18,12 +12,18 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
   );
   const [selectedDogIds, setSelectedDogIds] = useState<string[]>([]);
 
+  const [selectedTime, setSelectedTime] = useState<number>(15);
+
   const onLocationReceived = (location: Location) => {
     setReceivedLocation(location);
   };
 
   const onDogSelectionChanged = (dogIds: (prev: string[]) => string[]) => {
     setSelectedDogIds(dogIds);
+  };
+
+  const onselectedTime = (time: number) => {
+    setSelectedTime(time);
   };
 
   return (
@@ -33,6 +33,8 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
         onLocationReceived,
         selectedDogIds,
         onDogSelectionChanged,
+        selectedTime,
+        onselectedTime,
       }}>
       {children}
     </RequestContext.Provider>

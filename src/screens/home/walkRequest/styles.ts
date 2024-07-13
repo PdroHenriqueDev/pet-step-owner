@@ -7,17 +7,23 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    height: '50%',
+    width: '100%',
   },
   markerFixed: {
-    left: '50%',
-    top: '50%',
-    marginLeft: -24,
-    marginTop: -18,
+    left: '47%',
+    top: '26%',
+    marginLeft: -12,
+    marginTop: -24,
     position: 'absolute',
   },
   marker: {
     height: 48,
     width: 48,
+  },
+  bottomSheetContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
   },
 });
 

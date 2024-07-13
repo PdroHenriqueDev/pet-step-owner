@@ -3,7 +3,10 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {getNearestsDogWalkers} from '../../../../services/dogWalkerService';
+import {
+  calculateCost,
+  getNearestsDogWalkers,
+} from '../../../../services/dogWalkerService';
 import {DogWalker} from '../../../../interfaces/dogWalker';
 import SummarySection from './summarySection';
 import NearestDogWalkers from './nearestDogWalkers';
@@ -11,6 +14,7 @@ import TimeSelector from './timeSelector';
 import CustomButton from '../../../../components/customButton';
 import colors from '../../../../styles/colors';
 import {Icon} from '@rneui/base';
+import {CostDataProps} from '../../../../interfaces/costData';
 
 const title: {[key: number]: string} = {
   0: 'Dog walkers nas proximidades',
@@ -19,7 +23,7 @@ const title: {[key: number]: string} = {
 };
 
 function RequestBottomSheet() {
-  const {receivedLocation, selectedTime} = useRequest();
+  const {receivedLocation, selectedTime, selectedDogIds} = useRequest();
   const snapPoints = useMemo(() => [340, '90%'], []);
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
@@ -28,6 +32,7 @@ function RequestBottomSheet() {
     null,
   );
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [costData, setCostData] = useState<CostDataProps>();
 
   useEffect(() => {
     const fetchRecommededDogWalkers = async () => {
@@ -52,12 +57,22 @@ function RequestBottomSheet() {
     setSelectedDogWalkerId(id);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (currentStep === 0 && selectedDogWalkerId) {
       setCurrentStep(currentStep + 1);
     }
     if (currentStep === 1 && selectedTime) {
-      setCurrentStep(currentStep + 1);
+      try {
+        const data = await calculateCost({
+          walkDuration: selectedTime,
+          numberOfDogs: selectedDogIds.length,
+        });
+
+        setCostData(data as unknown as CostDataProps);
+        setCurrentStep(currentStep + 1);
+      } catch {
+      } finally {
+      }
     }
   };
 
@@ -100,7 +115,7 @@ function RequestBottomSheet() {
                 />
               )}
               {currentStep === 1 && <TimeSelector />}
-              {currentStep === 2 && <SummarySection />}
+              {currentStep === 2 && <SummarySection costData={costData} />}
             </ScrollView>
           </View>
         </BottomSheetView>

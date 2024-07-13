@@ -1,16 +1,32 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import styles from './styles';
-import CustomButton from '../../../../../components/customButton';
+import {useRequest} from '../../../../../contexts/requestContext';
 
-interface SummarySectionProps {
-  onConfirm: () => void;
-}
+export default function SummarySection() {
+  const {selectedDogIds, selectedTime} = useRequest();
 
-export default function SummarySection({onConfirm}: SummarySectionProps) {
+  // Preço por dog e por tempo
+  const pricePerDog = 4.99;
+  const basePrice = 15.99;
+
+  // Calculando o preço total
+  const totalDogsPrice = selectedDogIds.length * pricePerDog;
+  const totalPrice = totalDogsPrice + (selectedTime ? basePrice : 0);
+
   return (
-    <View style={styles.fixedFooter}>
-      <CustomButton label={'Confirmar'} onPress={onConfirm} />
+    <View style={styles.container}>
+      <Text style={styles.text}>
+        Dogs: {selectedDogIds.length} x R$ {pricePerDog.toFixed(2)}
+      </Text>
+
+      <Text style={styles.text}>
+        Tempo - {selectedTime} min: R$ {basePrice.toFixed(2)}
+      </Text>
+
+      <Text style={styles.totalText}>
+        Preço total: R$ {totalPrice.toFixed(2)}
+      </Text>
     </View>
   );
 }

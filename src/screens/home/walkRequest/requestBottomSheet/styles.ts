@@ -4,6 +4,7 @@ import colors from '../../../../styles/colors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderWidth: 1,
     padding: 24,
   },
   contentContainer: {
@@ -17,6 +18,16 @@ const styles = StyleSheet.create({
     color: colors.dark,
     fontSize: 16,
     marginBottom: 10,
+  },
+  fixedFooter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: colors.primary,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
 });
 

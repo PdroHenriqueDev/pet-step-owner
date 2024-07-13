@@ -2,15 +2,19 @@ import {StyleSheet} from 'react-native';
 import colors from '../../../../../styles/colors';
 
 const styles = StyleSheet.create({
-  fixedFooter: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 20,
-    backgroundColor: colors.primary,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+  container: {
+    paddingTop: 16,
+  },
+  text: {
+    fontSize: 15,
+    color: colors.dark,
+    marginBottom: 5,
+  },
+  totalText: {
+    fontSize: 16,
+    color: colors.dark,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
 });
 

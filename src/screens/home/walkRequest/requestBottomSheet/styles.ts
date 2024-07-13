@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   titleText: {
     color: colors.dark,
     fontSize: 16,
-    marginBottom: 10,
   },
   fixedFooter: {
     position: 'absolute',
@@ -28,6 +27,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+  },
+  icon: {
+    marginRight: 10,
   },
 });
 

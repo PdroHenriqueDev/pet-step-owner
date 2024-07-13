@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
@@ -9,6 +9,8 @@ import SummarySection from './summarySection';
 import NearestDogWalkers from './nearestDogWalkers';
 import TimeSelector from './timeSelector';
 import CustomButton from '../../../../components/customButton';
+import colors from '../../../../styles/colors';
+import {Icon} from '@rneui/base';
 
 const title: {[key: number]: string} = {
   0: 'Dog walkers nas proximidades',
@@ -59,6 +61,10 @@ function RequestBottomSheet() {
     }
   };
 
+  const back = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -70,7 +76,21 @@ function RequestBottomSheet() {
         handleIndicatorStyle={styles.indicator}>
         <BottomSheetView>
           <View style={styles.contentContainer}>
-            <Text style={styles.titleText}>{title[currentStep]}</Text>
+            <View className="flex flex-row items-center mb-3">
+              {currentStep > 0 && (
+                <TouchableOpacity onPress={back}>
+                  <Icon
+                    type="material"
+                    name="arrow-back-ios-new"
+                    size={14}
+                    color={colors.dark}
+                    className="mr-2"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              )}
+              <Text style={styles.titleText}>{title[currentStep]}</Text>
+            </View>
             <ScrollView>
               {currentStep === 0 && (
                 <NearestDogWalkers

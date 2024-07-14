@@ -13,11 +13,11 @@ export default function SummarySection({costData}: SummarySectionProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        Dogs: {dogPrice.dogs} x R$ {dogPrice.price}
+        Dogs: {dogPrice.numberOfDogs} x R$ {dogPrice.pricePerDog}
       </Text>
 
       <Text style={styles.text}>
-        Tempo - {walkPrice.time} min: R$ {walkPrice.price}
+        Tempo - {walkPrice.durationMinutes} min: R$ {walkPrice.price}
       </Text>
 
       <Text style={styles.totalText}>Preço total: R$ {totalCost}</Text>

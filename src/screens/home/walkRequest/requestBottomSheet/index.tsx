@@ -64,7 +64,7 @@ function RequestBottomSheet() {
     if (currentStep === 1 && selectedTime) {
       try {
         const data = await calculateCost({
-          walkDuration: selectedTime,
+          walkDurationMinutes: selectedTime,
           numberOfDogs: selectedDogIds.length,
         });
 
@@ -91,7 +91,7 @@ function RequestBottomSheet() {
         handleIndicatorStyle={styles.indicator}>
         <BottomSheetView>
           <View style={styles.contentContainer}>
-            <View className="flex flex-row items-center mb-3">
+            <View className="flex flex-row items-center mb-2.5">
               {currentStep > 0 && (
                 <TouchableOpacity onPress={back}>
                   <Icon

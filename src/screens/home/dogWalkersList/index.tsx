@@ -20,13 +20,13 @@ function DogWalkerList() {
       }
 
       try {
-        const ownerData = await getRecommedDogWalkers({
+        const recommedDogWalkers = await getRecommedDogWalkers({
           latitude: receivedLocation?.latitude,
           longitude: receivedLocation?.longitude,
         });
-        setDogWalkers(ownerData);
+        setDogWalkers(recommedDogWalkers);
       } catch (error) {
-        console.error('Failed to fetch owner data:', error);
+        console.error('Failed to fetch recommed DogWalkers:', error);
       }
     };
 

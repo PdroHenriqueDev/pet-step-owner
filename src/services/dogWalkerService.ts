@@ -58,14 +58,17 @@ export const getDogWalkerById = async (id: string): Promise<DogWalker> => {
 };
 
 export const calculateCost = async ({
+  dogWalkerId,
   numberOfDogs,
   walkDurationMinutes,
 }: {
+  dogWalkerId: string;
   numberOfDogs: number;
   walkDurationMinutes: number;
 }): Promise<DogWalker> => {
   try {
     const response = await api.post<DogWalker>('/dog-walker/calculate-cost', {
+      dogWalkerId,
       numberOfDogs,
       walkDurationMinutes,
     });

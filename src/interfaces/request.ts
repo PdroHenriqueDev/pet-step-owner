@@ -7,4 +7,6 @@ export interface RequestContextProps {
   onDogSelectionChanged: (dogIds: (prev: string[]) => string[]) => void;
   selectedTime: number;
   onselectedTime: (selectedTime: number) => void;
+  selectedDogWalkerId: string;
+  onselectedDogWalker: (selectedTime: string) => void;
 }

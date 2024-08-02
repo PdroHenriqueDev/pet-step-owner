@@ -1,12 +1,15 @@
 export interface CostDataProps {
-  totalCost: number;
-  dogPrice: {
-    numberOfDogs: number;
-    pricePerDog: number;
-    totalDogCost: number;
+  costDetails: {
+    totalCost: string;
+    dogPrice: {
+      numberOfDogs: number;
+      pricePerDog: number;
+      totalDogCost: string;
+    };
+    walkPrice: {
+      durationMinutes: number;
+      price: number;
+    };
   };
-  walkPrice: {
-    durationMinutes: number;
-    price: number;
-  };
+  requestId: string;
 }

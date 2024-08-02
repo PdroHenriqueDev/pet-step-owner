@@ -11,19 +11,20 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
     null,
   );
   const [selectedDogIds, setSelectedDogIds] = useState<string[]>([]);
-
+  const [selectedDogWalkerId, setSelectedDogWalkerId] = useState('');
   const [selectedTime, setSelectedTime] = useState<number>(15);
 
   const onLocationReceived = (location: Location) => {
     setReceivedLocation(location);
   };
-
   const onDogSelectionChanged = (dogIds: (prev: string[]) => string[]) => {
     setSelectedDogIds(dogIds);
   };
-
   const onselectedTime = (time: number) => {
     setSelectedTime(time);
+  };
+  const onselectedDogWalker = (dogWalkerId: string) => {
+    setSelectedDogWalkerId(dogWalkerId);
   };
 
   return (
@@ -35,6 +36,8 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
         onDogSelectionChanged,
         selectedTime,
         onselectedTime,
+        selectedDogWalkerId,
+        onselectedDogWalker,
       }}>
       {children}
     </RequestContext.Provider>

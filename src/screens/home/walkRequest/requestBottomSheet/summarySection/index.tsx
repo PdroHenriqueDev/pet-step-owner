@@ -4,11 +4,12 @@ import styles from './styles';
 import {CostDataProps} from '../../../../../interfaces/costData';
 
 interface SummarySectionProps {
-  costData?: CostDataProps;
+  costData: CostDataProps;
 }
 
 export default function SummarySection({costData}: SummarySectionProps) {
-  const {dogPrice, walkPrice, totalCost} = costData!;
+  const {costDetails} = costData;
+  const {dogPrice, walkPrice, totalCost} = costDetails;
 
   return (
     <View style={styles.container}>

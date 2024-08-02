@@ -23,13 +23,16 @@ const title: {[key: number]: string} = {
 };
 
 function RequestBottomSheet() {
-  const {receivedLocation, selectedTime, selectedDogIds} = useRequest();
+  const {
+    receivedLocation,
+    selectedTime,
+    selectedDogIds,
+    selectedDogWalkerId,
+    onselectedDogWalker,
+  } = useRequest();
   const snapPoints = useMemo(() => [340, '90%'], []);
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
-  );
-  const [selectedDogWalkerId, setSelectedDogWalkerId] = useState<string | null>(
-    null,
   );
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [costData, setCostData] = useState<CostDataProps>();
@@ -42,7 +45,7 @@ function RequestBottomSheet() {
           longitude: receivedLocation!.longitude,
         });
         if (dogWalkers.length > 0) {
-          setSelectedDogWalkerId(dogWalkers[0]._id);
+          onselectedDogWalker(dogWalkers[0]._id);
         }
         setRecommededDogWalkers(dogWalkers);
       } catch (error) {
@@ -51,10 +54,10 @@ function RequestBottomSheet() {
     };
 
     fetchRecommededDogWalkers();
-  }, [receivedLocation]);
+  }, [onselectedDogWalker, receivedLocation]);
 
   const handleSelect = (id: string) => {
-    setSelectedDogWalkerId(id);
+    onselectedDogWalker(id);
   };
 
   const handleConfirm = async () => {
@@ -64,13 +67,16 @@ function RequestBottomSheet() {
     if (currentStep === 1 && selectedTime) {
       try {
         const data = await calculateCost({
+          dogWalkerId: selectedDogWalkerId,
           walkDurationMinutes: selectedTime,
           numberOfDogs: selectedDogIds.length,
         });
+        console.log('got here');
 
         setCostData(data as unknown as CostDataProps);
         setCurrentStep(currentStep + 1);
-      } catch {
+      } catch (error) {
+        console.log('got error calculating', error);
       } finally {
       }
     }
@@ -115,7 +121,7 @@ function RequestBottomSheet() {
                 />
               )}
               {currentStep === 1 && <TimeSelector />}
-              {currentStep === 2 && <SummarySection costData={costData} />}
+              {currentStep === 2 && <SummarySection costData={costData!} />}
             </ScrollView>
           </View>
         </BottomSheetView>

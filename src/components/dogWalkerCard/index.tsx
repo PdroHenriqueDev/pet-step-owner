@@ -61,7 +61,7 @@ export default function DogWalkerCard({
         </View>
       </View>
       {isSelect ? (
-        isSelected && <Text style={styles.selectedText}>selecionado</Text>
+        isSelected && <Text style={globalStyles.selectedText}>selecionado</Text>
       ) : (
         <TouchableOpacity
           disabled={!dogWalker.isOnline}

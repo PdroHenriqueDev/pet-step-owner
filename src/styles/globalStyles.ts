@@ -64,6 +64,21 @@ const globalStyles = StyleSheet.create({
     fontSize: 12,
     color: colors.accent,
   },
+  headerTitle: {
+    color: colors.dark,
+    fontSize: 24,
+    fontWeight: 600,
+  },
+  headerSubtitle: {
+    color: colors.secondary,
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  selectedText: {
+    color: colors.dark,
+    alignSelf: 'center',
+    fontSize: 10,
+  },
 });
 
 export default globalStyles;

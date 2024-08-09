@@ -15,6 +15,7 @@ import CustomButton from '../../../../components/customButton';
 import colors from '../../../../styles/colors';
 import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
+import {useOwner} from '../../../../contexts/ownerContext';
 
 const title: {[key: number]: string} = {
   0: 'Dog walkers nas proximidades',
@@ -30,6 +31,8 @@ function RequestBottomSheet() {
     selectedDogWalkerId,
     onselectedDogWalker,
   } = useRequest();
+  const {owner} = useOwner();
+
   const snapPoints = useMemo(() => [340, '90%'], []);
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
@@ -67,11 +70,11 @@ function RequestBottomSheet() {
     if (currentStep === 1 && selectedTime) {
       try {
         const data = await calculateCost({
+          ownerId: owner!._id,
           dogWalkerId: selectedDogWalkerId,
           walkDurationMinutes: selectedTime,
           numberOfDogs: selectedDogIds.length,
         });
-        console.log('got here');
 
         setCostData(data as unknown as CostDataProps);
         setCurrentStep(currentStep + 1);
@@ -80,6 +83,10 @@ function RequestBottomSheet() {
       } finally {
       }
     }
+
+    // if (currentStep === 2) {
+    //   setCurrentStep(currentStep + 1);
+    // }
   };
 
   const back = () => {

@@ -1,13 +1,22 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabHeaderProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import Home from '../screens/home';
 import Account from '../screens/account';
 import colors from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
 import HomeIcon from './icons/home';
+import Payment from '../screens/payment';
+import PaymentIcon from './icons/payment';
+import Header from '../components/header';
+import NotificationHeader from '../components/header/notificationHeader';
 
 const {Navigator, Screen} = createBottomTabNavigator();
-
+const header = (props: BottomTabHeaderProps) => (
+  <NotificationHeader {...props} />
+);
 function HomeTabs() {
   return (
     <Navigator
@@ -17,13 +26,21 @@ function HomeTabs() {
         tabBarStyle: globalStyles.tabar,
         tabBarLabelStyle: globalStyles.tabBarLabel,
         tabBarHideOnKeyboard: true,
-        headerShown: false,
       })}>
       <Screen
         name="Home"
         component={Home}
         options={{
           tabBarIcon: HomeIcon,
+          header,
+        }}
+      />
+      <Screen
+        name="Pagamento"
+        component={Payment}
+        options={{
+          tabBarIcon: PaymentIcon,
+          headerShown: false,
         }}
       />
       <Screen name="Conta" component={Account} />

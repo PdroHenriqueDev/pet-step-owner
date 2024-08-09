@@ -5,23 +5,27 @@ import LocationSelector from '../screens/home/locationSelector';
 import {StackHeaderProps, createStackNavigator} from '@react-navigation/stack';
 import Header from '../components/header';
 import WalkRequest from '../screens/home/walkRequest';
+import CustomHeader from '../components/header/customHeader';
 
 const {Navigator, Screen} = createStackNavigator();
-const CustomHeader = (props: StackHeaderProps) => <Header {...props} />;
+const header = (props: StackHeaderProps) => <CustomHeader {...props} />;
 function Routes() {
   return (
     <NavigationContainer>
-      <Navigator
-        screenOptions={{
-          header: CustomHeader,
-        }}>
-        <Screen name="Inicio" component={HomeTabs} />
+      <Navigator>
+        <Screen
+          name="Inicio"
+          component={HomeTabs}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Screen
           name="LocationSelector"
           component={LocationSelector}
           options={{
             title: 'Selecionar localização',
-            headerShown: true,
+            header,
             headerTransparent: true,
           }}
         />
@@ -29,10 +33,20 @@ function Routes() {
           name="WalkRequest"
           component={WalkRequest}
           options={{
-            headerShown: true,
+            header,
             headerTransparent: true,
           }}
         />
+
+        {/* <Screen
+          name="ListPayment"
+          component={ListPayments}
+          options={{
+            title: 'Selecionar localização',
+            headerShown: true,
+            headerTransparent: true,
+          }}
+        /> */}
       </Navigator>
     </NavigationContainer>
   );

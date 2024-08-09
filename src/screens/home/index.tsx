@@ -53,7 +53,7 @@ function Home() {
   useEffect(() => {
     const fetchOwner = async () => {
       try {
-        const ownerData = await getOwner('6685a46cc8ccd21d41f50991');
+        const ownerData = await getOwner('66b29279044cd2eca1e22adf');
         setOwner(ownerData);
       } catch (error) {
         console.error('Failed to fetch owner data:', error);

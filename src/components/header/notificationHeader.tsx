@@ -1,17 +1,10 @@
-import React, {useCallback, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {getHeaderTitle} from '@react-navigation/elements';
-import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
+import React, {useState} from 'react';
+import {View, Text} from 'react-native';
 import styles from './styles';
 import {Icon} from '@rneui/base';
-import colors from '../../styles/colors';
-import {useFocusEffect} from '@react-navigation/native';
+import {StackHeaderProps} from '@react-navigation/stack';
 
-function NotificationHeader({
-  navigation,
-  route,
-  options,
-}: BottomTabHeaderProps) {
+function NotificationHeader({navigation, route, options}: StackHeaderProps) {
   const [notification] = useState(true);
   return (
     <View>

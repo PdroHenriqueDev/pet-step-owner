@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {getPaymentsMethods} from '../../services/ownerService';
 import {useOwner} from '../../contexts/ownerContext';
-import {Button, Icon, ListItem} from '@rneui/base';
+import {Icon, ListItem} from '@rneui/base';
 import {CardBrand, PaymentMethodProps} from '../../interfaces/payment';
 import globalStyles from '../../styles/globalStyles';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const icons: Record<CardBrand, {type: string; name: string}> = {
   visa: {
@@ -25,150 +26,34 @@ const icons: Record<CardBrand, {type: string; name: string}> = {
 
 export default function Payment() {
   const {owner} = useOwner();
-  const [paymentMethods, setPaymentMethods] = useState([
-    // {
-    //   id: '1',
-    //   card: {
-    //     brand: 'visa' as CardBrand,
-    //     last4: '1234',
-    //     exp_month: 12,
-    //     exp_year: 2024,
-    //     funding: 'credit',
-    //   },
-    // },
-    // {
-    //   id: '2',
-    //   card: {
-    //     brand: 'amex' as CardBrand,
-    //     last4: '5678',
-    //     exp_month: 11,
-    //     exp_year: 2023,
-    //     funding: 'credit',
-    //   },
-    // },
-    // {
-    //   id: '3',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '4',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '5',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '6',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '7',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '8',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '9',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '10',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '11',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-    // {
-    //   id: '12',
-    //   card: {
-    //     brand: 'mastercard' as CardBrand,
-    //     last4: '9012',
-    //     exp_month: 10,
-    //     exp_year: 2025,
-    //     funding: 'debit',
-    //   },
-    // },
-  ]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation() as any;
 
-  useEffect(() => {
-    const fetchPaymentMethods = async () => {
-      if (!owner) {
-        return;
-      }
-      try {
-        const response = await getPaymentsMethods(owner._id);
-        setPaymentMethods(response as any);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchPaymentMethods = async () => {
+        if (!owner) {
+          return;
+        }
+        try {
+          const response = await getPaymentsMethods(owner._id);
+          setPaymentMethods(response as any);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchPaymentMethods();
-  }, [owner]);
+      fetchPaymentMethods();
+    }, [owner]),
+  );
 
   const handlePress = () => {};
-  const addCard = () => {};
+  const addCardRoute = () => {
+    navigation.navigate('AddPaymentScreen');
+  };
 
   const renderItem = ({
     item: {
@@ -209,7 +94,7 @@ export default function Payment() {
     <View style={styles.container}>
       <View className="flex-row items-center justify-between">
         <Text style={globalStyles.headerTitle}>Pagamentos</Text>
-        <TouchableOpacity onPress={addCard}>
+        <TouchableOpacity onPress={addCardRoute}>
           <Text style={globalStyles.headerSubtitle}>Adicionar cartão</Text>
         </TouchableOpacity>
       </View>

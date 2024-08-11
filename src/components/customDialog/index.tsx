@@ -2,18 +2,20 @@ import {Dialog} from '@rneui/base';
 import React from 'react';
 import CustomButton from '../customButton';
 import styles from './styles';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import colors from '../../styles/colors';
 
 function CustomDialog({
   isVisible = false,
   title,
+  description,
   confirm,
   cancel,
   onBackdropPress,
 }: {
   isVisible: boolean;
   title: string;
+  description?: string;
   confirm?: {
     confirmLabel: string;
     onConfirm: () => void;
@@ -30,6 +32,7 @@ function CustomDialog({
       isVisible={isVisible}
       onBackdropPress={onBackdropPress}>
       <Dialog.Title titleStyle={styles.title} title={title} />
+      {description && <Text style={styles.description}>{description}</Text>}
 
       <View className="flex-col">
         {confirm && confirm.confirmLabel && confirm.onConfirm && (

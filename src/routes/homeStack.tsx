@@ -13,7 +13,7 @@ const notificationHeader = (props: StackHeaderProps) => (
   <NotificationHeader {...props} />
 );
 
-const headerTe = (props: StackHeaderProps) => <CustomHeader {...props} />;
+const customHeader = (props: StackHeaderProps) => <CustomHeader {...props} />;
 
 function HomeStack() {
   const navigation = useNavigation();
@@ -46,7 +46,7 @@ function HomeStack() {
         component={LocationSelector}
         options={{
           title: 'Selecionar localização',
-          header: headerTe,
+          header: customHeader,
           headerTransparent: true,
         }}
       />
@@ -54,7 +54,7 @@ function HomeStack() {
         name="WalkRequest"
         component={WalkRequest}
         options={{
-          header: headerTe,
+          header: customHeader,
           headerTransparent: true,
         }}
       />

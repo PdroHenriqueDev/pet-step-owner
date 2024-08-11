@@ -8,6 +8,7 @@ interface DialogContextProps {
 
 interface DialogProps {
   title: string;
+  description?: string;
   confirm?: {
     confirmLabel: string;
     onConfirm: () => void;

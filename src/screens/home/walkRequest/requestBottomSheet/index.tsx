@@ -17,11 +17,32 @@ import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
 import {useOwner} from '../../../../contexts/ownerContext';
 
-const title: {[key: number]: string} = {
-  0: 'Dog walkers nas proximidades',
-  1: 'Tempo de passeio',
-  2: 'Resumo do Preço',
-};
+const stepsConfig = [
+  {
+    title: 'Dog walkers nas proximidades',
+    component: (props: {
+      recommededDogWalkers: DogWalker[];
+      selectedDogWalkerId: string | null;
+      handleSelect: (id: string) => void;
+    }) => (
+      <NearestDogWalkers
+        recommededDogWalkers={props.recommededDogWalkers}
+        selectedDogWalkerId={props.selectedDogWalkerId}
+        handleSelect={props.handleSelect}
+      />
+    ),
+  },
+  {
+    title: 'Tempo de passeio',
+    component: () => <TimeSelector />,
+  },
+  {
+    title: 'Resumo do Preço',
+    component: (props: {costData: CostDataProps}) => (
+      <SummarySection costData={props.costData} />
+    ),
+  },
+];
 
 function RequestBottomSheet() {
   const {
@@ -38,7 +59,7 @@ function RequestBottomSheet() {
     [],
   );
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [costData, setCostData] = useState<CostDataProps>();
+  const [costData, setCostData] = useState<CostDataProps>(null!);
 
   useEffect(() => {
     const fetchRecommededDogWalkers = async () => {
@@ -93,6 +114,8 @@ function RequestBottomSheet() {
     setCurrentStep(currentStep - 1);
   };
 
+  const currentConfig = stepsConfig[currentStep];
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -117,18 +140,15 @@ function RequestBottomSheet() {
                   />
                 </TouchableOpacity>
               )}
-              <Text style={styles.titleText}>{title[currentStep]}</Text>
+              <Text style={styles.titleText}>{currentConfig.title}</Text>
             </View>
             <ScrollView>
-              {currentStep === 0 && (
-                <NearestDogWalkers
-                  recommededDogWalkers={recommededDogWalkers}
-                  selectedDogWalkerId={selectedDogWalkerId}
-                  handleSelect={handleSelect}
-                />
-              )}
-              {currentStep === 1 && <TimeSelector />}
-              {currentStep === 2 && <SummarySection costData={costData!} />}
+              {currentConfig.component({
+                recommededDogWalkers,
+                selectedDogWalkerId,
+                handleSelect,
+                costData,
+              })}
             </ScrollView>
           </View>
         </BottomSheetView>

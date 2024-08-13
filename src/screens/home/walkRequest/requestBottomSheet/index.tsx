@@ -60,27 +60,50 @@ function RequestBottomSheet() {
     [],
   );
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [costData, setCostData] = useState<CostDataProps>(null!);
+  const [costData, setCostData] = useState<CostDataProps>({
+    costDetails: {
+      totalCost: '',
+      dogPrice: {
+        numberOfDogs: 0,
+        pricePerDog: 0,
+        totalDogCost: '',
+      },
+      walkPrice: {
+        durationMinutes: 0,
+        price: 0,
+      },
+    },
+    requestId: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!receivedLocation) {
+      return;
+    }
+
     const fetchRecommededDogWalkers = async () => {
+      setIsLoading(true);
       try {
+        console.log('got here 3');
         const dogWalkers = await getNearestsDogWalkers({
           latitude: receivedLocation!.latitude,
           longitude: receivedLocation!.longitude,
         });
-        if (dogWalkers.length > 0) {
+        if (dogWalkers.length > 0 && !selectedDogWalkerId) {
           onselectedDogWalker(dogWalkers[0]._id);
         }
         setRecommededDogWalkers(dogWalkers);
       } catch (error) {
         console.error('Failed to fetch owner data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchRecommededDogWalkers();
-  }, [onselectedDogWalker, receivedLocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [receivedLocation]);
 
   const handleSelect = (id: string) => {
     onselectedDogWalker(id);

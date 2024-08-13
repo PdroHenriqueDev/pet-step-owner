@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Animated, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Region} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
@@ -8,6 +8,7 @@ import LocationBottomSheet from './locationBottomSheet';
 import styles from './styles';
 import Marker from '../../../components/marker';
 import {getLocationData} from '../../../services/map';
+import {debounce} from '../../../utils/debounce';
 
 function LocationSelector() {
   const {receivedLocation, onLocationReceived} = useRequest();
@@ -26,7 +27,7 @@ function LocationSelector() {
   const animation = useRef(new Animated.Value(1)).current;
   const animationLoop = useRef<any>(null);
 
-  const startAnimation = () => {
+  const startAnimation = useCallback(() => {
     animationLoop.current = Animated.loop(
       Animated.sequence([
         Animated.timing(animation, {
@@ -42,16 +43,16 @@ function LocationSelector() {
       ]),
     ) as any;
     animationLoop.current.start();
-  };
+  }, [animation]);
 
-  const stopAnimation = () => {
+  const stopAnimation = useCallback(() => {
     if (animationLoop.current) {
       animationLoop.current.stop();
       animation.setValue(1);
     }
-  };
+  }, [animation]);
 
-  const handleRegionChangeComplete = async (event: Region) => {
+  const handleRegionChangeComplete = debounce(async (event: Region) => {
     stopAnimation();
     setIsLoading(true);
 
@@ -71,7 +72,7 @@ function LocationSelector() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, 500);
 
   const handleOnLocationReceived = (location: Location) => {
     const {latitude, longitude} = location;

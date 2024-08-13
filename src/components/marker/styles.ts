@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   markerFixed: {
     left: '50%',
     marginLeft: -24,
-    marginTop: -48,
+    marginTop: -36,
     position: 'absolute',
     top: '50%',
   },

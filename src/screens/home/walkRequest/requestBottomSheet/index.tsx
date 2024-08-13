@@ -78,6 +78,10 @@ function RequestBottomSheet() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (selectedDogWalkerId) {
+      setCurrentStep(1);
+    }
+
     if (!receivedLocation) {
       return;
     }
@@ -85,7 +89,6 @@ function RequestBottomSheet() {
     const fetchRecommededDogWalkers = async () => {
       setIsLoading(true);
       try {
-        console.log('got here 3');
         const dogWalkers = await getNearestsDogWalkers({
           latitude: receivedLocation!.latitude,
           longitude: receivedLocation!.longitude,

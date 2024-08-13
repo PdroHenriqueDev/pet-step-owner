@@ -8,10 +8,16 @@ import {getRecommedDogWalkers} from '../../../services/dogWalkerService';
 import DogWalkerCard from '../../../components/dogWalkerCard';
 import globalStyles from '../../../styles/globalStyles';
 import {useRequest} from '../../../contexts/requestContext';
+import {useDialog} from '../../../contexts/dialogContext';
+import {useNavigation} from '@react-navigation/native';
 
 function DogWalkerList() {
-  const {receivedLocation} = useRequest();
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
+
+  const {receivedLocation, onselectedDogWalker, selectedDogIds} = useRequest();
+  const {showDialog, hideDialog} = useDialog();
+
+  const navigation = useNavigation() as any;
 
   useEffect(() => {
     const fetchOwner = async () => {
@@ -32,6 +38,28 @@ function DogWalkerList() {
 
     fetchOwner();
   }, [receivedLocation]);
+
+  const handleSelectDogWalker = (id: string) => {
+    if (selectedDogIds.length === 0 || selectedDogIds.length > 3) {
+      showDialog({
+        title:
+          selectedDogIds.length === 0
+            ? 'É preciso no mínimo 1 dog'
+            : 'Só é permitido no máximo 3 dogs',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+
+    onselectedDogWalker(id);
+
+    navigation.navigate('WalkRequest');
+  };
 
   return (
     <View style={styles.container}>
@@ -60,6 +88,8 @@ function DogWalkerList() {
             key={dogWalker._id}
             dogWalker={dogWalker}
             isLastItem={index === dogWalkers.length - 1}
+            isSelected={false}
+            onSelect={handleSelectDogWalker}
           />
         ))
       )}

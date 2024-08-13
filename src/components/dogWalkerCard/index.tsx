@@ -15,9 +15,7 @@ export default function DogWalkerCard({
   onSelect,
 }: DogWalkerCardProps) {
   const handlePress = () => {
-    if (isSelect && onSelect) {
-      onSelect(dogWalker._id);
-    }
+    onSelect(dogWalker._id);
   };
 
   return (

@@ -10,9 +10,11 @@ import globalStyles from '../../../styles/globalStyles';
 import {useRequest} from '../../../contexts/requestContext';
 import {useDialog} from '../../../contexts/dialogContext';
 import {useNavigation} from '@react-navigation/native';
+import Spinner from '../../../components/spinner/spinner';
 
 function DogWalkerList() {
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {receivedLocation, onselectedDogWalker, selectedDogIds} = useRequest();
   const {showDialog, hideDialog} = useDialog();
@@ -25,6 +27,8 @@ function DogWalkerList() {
         return;
       }
 
+      setIsLoading(true);
+
       try {
         const recommedDogWalkers = await getRecommedDogWalkers({
           latitude: receivedLocation?.latitude,
@@ -33,6 +37,8 @@ function DogWalkerList() {
         setDogWalkers(recommedDogWalkers);
       } catch (error) {
         console.error('Failed to fetch recommed DogWalkers:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -76,7 +82,9 @@ function DogWalkerList() {
           />
         </TouchableOpacity>
       </View>
-      {dogWalkers.length === 0 ? (
+      {isLoading ? (
+        <Spinner />
+      ) : dogWalkers.length === 0 ? (
         <Text style={globalStyles.infoText}>
           {!receivedLocation
             ? 'Selecione o inicio do passeio para podermos mostrar os dog walkers recomendados'

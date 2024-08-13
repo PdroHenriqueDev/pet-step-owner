@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
   },
+  spinnerContainer: {
+    height: '75%',
+  },
 });
 
 export default styles;

@@ -16,6 +16,7 @@ import colors from '../../../../styles/colors';
 import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
 import {useOwner} from '../../../../contexts/ownerContext';
+import Spinner from '../../../../components/spinner/spinner';
 
 const stepsConfig = [
   {
@@ -60,6 +61,7 @@ function RequestBottomSheet() {
   );
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [costData, setCostData] = useState<CostDataProps>(null!);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchRecommededDogWalkers = async () => {
@@ -84,25 +86,31 @@ function RequestBottomSheet() {
     onselectedDogWalker(id);
   };
 
+  const handleCalculate = async () => {
+    setIsLoading(true);
+    try {
+      const data = await calculateCost({
+        ownerId: owner!._id,
+        dogWalkerId: selectedDogWalkerId,
+        walkDurationMinutes: selectedTime,
+        numberOfDogs: selectedDogIds.length,
+      });
+
+      setCostData(data as unknown as CostDataProps);
+      setCurrentStep(currentStep + 1);
+    } catch (error) {
+      console.log('got error calculating', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleConfirm = async () => {
     if (currentStep === 0 && selectedDogWalkerId) {
       setCurrentStep(currentStep + 1);
     }
     if (currentStep === 1 && selectedTime) {
-      try {
-        const data = await calculateCost({
-          ownerId: owner!._id,
-          dogWalkerId: selectedDogWalkerId,
-          walkDurationMinutes: selectedTime,
-          numberOfDogs: selectedDogIds.length,
-        });
-
-        setCostData(data as unknown as CostDataProps);
-        setCurrentStep(currentStep + 1);
-      } catch (error) {
-        console.log('got error calculating', error);
-      } finally {
-      }
+      handleCalculate();
     }
 
     // if (currentStep === 2) {
@@ -119,38 +127,42 @@ function RequestBottomSheet() {
   return (
     <View style={styles.container}>
       <BottomSheet
-        // ref={bottomSheetRef}
-        // onChange={handleSheetChanges}
         snapPoints={snapPoints}
         index={0}
         enablePanDownToClose={false}
         handleIndicatorStyle={styles.indicator}>
         <BottomSheetView>
-          <View style={styles.contentContainer}>
-            <View className="flex flex-row items-center mb-2.5">
-              {currentStep > 0 && (
-                <TouchableOpacity onPress={back}>
-                  <Icon
-                    type="material"
-                    name="arrow-back-ios-new"
-                    size={14}
-                    color={colors.dark}
-                    className="mr-2"
-                    style={styles.icon}
-                  />
-                </TouchableOpacity>
-              )}
-              <Text style={styles.titleText}>{currentConfig.title}</Text>
+          {isLoading ? (
+            <View style={styles.spinnerContainer}>
+              <Spinner />
             </View>
-            <ScrollView>
-              {currentConfig.component({
-                recommededDogWalkers,
-                selectedDogWalkerId,
-                handleSelect,
-                costData,
-              })}
-            </ScrollView>
-          </View>
+          ) : (
+            <View style={styles.contentContainer}>
+              <View className="flex flex-row items-center mb-2.5">
+                {currentStep > 0 && (
+                  <TouchableOpacity onPress={back}>
+                    <Icon
+                      type="material"
+                      name="arrow-back-ios-new"
+                      size={14}
+                      color={colors.dark}
+                      className="mr-2"
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text style={styles.titleText}>{currentConfig.title}</Text>
+              </View>
+              <ScrollView>
+                {currentConfig.component({
+                  recommededDogWalkers,
+                  selectedDogWalkerId,
+                  handleSelect,
+                  costData,
+                })}
+              </ScrollView>
+            </View>
+          )}
         </BottomSheetView>
       </BottomSheet>
 

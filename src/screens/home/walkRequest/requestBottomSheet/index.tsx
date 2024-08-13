@@ -193,6 +193,7 @@ function RequestBottomSheet() {
         <CustomButton
           onPress={handleConfirm}
           label={currentStep === 2 ? 'Iniciar passeio' : 'Confirmar'}
+          isLoading={isLoading}
         />
       </View>
     </View>

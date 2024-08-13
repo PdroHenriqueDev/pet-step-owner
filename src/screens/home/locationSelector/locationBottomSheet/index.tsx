@@ -14,6 +14,7 @@ import {Location} from '../../../../interfaces/location';
 import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
 import {truncateText} from '../../../../utils/textUtils';
+import {DialogLoading} from '@rneui/base/dist/Dialog/Dialog.Loading';
 
 function LocationBottomSheet({
   onLocationSelected,
@@ -113,19 +114,37 @@ function LocationBottomSheet({
           ) : (
             <View style={styles.buttonContainer}>
               <View className="flex-row justify-between p-4 mb-1 items-center">
-                <Text style={styles.location}>
-                  {truncateText({
-                    text: receivedLocation?.description || '',
-                    maxLength: 40,
-                  })}
-                </Text>
+                {isLoading ? (
+                  <View style={styles.spinnerContainer}>
+                    <DialogLoading
+                      loadingProps={{
+                        color: colors.secondary,
+                        size: 'small',
+                        style: {
+                          margin: 0,
+                          padding: 0,
+                        },
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <>
+                    <Text style={styles.location}>
+                      {truncateText({
+                        text: receivedLocation?.description || '',
+                        maxLength: 40,
+                      })}
+                    </Text>
 
-                <TouchableOpacity
-                  onPress={handleEdit}
-                  style={styles.editContainer}>
-                  <Text>editar</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleEdit}
+                      style={styles.editContainer}>
+                      <Text>editar</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
               </View>
+
               <CustomButton
                 onPress={confirmLocation}
                 label="Confirmar Localização"

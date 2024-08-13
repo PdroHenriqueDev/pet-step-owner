@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
   indicator: {
     backgroundColor: colors.dark,
   },
+  spinnerContainer: {
+    width: '100%',
+  },
 });
 
 export default styles;

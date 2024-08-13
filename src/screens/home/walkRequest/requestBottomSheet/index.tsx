@@ -17,6 +17,7 @@ import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
 import {useOwner} from '../../../../contexts/ownerContext';
 import Spinner from '../../../../components/spinner/spinner';
+import {useDialog} from '../../../../contexts/dialogContext';
 
 const stepsConfig = [
   {
@@ -55,6 +56,8 @@ function RequestBottomSheet() {
   } = useRequest();
   const {owner} = useOwner();
 
+  const {showDialog, hideDialog} = useDialog();
+
   const snapPoints = useMemo(() => [340, '90%'], []);
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
@@ -88,6 +91,7 @@ function RequestBottomSheet() {
 
     const fetchRecommededDogWalkers = async () => {
       setIsLoading(true);
+
       try {
         const dogWalkers = await getNearestsDogWalkers({
           latitude: receivedLocation!.latitude,
@@ -97,8 +101,17 @@ function RequestBottomSheet() {
           onselectedDogWalker(dogWalkers[0]._id);
         }
         setRecommededDogWalkers(dogWalkers);
-      } catch (error) {
-        console.error('Failed to fetch owner data:', error);
+      } catch {
+        showDialog({
+          title: 'Algo de errado',
+          description: 'Tente novamente.',
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: () => {
+              hideDialog();
+            },
+          },
+        });
       } finally {
         setIsLoading(false);
       }
@@ -136,7 +149,7 @@ function RequestBottomSheet() {
       setCurrentStep(currentStep + 1);
     }
     if (currentStep === 1 && selectedTime) {
-      handleCalculate();
+      await handleCalculate();
     }
 
     // if (currentStep === 2) {

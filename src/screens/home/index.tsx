@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {ScrollView, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Platform, ScrollView, View} from 'react-native';
 import styles from './styles';
 import InputAddress from './inputAddress';
 import DogsList from './dogsList';
@@ -10,12 +10,20 @@ import {useRequest} from '../../contexts/requestContext';
 import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
 import {useNavigation} from '@react-navigation/native';
+import GetLocation from 'react-native-get-location';
+import {getLocationData} from '../../services/map';
+import {PlataformEnum} from '../../enums/platform.enum';
+import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 
 function Home() {
   const {setOwner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
-  const {selectedDogIds, receivedLocation} = useRequest();
+  const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
+
   const navigation = useNavigation() as any;
+
+  const [locationPermission, setLocationPermission] =
+    useState<PermissionStatus | null>(null);
 
   const handleClick = () => {
     if (!receivedLocation) {
@@ -62,6 +70,62 @@ function Home() {
 
     fetchOwner();
   }, [setOwner]);
+
+  useEffect(() => {
+    const showLocationPermissionDeniedDialog = () => {
+      showDialog({
+        title: 'Permissão de localização necessária',
+        description:
+          'A permissão de localização é necessária para que a aplicação funcione corretamente. Por favor, habilite-a nas configurações.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+    };
+
+    const getLocationAndUpdateRegion = async () => {
+      try {
+        const location = await GetLocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 60000,
+        });
+
+        const {latitude, longitude} = location;
+
+        const locationData = await getLocationData({latitude, longitude});
+        const description = locationData?.results[0]?.formatted_address;
+
+        onLocationReceived({
+          latitude,
+          longitude,
+          description,
+        });
+      } catch {
+        console.warn('Error ao localizar');
+      }
+    };
+
+    const requestLocationPermission = async () => {
+      const requestResponse = await request(
+        Platform.OS === PlataformEnum.IOS
+          ? PERMISSIONS.IOS.LOCATION_ALWAYS
+          : PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+      );
+
+      setLocationPermission(requestResponse);
+
+      locationPermission === 'denied'
+        ? showLocationPermissionDeniedDialog()
+        : await getLocationAndUpdateRegion();
+    };
+
+    if (locationPermission === null) {
+      requestLocationPermission();
+    }
+  }, [hideDialog, locationPermission, onLocationReceived, showDialog]);
 
   return (
     <ScrollView style={styles.scrollViewContainer}>

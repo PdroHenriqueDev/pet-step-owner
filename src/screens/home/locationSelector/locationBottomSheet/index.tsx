@@ -15,7 +15,11 @@ import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
 import {truncateText} from '../../../../utils/textUtils';
 
-function LocationBottomSheet({onLocationSelected, onConfirmLocation}: any) {
+function LocationBottomSheet({
+  onLocationSelected,
+  onConfirmLocation,
+  isLoading,
+}: any) {
   const {receivedLocation, onLocationReceived} = useRequest();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);

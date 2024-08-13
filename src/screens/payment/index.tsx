@@ -8,6 +8,7 @@ import {Icon, ListItem} from '@rneui/base';
 import {CardBrand, PaymentMethodProps} from '../../interfaces/payment';
 import globalStyles from '../../styles/globalStyles';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Spinner from '../../components/spinner/spinner';
 
 const icons: Record<CardBrand, {type: string; name: string}> = {
   visa: {
@@ -32,6 +33,7 @@ export default function Payment() {
 
   useFocusEffect(
     useCallback(() => {
+      setLoading(true);
       const fetchPaymentMethods = async () => {
         if (!owner) {
           return;
@@ -92,18 +94,24 @@ export default function Payment() {
   );
   return (
     <View style={styles.container}>
-      <View className="flex-row items-center justify-between">
-        <Text style={globalStyles.headerTitle}>Pagamentos</Text>
-        <TouchableOpacity onPress={addCardRoute}>
-          <Text style={globalStyles.headerSubtitle}>Adicionar cartão</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={paymentMethods}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.list}
-      />
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <View className="flex-row items-center justify-between">
+            <Text style={globalStyles.headerTitle}>Pagamentos</Text>
+            <TouchableOpacity onPress={addCardRoute}>
+              <Text style={globalStyles.headerSubtitle}>Adicionar cartão</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={paymentMethods}
+            keyExtractor={item => item.id}
+            renderItem={renderItem}
+            contentContainerStyle={styles.list}
+          />
+        </>
+      )}
     </View>
   );
 }

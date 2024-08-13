@@ -133,6 +133,7 @@ function RequestBottomSheet() {
         dogWalkerId: selectedDogWalkerId,
         walkDurationMinutes: selectedTime,
         numberOfDogs: selectedDogIds.length,
+        receivedLocation: receivedLocation!,
       });
 
       setCostData(data as unknown as CostDataProps);

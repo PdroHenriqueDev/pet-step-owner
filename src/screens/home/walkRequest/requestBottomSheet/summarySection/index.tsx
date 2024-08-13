@@ -8,7 +8,7 @@ interface SummarySectionProps {
 }
 
 export default function SummarySection({costData}: SummarySectionProps) {
-  const {costDetails} = costData;
+  const {costDetails, receivedLocation} = costData;
   const {dogPrice, walkPrice, totalCost} = costDetails;
 
   return (
@@ -20,6 +20,8 @@ export default function SummarySection({costData}: SummarySectionProps) {
       <Text style={styles.text}>
         Tempo - {walkPrice.durationMinutes} min: R$ {walkPrice.price}
       </Text>
+
+      <Text style={styles.text}>Início - {receivedLocation.description}</Text>
 
       <Text style={styles.totalText}>Preço total: R$ {totalCost}</Text>
     </View>

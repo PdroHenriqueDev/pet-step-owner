@@ -1,3 +1,5 @@
+import {Location} from './location';
+
 export interface CostDataProps {
   costDetails: {
     totalCost: string;
@@ -11,5 +13,6 @@ export interface CostDataProps {
       price: number;
     };
   };
+  receivedLocation: Location;
   requestId: string;
 }

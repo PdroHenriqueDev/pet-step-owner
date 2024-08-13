@@ -1,6 +1,7 @@
 import api from './api';
 import {DogWalker} from '../interfaces/dogWalker';
 import {CoordinatesProps} from '../interfaces/coordinates';
+import {Location} from '../interfaces/location';
 
 export const getDogWalkers = async (): Promise<DogWalker[]> => {
   try {
@@ -62,11 +63,13 @@ export const calculateCost = async ({
   dogWalkerId,
   numberOfDogs,
   walkDurationMinutes,
+  receivedLocation,
 }: {
   ownerId: string;
   dogWalkerId: string;
   numberOfDogs: number;
   walkDurationMinutes: number;
+  receivedLocation: Location;
 }): Promise<DogWalker> => {
   try {
     const response = await api.post<DogWalker>('/dog-walker/calculate-cost', {
@@ -74,6 +77,7 @@ export const calculateCost = async ({
       dogWalkerId,
       numberOfDogs,
       walkDurationMinutes,
+      receivedLocation,
     });
     const {data} = response;
     return data;

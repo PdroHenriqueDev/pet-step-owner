@@ -12,12 +12,14 @@ import CustomButton from '../../../components/customButton';
 import {useDialog} from '../../../contexts/dialogContext';
 import {Details} from '@stripe/stripe-react-native/lib/typescript/src/types/components/CardFieldInput';
 import {useNavigation} from '@react-navigation/native';
+import {updateDefaultPaymentMethod} from '../../../services/ownerService';
 
 export default function AddPayment() {
   const {owner} = useOwner();
   const {confirmSetupIntent, loading} = useConfirmSetupIntent();
   const {showDialog, hideDialog} = useDialog();
   const [cardDetails, setCardDetails] = useState<Details>(null!);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -49,12 +51,15 @@ export default function AddPayment() {
     const setupIntentData = await getSetupIntent(customerStripe.id);
     const {setupIntentClientSecret} = setupIntentData;
 
-    const {error} = await confirmSetupIntent(setupIntentClientSecret, {
-      paymentMethodType: 'Card',
-      paymentMethodData: {
-        billingDetails,
+    const {error, setupIntent} = await confirmSetupIntent(
+      setupIntentClientSecret,
+      {
+        paymentMethodType: 'Card',
+        paymentMethodData: {
+          billingDetails,
+        },
       },
-    });
+    );
 
     if (error) {
       showDialog({
@@ -69,6 +74,42 @@ export default function AddPayment() {
       });
 
       return;
+    }
+
+    const paymentMethodId = setupIntent.paymentMethod?.id;
+
+    if (!paymentMethodId) {
+      showDialog({
+        title: 'Erro',
+        description: 'Falha ao obter o ID do método de pagamento',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+
+    if (!owner.defaultPayment && paymentMethodId) {
+      setIsLoading(true);
+      try {
+        await updateDefaultPaymentMethod({ownerId: owner._id, paymentMethodId});
+      } catch {
+        showDialog({
+          title: 'Erro',
+          description: 'Falha ao adicionar o método de pagamento',
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: () => {
+              hideDialog();
+            },
+          },
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     navigation.goBack();
@@ -90,7 +131,7 @@ export default function AddPayment() {
       <CustomButton
         onPress={handlePayPress}
         label="Adicionar"
-        isLoading={loading}
+        isLoading={loading || isLoading}
       />
     </View>
   );

@@ -20,7 +20,24 @@ export const getPaymentsMethods = async (
     const {data} = response;
     return data;
   } catch (error) {
-    console.error('Error set up intent', error);
+    throw error;
+  }
+};
+
+export const updateDefaultPaymentMethod = async ({
+  ownerId,
+  paymentMethodId,
+}: {
+  ownerId: string;
+  paymentMethodId: string;
+}): Promise<CreditCardProps[]> => {
+  try {
+    const response = await api.put<any>(`/owner/${ownerId}/defaultPayment`, {
+      paymentMethodId,
+    });
+    const {data} = response;
+    return data;
+  } catch (error) {
     throw error;
   }
 };

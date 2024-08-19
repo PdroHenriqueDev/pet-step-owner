@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.dark,
   },
+  emptyContainer: {
+    marginTop: 20,
+  },
 });
 
 export default styles;

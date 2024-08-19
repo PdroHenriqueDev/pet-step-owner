@@ -92,6 +92,16 @@ export default function Payment() {
       </View>
     </ListItem>
   );
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={globalStyles.label}>
+        Nenhum método de pagamento encontrado. Adicione um cartão para
+        continuar.
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -108,6 +118,7 @@ export default function Payment() {
             data={paymentMethods}
             keyExtractor={item => item.id}
             renderItem={renderItem}
+            ListEmptyComponent={renderEmptyComponent}
             contentContainerStyle={styles.list}
           />
         </>

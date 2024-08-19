@@ -22,7 +22,7 @@ export default function WalkStart() {
     const messages: {[key: string]: string} = {
       [RideEvents.PAYMENT_FAILURE]:
         'O pagamento não foi concluído. Verifique suas informações e tente novamente. Se o problema persistir, entre em contato com o suporte.',
-      [RideEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi iniciado com sucesso.',
+      [RideEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi aceito com sucesso.',
       [RideEvents.SERVER_ERROR]:
         'Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.',
       [RideEvents.INVALID_REQUEST]:

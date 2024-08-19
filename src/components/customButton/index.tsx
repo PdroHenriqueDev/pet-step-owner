@@ -3,6 +3,7 @@ import {TouchableOpacity, Text} from 'react-native';
 import styles from './styles';
 import colors from '../../styles/colors';
 import {DialogLoading} from '@rneui/base/dist/Dialog/Dialog.Loading';
+import {CustomButtonProps} from '../../interfaces/customButton';
 
 function CustomButton({
   label,
@@ -11,10 +12,10 @@ function CustomButton({
   textColor = colors.dark,
   style,
   isLoading = false,
-}: any) {
+}: CustomButtonProps) {
   return (
     <TouchableOpacity
-      onPress={!isLoading ? onPress : null}
+      onPress={!isLoading ? onPress : undefined}
       style={[styles.button, {backgroundColor}, style]}
       disabled={isLoading}>
       {isLoading ? (

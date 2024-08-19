@@ -6,6 +6,7 @@ import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {
   calculateCost,
   getNearestsDogWalkers,
+  requestWalk,
 } from '../../../../services/dogWalkerService';
 import {DogWalker} from '../../../../interfaces/dogWalker';
 import SummarySection from './summarySection';
@@ -18,6 +19,7 @@ import {CostDataProps} from '../../../../interfaces/costData';
 import {useOwner} from '../../../../contexts/ownerContext';
 import Spinner from '../../../../components/spinner/spinner';
 import {useDialog} from '../../../../contexts/dialogContext';
+import {useAppNavigation} from '../../../../hooks/useAppNavigation';
 
 const stepsConfig = [
   {
@@ -58,7 +60,10 @@ function RequestBottomSheet() {
 
   const {showDialog, hideDialog} = useDialog();
 
+  const {navigation} = useAppNavigation();
+
   const snapPoints = useMemo(() => [340, '90%'], []);
+
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
   );
@@ -76,9 +81,15 @@ function RequestBottomSheet() {
         price: 0,
       },
     },
-    requestId: '',
+    receivedLocation: {
+      description: '',
+      latitude: 0,
+      longitude: 0,
+    },
+    calculationId: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [calculation, setCalculation] = useState('');
 
   useEffect(() => {
     if (selectedDogWalkerId) {
@@ -136,10 +147,43 @@ function RequestBottomSheet() {
         receivedLocation: receivedLocation!,
       });
 
+      const {calculationId} = data;
+
+      setCalculation(calculationId);
       setCostData(data as unknown as CostDataProps);
       setCurrentStep(currentStep + 1);
     } catch (error) {
-      console.log('got error calculating', error);
+      showDialog({
+        title: 'Algo de errado',
+        description: 'Tente novamente.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRequest = async () => {
+    setIsLoading(true);
+    try {
+      const {requestId} = await requestWalk(calculation);
+      navigation.navigate('WalkStart', {requestId});
+    } catch (error) {
+      showDialog({
+        title: 'Algo de errado',
+        description: 'Tente novamente.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -153,9 +197,9 @@ function RequestBottomSheet() {
       await handleCalculate();
     }
 
-    // if (currentStep === 2) {
-    //   setCurrentStep(currentStep + 1);
-    // }
+    if (currentStep === 2) {
+      await handleRequest();
+    }
   };
 
   const back = () => {

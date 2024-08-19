@@ -148,6 +148,7 @@ function LocationBottomSheet({
               <CustomButton
                 onPress={confirmLocation}
                 label="Confirmar Localização"
+                isLoading={isLoading}
               />
             </View>
           )}

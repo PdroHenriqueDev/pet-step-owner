@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Platform, ScrollView, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Platform, ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import InputAddress from './inputAddress';
 import DogsList from './dogsList';
@@ -9,16 +9,17 @@ import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
 import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
 import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 
 function Home() {
-  const {setOwner} = useOwner();
+  const {setOwner, owner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
+  const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation() as any;
 
@@ -58,18 +59,26 @@ function Home() {
     navigation.navigate('WalkRequest');
   };
 
-  useEffect(() => {
-    const fetchOwner = async () => {
-      try {
-        const ownerData = await getOwner('66b29279044cd2eca1e22adf');
-        setOwner(ownerData);
-      } catch (error) {
-        console.error('Failed to fetch owner data:', error);
-      }
-    };
+  const handleWalk = () => {
+    navigation.navigate('WalkStart', {requestId: owner?.currentWalk});
+  };
 
-    fetchOwner();
-  }, [setOwner]);
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      const fetchOwner = async () => {
+        console.log('got here fetchOwner');
+        try {
+          const ownerData = await getOwner('66b29279044cd2eca1e22adf');
+          setOwner(ownerData);
+        } catch (error) {
+          console.error('Failed to fetch owner data:', error);
+        }
+      };
+
+      fetchOwner();
+    }, [setOwner]),
+  );
 
   useEffect(() => {
     const showLocationPermissionDeniedDialog = () => {
@@ -131,11 +140,20 @@ function Home() {
     <ScrollView style={styles.scrollViewContainer}>
       <View style={styles.container}>
         <View style={styles.requestContainer}>
-          <InputAddress />
-          <DogsList />
-          <View style={styles.buttonContainer}>
-            <CustomButton onPress={handleClick} label="Solicitar passeio" />
-          </View>
+          {owner?.currentWalk ? (
+            <>
+              <Text>O passeio do seu Dog</Text>
+              <CustomButton onPress={handleWalk} label="Acompanhe o passeio" />
+            </>
+          ) : (
+            <>
+              <InputAddress />
+              <DogsList />
+              <View style={styles.buttonContainer}>
+                <CustomButton onPress={handleClick} label="Solicitar passeio" />
+              </View>
+            </>
+          )}
         </View>
         <DogWalkerList />
       </View>

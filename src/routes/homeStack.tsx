@@ -6,6 +6,7 @@ import WalkRequest from '../screens/home/walkRequest';
 import CustomHeader from '../components/header/customHeader';
 import NotificationHeader from '../components/header/notificationHeader';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import WalkStart from '../screens/home/walkStart/walkStart';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -53,6 +54,14 @@ function HomeStack() {
       <Screen
         name="WalkRequest"
         component={WalkRequest}
+        options={{
+          header: customHeader,
+          headerTransparent: true,
+        }}
+      />
+      <Screen
+        name="WalkStart"
+        component={WalkStart}
         options={{
           header: customHeader,
           headerTransparent: true,

@@ -2,6 +2,7 @@ import api from './api';
 import {DogWalker} from '../interfaces/dogWalker';
 import {CoordinatesProps} from '../interfaces/coordinates';
 import {Location} from '../interfaces/location';
+import {CostDataProps} from '../interfaces/costData';
 
 export const getDogWalkers = async (): Promise<DogWalker[]> => {
   try {
@@ -70,15 +71,30 @@ export const calculateCost = async ({
   numberOfDogs: number;
   walkDurationMinutes: number;
   receivedLocation: Location;
-}): Promise<DogWalker> => {
+}): Promise<CostDataProps> => {
   try {
-    const response = await api.post<DogWalker>('/dog-walker/calculate-cost', {
-      ownerId,
-      dogWalkerId,
-      numberOfDogs,
-      walkDurationMinutes,
-      receivedLocation,
-    });
+    const response = await api.post<CostDataProps>(
+      '/dog-walker/calculate-cost',
+      {
+        ownerId,
+        dogWalkerId,
+        numberOfDogs,
+        walkDurationMinutes,
+        receivedLocation,
+      },
+    );
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestWalk = async (calculationId: string): Promise<any> => {
+  try {
+    const response = await api.post(
+      `/dog-walker/request-ride/${calculationId}`,
+    );
     const {data} = response;
     return data;
   } catch (error) {

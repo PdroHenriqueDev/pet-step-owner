@@ -9,6 +9,7 @@ export interface Owner {
   dogs: Dog[];
   rate: number;
   defaultPayment: string;
+  currentWalk: string;
   totalRatings: number;
   customerStripe: {
     id: string;

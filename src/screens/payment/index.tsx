@@ -28,7 +28,7 @@ const icons: Record<CardBrand, {type: string; name: string}> = {
 export default function Payment() {
   const {owner} = useOwner();
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation() as any;
 
   useFocusEffect(

@@ -2,6 +2,7 @@ import {
   useNavigation,
   useRoute,
   NavigationProp,
+  RouteProp,
 } from '@react-navigation/native';
 
 type RootStackParamList = {
@@ -12,10 +13,16 @@ type RootStackParamList = {
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;
+type AppRouteProp<RouteName extends keyof RootStackParamList> = RouteProp<
+  RootStackParamList,
+  RouteName
+>;
 
-export const useAppNavigation = () => {
+export const useAppNavigation = <
+  RouteName extends keyof RootStackParamList,
+>() => {
   const navigation = useNavigation<AppNavigationProp>();
-  const route = useRoute();
+  const route = useRoute<AppRouteProp<RouteName>>();
 
   return {navigation, route};
 };

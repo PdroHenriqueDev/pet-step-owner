@@ -14,5 +14,5 @@ export interface CostDataProps {
     };
   };
   receivedLocation: Location;
-  requestId: string;
+  calculationId: string;
 }

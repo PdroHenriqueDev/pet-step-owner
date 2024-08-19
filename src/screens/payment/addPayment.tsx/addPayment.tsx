@@ -87,7 +87,11 @@ export default function AddPayment() {
         }}
       />
 
-      <CustomButton onPress={handlePayPress} label="Adicionar" />
+      <CustomButton
+        onPress={handlePayPress}
+        label="Adicionar"
+        isLoading={loading}
+      />
     </View>
   );
 }

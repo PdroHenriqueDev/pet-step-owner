@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {
   GooglePlaceData,
@@ -14,7 +14,6 @@ import {Location} from '../../../../interfaces/location';
 import colors from '../../../../styles/colors';
 import CustomButton from '../../../../components/customButton';
 import {truncateText} from '../../../../utils/textUtils';
-import {DialogLoading} from '@rneui/base/dist/Dialog/Dialog.Loading';
 
 function LocationBottomSheet({
   onLocationSelected,
@@ -116,16 +115,7 @@ function LocationBottomSheet({
               <View className="flex-row justify-between p-4 mb-1 items-center">
                 {isLoading ? (
                   <View style={styles.spinnerContainer}>
-                    <DialogLoading
-                      loadingProps={{
-                        color: colors.secondary,
-                        size: 'small',
-                        style: {
-                          margin: 0,
-                          padding: 0,
-                        },
-                      }}
-                    />
+                    <ActivityIndicator color={colors.secondary} size="small" />
                   </View>
                 ) : (
                   <>
@@ -148,7 +138,7 @@ function LocationBottomSheet({
               <CustomButton
                 onPress={confirmLocation}
                 label="Confirmar Localização"
-                isLoading={isLoading}
+                disabled={isLoading}
               />
             </View>
           )}

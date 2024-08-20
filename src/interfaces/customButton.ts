@@ -6,5 +6,6 @@ export interface CustomButtonProps {
   backgroundColor?: string;
   textColor?: string;
   style?: ViewStyle;
+  disabled?: boolean;
   isLoading?: boolean;
 }

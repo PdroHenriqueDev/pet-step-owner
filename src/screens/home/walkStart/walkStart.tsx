@@ -12,7 +12,7 @@ import {
 import {RideEvents} from '../../../enums/ride';
 
 export default function WalkStart() {
-  const {route} = useAppNavigation();
+  const {route, navigation} = useAppNavigation();
   const {requestId} = route.params ?? {};
 
   const [message, setMessage] = useState('');
@@ -36,16 +36,20 @@ export default function WalkStart() {
       connectSocket(requestId);
 
       listenToEvent('dog_walker_response', data => {
-        console.log('Resposta do Dog Walker:', data);
         setMessage(messages[data] || messages.default);
+
         setIsLoading(false);
+
+        if (data === RideEvents.ACCEPTED_SUCCESSFULLY) {
+          navigation.navigate('WalkInProgress', {requestId});
+        }
       });
 
       return () => {
         disconnectSocket();
       };
     }
-  }, [requestId]);
+  }, [navigation, requestId]);
 
   const notificationMessage =
     message ||

@@ -12,10 +12,13 @@ export default function DogWalkerCard({
   isLastItem,
   isSelect,
   isSelected,
-  onSelect,
+  onPress,
+  buttonInfo,
 }: DogWalkerCardProps) {
   const handlePress = () => {
-    onSelect(dogWalker._id);
+    if (onPress) {
+      onPress(dogWalker._id);
+    }
   };
 
   return (
@@ -64,13 +67,16 @@ export default function DogWalkerCard({
         <TouchableOpacity
           disabled={!dogWalker.isOnline}
           style={[styles.button, !dogWalker.isOnline && styles.disabledButton]}
-          onPress={handlePress}>
+          onPress={dogWalker.isOnline ? handlePress : undefined}>
+          {buttonInfo?.icon && (
+            <View style={styles.iconWrapper}>{buttonInfo.icon}</View>
+          )}
           <Text
             style={[
               styles.buttonText,
               !dogWalker.isOnline && styles.buttonDisabledText,
             ]}>
-            Contratar
+            {buttonInfo?.title}
           </Text>
         </TouchableOpacity>
       )}

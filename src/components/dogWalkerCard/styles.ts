@@ -29,10 +29,12 @@ const styles = StyleSheet.create({
     color: colors.dark,
   },
   button: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 16,
-    alignItems: 'center',
     padding: 8,
   },
   disabledButton: {
@@ -50,6 +52,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: 16,
     padding: 8,
+  },
+  iconWrapper: {
+    marginRight: 5,
+    marginTop: 3,
   },
 });
 

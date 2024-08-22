@@ -14,6 +14,7 @@ import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
 import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
+import {RideEvents} from '../../enums/ride';
 
 function Home() {
   const {setOwner, owner} = useOwner();
@@ -60,14 +61,17 @@ function Home() {
   };
 
   const handleWalk = () => {
-    navigation.navigate('WalkStart', {requestId: owner?.currentWalk});
+    const {requestId} = owner?.currentWalk ?? {};
+
+    owner?.currentWalk.status === RideEvents.PENDING
+      ? navigation.navigate('WalkStart', {requestId})
+      : navigation.navigate('WalkInProgress', {requestId});
   };
 
   useFocusEffect(
     useCallback(() => {
       setLoading(true);
       const fetchOwner = async () => {
-        console.log('got here fetchOwner');
         try {
           const ownerData = await getOwner('66b29279044cd2eca1e22adf');
           setOwner(ownerData);

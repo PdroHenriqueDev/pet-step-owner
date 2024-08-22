@@ -1,19 +1,23 @@
-import React, {useCallback, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {getHeaderTitle} from '@react-navigation/elements';
-import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
+import React from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {Icon} from '@rneui/base';
 import {StackHeaderProps} from '@react-navigation/stack';
 import colors from '../../styles/colors';
-import {useFocusEffect} from '@react-navigation/native';
 
 function CustomHeader({navigation, route, options, back}: StackHeaderProps) {
+  const handleBackPress = () => {
+    const isWalkScreen =
+      route.name === 'WalkStart' || route.name === 'WalkInProgress';
+
+    isWalkScreen ? navigation.navigate('HomeScreen') : navigation.goBack;
+  };
+
   return (
     <View>
       {back ? (
         <View style={styles.headerInvisible}>
-          <TouchableOpacity onPress={navigation.goBack}>
+          <TouchableOpacity onPress={handleBackPress}>
             <View style={styles.backIconContainer}>
               <Icon
                 type="material"

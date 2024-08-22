@@ -97,7 +97,8 @@ function DogWalkerList() {
             dogWalker={dogWalker}
             isLastItem={index === dogWalkers.length - 1}
             isSelected={false}
-            onSelect={handleSelectDogWalker}
+            onPress={handleSelectDogWalker}
+            buttonInfo={{title: 'Contratar'}}
           />
         ))
       )}

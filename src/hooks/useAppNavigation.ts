@@ -10,6 +10,7 @@ type RootStackParamList = {
   LocationSelector: undefined;
   WalkRequest: undefined;
   WalkStart: {requestId: string};
+  WalkInProgress: {requestId: string};
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

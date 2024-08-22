@@ -29,7 +29,7 @@ export default function NearestDogWalkers({
             isSelect={true}
             isLastItem={index === recommededDogWalkers.length - 1}
             isSelected={dogWalker._id === selectedDogWalkerId}
-            onSelect={handleSelect}
+            onPress={handleSelect}
           />
         ))
       )}

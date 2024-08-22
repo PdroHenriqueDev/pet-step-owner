@@ -7,6 +7,7 @@ import CustomHeader from '../components/header/customHeader';
 import NotificationHeader from '../components/header/notificationHeader';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import WalkStart from '../screens/home/walkStart/walkStart';
+import WalkInProgress from '../screens/home/walkInProgess/walkInProgess';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -62,6 +63,14 @@ function HomeStack() {
       <Screen
         name="WalkStart"
         component={WalkStart}
+        options={{
+          header: customHeader,
+          headerTransparent: true,
+        }}
+      />
+      <Screen
+        name="WalkInProgress"
+        component={WalkInProgress}
         options={{
           header: customHeader,
           headerTransparent: true,

@@ -11,6 +11,7 @@ type RootStackParamList = {
   WalkRequest: undefined;
   WalkStart: {requestId: string};
   WalkInProgress: {requestId: string};
+  Chat: {requestId: string; dogWalkerId: string};
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

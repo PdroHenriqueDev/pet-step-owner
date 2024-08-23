@@ -8,6 +8,7 @@ import NotificationHeader from '../components/header/notificationHeader';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import WalkStart from '../screens/home/walkStart/walkStart';
 import WalkInProgress from '../screens/home/walkInProgess/walkInProgess';
+import Chat from '../screens/home/chat/chat';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -71,6 +72,14 @@ function HomeStack() {
       <Screen
         name="WalkInProgress"
         component={WalkInProgress}
+        options={{
+          header: customHeader,
+          headerTransparent: true,
+        }}
+      />
+      <Screen
+        name="Chat"
+        component={Chat}
         options={{
           header: customHeader,
           headerTransparent: true,

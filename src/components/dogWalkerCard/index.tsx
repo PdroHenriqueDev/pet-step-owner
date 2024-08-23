@@ -72,7 +72,7 @@ export default function DogWalkerCard({
         <TouchableOpacity
           disabled={!dogWalker?.isOnline && !isChat}
           style={[styles.button, isButtonDisabled && styles.disabledButton]}
-          onPress={isButtonDisabled ? handlePress : undefined}>
+          onPress={isButtonDisabled ? undefined : handlePress}>
           {buttonInfo?.icon && (
             <View style={styles.iconWrapper}>{buttonInfo.icon}</View>
           )}

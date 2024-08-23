@@ -18,7 +18,7 @@ import {walkById} from '../../../services/walkService';
 import {DogWalker} from '../../../interfaces/dogWalker';
 
 export default function WalkInProgress() {
-  const {route} = useAppNavigation();
+  const {route, navigation} = useAppNavigation();
   const {requestId} = route.params ?? {};
 
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +42,7 @@ export default function WalkInProgress() {
 
       listenToEvent('dog_walker_location', data => {
         const {longitude, latitude} = data;
-        console.log('got first data =>', data);
+        // console.log('got first data =>', data);
         if (longitude && latitude) {
           setRegion(prevRegion => ({
             ...prevRegion,
@@ -59,6 +59,20 @@ export default function WalkInProgress() {
       };
     }
   }, [requestId]);
+
+  const navigateToChat = () => {
+    if (!requestId) {
+      return;
+    }
+
+    console.log('got here');
+    if (walkInformation?.dogWalker) {
+      navigation.navigate('Chat', {
+        dogWalkerId: walkInformation.dogWalker._id,
+        requestId,
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchWalkData = async () => {
@@ -123,7 +137,7 @@ export default function WalkInProgress() {
                   title: 'Conversar',
                   icon: <Icon type="material" name="message" size={14} />,
                 }}
-                onPress={() => {}}
+                onPress={navigateToChat}
               />
             </View>
             <View className="flex-row items-center">

@@ -3,11 +3,7 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {
-  calculateCost,
-  getNearestsDogWalkers,
-  requestWalk,
-} from '../../../../services/dogWalkerService';
+import {getNearestsDogWalkers} from '../../../../services/dogWalkerService';
 import {DogWalker} from '../../../../interfaces/dogWalker';
 import SummarySection from './summarySection';
 import NearestDogWalkers from './nearestDogWalkers';
@@ -20,6 +16,7 @@ import {useOwner} from '../../../../contexts/ownerContext';
 import Spinner from '../../../../components/spinner/spinner';
 import {useDialog} from '../../../../contexts/dialogContext';
 import {useAppNavigation} from '../../../../hooks/useAppNavigation';
+import {calculateCost, requestWalk} from '../../../../services/walkService';
 
 const stepsConfig = [
   {

@@ -6,7 +6,7 @@ export const getSetupIntent = async (
 ): Promise<SetUpIntentProps> => {
   try {
     const response = await api.get<any>(
-      `/stripe/create-setup-intent/${customerId}`,
+      `/payment/create-setup-intent/${customerId}`,
     );
     const {data} = response;
     return data;

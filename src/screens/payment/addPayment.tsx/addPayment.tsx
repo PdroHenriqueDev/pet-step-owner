@@ -6,7 +6,7 @@ import {
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useOwner} from '../../../contexts/ownerContext';
-import {getSetupIntent} from '../../../services/stripeService';
+import {getSetupIntent} from '../../../services/paymentService';
 import styles from './styles';
 import CustomButton from '../../../components/customButton';
 import {useDialog} from '../../../contexts/dialogContext';

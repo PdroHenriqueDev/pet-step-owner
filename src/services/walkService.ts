@@ -39,3 +39,13 @@ export const requestWalk = async (calculationId: string): Promise<any> => {
     throw error;
   }
 };
+
+export const walkById = async (requestId: string): Promise<any> => {
+  try {
+    const response = await api.get(`/walk/${requestId}`);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

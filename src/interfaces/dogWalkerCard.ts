@@ -6,6 +6,7 @@ export interface DogWalkerCardProps {
   isLastItem?: boolean;
   isSelect?: boolean;
   isSelected: boolean;
+  isChat?: boolean;
   buttonInfo?: {
     title: string;
     icon?: ReactNode;

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import Spinner from '../../../components/spinner/spinner';
 import styles from './styles';
-import globalStyles from '../../../styles/globalStyles';
 import {useAppNavigation} from '../../../hooks/useAppNavigation';
 import {
   connectSocket,
@@ -57,7 +56,7 @@ export default function WalkStart() {
 
   return (
     <View style={styles.container}>
-      <Text style={globalStyles.label}>{notificationMessage}</Text>
+      <Text style={styles.notificationMessage}>{notificationMessage}</Text>
       {isLoading && <Spinner />}
     </View>
   );

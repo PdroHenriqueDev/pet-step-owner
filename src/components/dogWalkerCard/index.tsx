@@ -14,12 +14,15 @@ export default function DogWalkerCard({
   isSelected,
   onPress,
   buttonInfo,
+  isChat = false,
 }: DogWalkerCardProps) {
   const handlePress = () => {
     if (onPress) {
       onPress(dogWalker._id);
     }
   };
+
+  const isButtonDisabled = !dogWalker.isOnline && !isChat;
 
   return (
     <TouchableOpacity
@@ -35,13 +38,13 @@ export default function DogWalkerCard({
           rounded
           source={{
             uri:
-              dogWalker.profileUrl ||
+              dogWalker?.profileUrl ||
               'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
           }}>
           <View
             style={[
               styles.statusIndicator,
-              dogWalker.isOnline ? styles.online : styles.offline,
+              dogWalker?.isOnline ? styles.online : styles.offline,
             ]}
           />
         </Avatar>
@@ -58,23 +61,25 @@ export default function DogWalkerCard({
               {dogWalker.rate}
             </Text>
           </View>
-          <Text style={globalStyles.infoText}>{dogWalker.distance} km</Text>
+          {dogWalker.distance && (
+            <Text style={globalStyles.infoText}>{dogWalker.distance} km</Text>
+          )}
         </View>
       </View>
       {isSelect ? (
         isSelected && <Text style={globalStyles.selectedText}>selecionado</Text>
       ) : (
         <TouchableOpacity
-          disabled={!dogWalker.isOnline}
-          style={[styles.button, !dogWalker.isOnline && styles.disabledButton]}
-          onPress={dogWalker.isOnline ? handlePress : undefined}>
+          disabled={!dogWalker?.isOnline && !isChat}
+          style={[styles.button, isButtonDisabled && styles.disabledButton]}
+          onPress={isButtonDisabled ? handlePress : undefined}>
           {buttonInfo?.icon && (
             <View style={styles.iconWrapper}>{buttonInfo.icon}</View>
           )}
           <Text
             style={[
               styles.buttonText,
-              !dogWalker.isOnline && styles.buttonDisabledText,
+              isButtonDisabled && styles.buttonDisabledText,
             ]}>
             {buttonInfo?.title}
           </Text>

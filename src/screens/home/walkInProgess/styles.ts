@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
   time: {
     color: colors.accent,
   },
+  spinnerContainer: {
+    padding: 22,
+  },
 });
 
 export default styles;

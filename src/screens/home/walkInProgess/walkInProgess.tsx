@@ -14,17 +14,26 @@ import {
   listenToEvent,
   setComponentMounted,
 } from '../../../services/socketService';
+import {walkById} from '../../../services/walkService';
+import {DogWalker} from '../../../interfaces/dogWalker';
 
 export default function WalkInProgress() {
   const {route} = useAppNavigation();
   const {requestId} = route.params ?? {};
+
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingWalk, setIsFetchingWalk] = useState(true);
   const [region, setRegion] = useState({
     longitude: -23.5505,
     latitude: -46.6333,
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
   });
+
+  const [walkInformation, setWalkInformation] = useState<{
+    dogWalker: DogWalker;
+    durationMinutes: number;
+  }>();
 
   useEffect(() => {
     if (requestId) {
@@ -49,6 +58,26 @@ export default function WalkInProgress() {
         disconnectSocket();
       };
     }
+  }, [requestId]);
+
+  useEffect(() => {
+    const fetchWalkData = async () => {
+      if (!requestId) {
+        setIsFetchingWalk(false);
+        return;
+      }
+
+      try {
+        const walkData = await walkById(requestId);
+        setWalkInformation(walkData);
+      } catch (error) {
+        console.error('Failed to fetch walk info:', error);
+      } finally {
+        setIsFetchingWalk(false);
+      }
+    };
+
+    fetchWalkData();
   }, [requestId]);
 
   return isLoading ? (
@@ -79,27 +108,33 @@ export default function WalkInProgress() {
       </MapView>
       <View style={styles.infoContainer}>
         <Text style={globalStyles.label}>Dog Walker em rota...</Text>
-        <View className="mt-4">
-          <DogWalkerCard
-            dogWalker={{
-              _id: '',
-              name: 'Pedro Henrique',
-              rate: 5,
-              profileUrl: '',
-              isOnline: true,
-            }}
-            isSelected={false}
-            buttonInfo={{
-              title: 'Conversar',
-              icon: <Icon type="material" name="message" size={14} />,
-            }}
-            onPress={() => {}}
-          />
-        </View>
-        <View className="flex-row items-center">
-          <Text style={globalStyles.label}>Tempo do passeio:</Text>
-          <Text style={styles.time}> 20 min</Text>
-        </View>
+        {isFetchingWalk ? (
+          <View style={styles.spinnerContainer}>
+            <Spinner />
+          </View>
+        ) : (
+          <>
+            <View className="mt-4">
+              <DogWalkerCard
+                dogWalker={walkInformation?.dogWalker!}
+                isSelected={false}
+                isChat={true}
+                buttonInfo={{
+                  title: 'Conversar',
+                  icon: <Icon type="material" name="message" size={14} />,
+                }}
+                onPress={() => {}}
+              />
+            </View>
+            <View className="flex-row items-center">
+              <Text style={globalStyles.label}>Tempo do passeio:</Text>
+              <Text style={styles.time}>
+                {' '}
+                {walkInformation?.durationMinutes}
+              </Text>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );

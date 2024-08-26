@@ -10,7 +10,7 @@ function CustomHeader({navigation, route, options, back}: StackHeaderProps) {
     const isWalkScreen =
       route.name === 'WalkStart' || route.name === 'WalkInProgress';
 
-    isWalkScreen ? navigation.navigate('HomeScreen') : navigation.goBack;
+    isWalkScreen ? navigation.navigate('HomeScreen') : navigation.goBack();
   };
 
   return (

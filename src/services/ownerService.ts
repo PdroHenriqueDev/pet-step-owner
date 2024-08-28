@@ -1,6 +1,6 @@
 import api from './api';
 import {Owner} from '../interfaces/owner';
-import {CreditCardProps} from '../interfaces/payment';
+import {CreditCardProps, PaymentMethodProps} from '../interfaces/payment';
 
 export const getOwner = async (ownerId: string): Promise<Owner> => {
   try {
@@ -14,7 +14,7 @@ export const getOwner = async (ownerId: string): Promise<Owner> => {
 
 export const getPaymentsMethods = async (
   ownerId: string,
-): Promise<CreditCardProps[]> => {
+): Promise<PaymentMethodProps[]> => {
   try {
     const response = await api.get<any>(`/owner/payments/${ownerId}`);
     const {data} = response;

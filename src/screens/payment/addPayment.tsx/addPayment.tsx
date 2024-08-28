@@ -92,7 +92,7 @@ export default function AddPayment() {
       return;
     }
 
-    if (!owner.defaultPayment && paymentMethodId) {
+    if (paymentMethodId) {
       setIsLoading(true);
       try {
         await updateDefaultPaymentMethod({ownerId: owner._id, paymentMethodId});

@@ -65,7 +65,6 @@ export default function WalkInProgress() {
       return;
     }
 
-    console.log('got here');
     if (walkInformation?.dogWalker) {
       navigation.navigate('Chat', {
         dogWalkerId: walkInformation.dogWalker._id,

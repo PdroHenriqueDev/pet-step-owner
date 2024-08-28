@@ -15,3 +15,21 @@ export const getSetupIntent = async (
     throw error;
   }
 };
+
+export const removePaymentMethod = async ({
+  ownerId,
+  paymentMethodId,
+}: {
+  ownerId: string;
+  paymentMethodId: string;
+}) => {
+  try {
+    const response = await api.delete<any>(
+      `/payment/remove/${ownerId}/${paymentMethodId}`,
+    );
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

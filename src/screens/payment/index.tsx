@@ -7,8 +7,9 @@ import {useOwner} from '../../contexts/ownerContext';
 import {Icon, ListItem} from '@rneui/base';
 import {CardBrand, PaymentMethodProps} from '../../interfaces/payment';
 import globalStyles from '../../styles/globalStyles';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import Spinner from '../../components/spinner/spinner';
+import {useAppNavigation} from '../../hooks/useAppNavigation';
 
 const icons: Record<CardBrand, {type: string; name: string}> = {
   visa: {
@@ -27,9 +28,11 @@ const icons: Record<CardBrand, {type: string; name: string}> = {
 
 export default function Payment() {
   const {owner} = useOwner();
-  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethodProps[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation() as any;
+  const {navigation} = useAppNavigation();
 
   useFocusEffect(
     useCallback(() => {
@@ -40,7 +43,17 @@ export default function Payment() {
         }
         try {
           const response = await getPaymentsMethods(owner._id);
-          setPaymentMethods(response as any);
+          const sortedPaymentMethods = response.sort((a, b) => {
+            if (a.isSelected) {
+              return -1;
+            }
+            if (b.isSelected) {
+              return 1;
+            }
+            return 0;
+          });
+
+          setPaymentMethods(sortedPaymentMethods);
         } catch (error) {
           console.error(error);
         } finally {
@@ -52,7 +65,9 @@ export default function Payment() {
     }, [owner]),
   );
 
-  const handlePress = () => {};
+  const handlePress = (cardId: string) => {
+    navigation.navigate('CardActions', {cardId});
+  };
   const addCardRoute = () => {
     navigation.navigate('AddPaymentScreen');
   };
@@ -60,6 +75,7 @@ export default function Payment() {
   const renderItem = ({
     item: {
       isSelected,
+      id,
       card: {brand, last4, funding, exp_month, exp_year},
     },
   }: {
@@ -67,7 +83,7 @@ export default function Payment() {
   }) => (
     <ListItem
       bottomDivider
-      onPress={handlePress}
+      onPress={() => handlePress(id)}
       containerStyle={styles.listItem}>
       <Icon
         name={icons[brand]?.name ?? 'credit-card'}

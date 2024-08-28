@@ -42,7 +42,7 @@ export default function WalkInProgress() {
 
       listenToEvent('dog_walker_location', data => {
         const {longitude, latitude} = data;
-        // console.log('got first data =>', data);
+
         if (longitude && latitude) {
           setRegion(prevRegion => ({
             ...prevRegion,
@@ -107,9 +107,9 @@ export default function WalkInProgress() {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={region}
-        scrollEnabled={false}
-        zoomEnabled={false}
-        rotateEnabled={false}
+        scrollEnabled={true}
+        zoomEnabled={true}
+        rotateEnabled={true}
         showsUserLocation={false}>
         <Marker coordinate={region}>
           <Icon

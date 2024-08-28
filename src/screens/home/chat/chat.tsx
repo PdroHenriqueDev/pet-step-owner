@@ -8,6 +8,7 @@ import colors from '../../../styles/colors';
 import {database} from '../../../../firebaseConfig';
 import {onValue, push, ref, set} from 'firebase/database';
 import {MessageProps} from '../../../interfaces/chat';
+import {delay} from '../../../utils/delay';
 
 export default function Chat() {
   const {route} = useAppNavigation();
@@ -22,7 +23,7 @@ export default function Chat() {
   useEffect(() => {
     const messagesRef = ref(database, `chats/${requestId}/messages`);
 
-    const unsubscribe = onValue(messagesRef, snapshot => {
+    const unsubscribe = onValue(messagesRef, async snapshot => {
       const data = snapshot.val();
       if (data) {
         const parsedMessages = Object.keys(data).map(key => ({
@@ -33,6 +34,7 @@ export default function Chat() {
 
         setInputHeight(40);
 
+        await delay();
         flatListRef.current?.scrollToEnd({animated: true});
       }
     });

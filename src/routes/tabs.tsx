@@ -8,6 +8,8 @@ import PaymentIcon from '../components/icons/payment';
 import HomeStack from './homeStack';
 import PaymentStack from './paymentStack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import HistoryStack from './historyStack';
+import HistorytIcon from '../components/icons/history';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
@@ -30,6 +32,24 @@ function HomeTabs() {
 
           return {
             tabBarIcon: HomeIcon,
+            headerShown: false,
+            tabBarStyle: {
+              ...globalStyles.tabar,
+              display: isHiddenRoute ? 'none' : 'flex',
+            },
+          };
+        }}
+      />
+      <Screen
+        name="Histórico"
+        component={HistoryStack}
+        options={({route}) => {
+          const routeName =
+            getFocusedRouteNameFromRoute(route) ?? 'HistoryScreen';
+          const isHiddenRoute = routeName !== 'HistoryScreen';
+
+          return {
+            tabBarIcon: HistorytIcon,
             headerShown: false,
             tabBarStyle: {
               ...globalStyles.tabar,

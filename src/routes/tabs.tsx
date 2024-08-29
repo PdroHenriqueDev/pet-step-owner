@@ -1,6 +1,5 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Account from '../screens/account';
 import colors from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
 import HomeIcon from '../components/icons/home';
@@ -10,6 +9,8 @@ import PaymentStack from './paymentStack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import HistoryStack from './historyStack';
 import HistorytIcon from '../components/icons/history';
+import AccountStack from './accountStack';
+import AccountIcon from '../components/icons/account';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
@@ -76,7 +77,24 @@ function HomeTabs() {
           };
         }}
       />
-      <Screen name="Conta" component={Account} />
+      <Screen
+        name="Conta"
+        component={AccountStack}
+        options={({route}) => {
+          const routeName =
+            getFocusedRouteNameFromRoute(route) ?? 'AccountScreen';
+          const isHiddenRoute = routeName !== 'AccountScreen';
+
+          return {
+            tabBarIcon: AccountIcon,
+            headerShown: false,
+            tabBarStyle: {
+              ...globalStyles.tabar,
+              display: isHiddenRoute ? 'none' : 'flex',
+            },
+          };
+        }}
+      />
     </Navigator>
   );
 }

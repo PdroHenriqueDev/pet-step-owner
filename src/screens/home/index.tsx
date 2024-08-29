@@ -20,7 +20,7 @@ function Home() {
   const {setOwner, owner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation() as any;
 
@@ -70,13 +70,15 @@ function Home() {
 
   useFocusEffect(
     useCallback(() => {
-      setLoading(true);
+      setIsLoading(true);
       const fetchOwner = async () => {
         try {
           const ownerData = await getOwner('66b29279044cd2eca1e22adf');
           setOwner(ownerData);
         } catch (error) {
           console.error('Failed to fetch owner data:', error);
+        } finally {
+          setIsLoading(false);
         }
       };
 

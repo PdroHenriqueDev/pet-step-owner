@@ -49,3 +49,13 @@ export const walkById = async (requestId: string): Promise<any> => {
     throw error;
   }
 };
+
+export const listWalks = async (ownerId: string, page = 1): Promise<any> => {
+  try {
+    const response = await api.get(`/walk/list/${ownerId}?page=${page}`);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

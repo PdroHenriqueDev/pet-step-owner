@@ -66,7 +66,7 @@ export default function Payment() {
   );
 
   const handlePress = (cardId: string) => {
-    navigation.navigate('CardActions', {cardId});
+    navigation.navigate('CardActionsScreen', {cardId});
   };
   const addCardRoute = () => {
     navigation.navigate('AddPaymentScreen');

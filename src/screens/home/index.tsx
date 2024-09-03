@@ -9,12 +9,13 @@ import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
 import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
 import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 import {RideEvents} from '../../enums/ride';
+import {useAppNavigation} from '../../hooks/useAppNavigation';
 
 function Home() {
   const {setOwner, owner} = useOwner();
@@ -22,7 +23,7 @@ function Home() {
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigation = useNavigation() as any;
+  const {navigation} = useAppNavigation() as any;
 
   const [locationPermission, setLocationPermission] =
     useState<PermissionStatus | null>(null);
@@ -62,7 +63,6 @@ function Home() {
 
   const handleWalk = () => {
     const {requestId} = owner?.currentWalk ?? {};
-
     owner?.currentWalk.status === RideEvents.PENDING
       ? navigation.navigate('WalkStart', {requestId})
       : navigation.navigate('WalkInProgress', {requestId});

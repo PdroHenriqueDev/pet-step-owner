@@ -27,7 +27,7 @@ function PaymentStack() {
         }}
       />
       <Screen
-        name="CardActions"
+        name="CardActionsScreen"
         component={CardActions}
         options={{
           header: customHeader,

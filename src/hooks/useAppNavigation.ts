@@ -4,6 +4,7 @@ import {
   NavigationProp,
   RouteProp,
 } from '@react-navigation/native';
+import {FieldOwnerProps} from '../interfaces/owner';
 
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -13,7 +14,8 @@ type RootStackParamList = {
   WalkInProgress: {requestId: string};
   Chat: {requestId: string; dogWalkerId: string};
   AddPaymentScreen: undefined;
-  CardActions: {cardId: string};
+  CardActionsScreen: {cardId: string};
+  UpdateOwnerScreen: {field: FieldOwnerProps};
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

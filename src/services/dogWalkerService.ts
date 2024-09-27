@@ -19,7 +19,7 @@ export const getRecommedDogWalkers = async ({
 }: CoordinatesProps): Promise<DogWalker[]> => {
   try {
     const response = await api.get<DogWalker[]>(
-      `/dog-walker/recommed?longitude=${longitude}&latitude=${latitude}`,
+      `/dog-walker/recommended?longitude=${longitude}&latitude=${latitude}`,
     );
     const {data} = response;
     return data;

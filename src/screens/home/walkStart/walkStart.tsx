@@ -34,7 +34,7 @@ export default function WalkStart() {
       setIsLoading(true);
       connectSocket(requestId);
 
-      listenToEvent('dog_walker_response', data => {
+      listenToEvent('dogWalkerResponse', data => {
         setMessage(messages[data] || messages.default);
 
         setIsLoading(false);

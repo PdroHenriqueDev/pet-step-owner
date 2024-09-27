@@ -40,7 +40,7 @@ export default function WalkInProgress() {
       setComponentMounted(true);
       connectSocket(requestId);
 
-      listenToEvent('dog_walker_location', data => {
+      listenToEvent('dogWalkerLocation', data => {
         const {longitude, latitude} = data;
 
         if (longitude && latitude) {

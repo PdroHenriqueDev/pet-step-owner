@@ -14,7 +14,7 @@ import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
 import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
-import {RideEvents} from '../../enums/ride';
+import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 
 function Home() {
@@ -63,7 +63,7 @@ function Home() {
 
   const handleWalk = () => {
     const {requestId} = owner?.currentWalk ?? {};
-    owner?.currentWalk.status === RideEvents.PENDING
+    owner?.currentWalk.status === WalkEvents.PENDING
       ? navigation.navigate('WalkStart', {requestId})
       : navigation.navigate('WalkInProgress', {requestId});
   };

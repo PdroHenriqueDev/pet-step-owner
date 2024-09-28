@@ -8,7 +8,7 @@ import {
   disconnectSocket,
   listenToEvent,
 } from '../../../services/socketService';
-import {RideEvents} from '../../../enums/ride';
+import {WalkEvents} from '../../../enums/walk';
 
 export default function WalkStart() {
   const {route, navigation} = useAppNavigation();
@@ -19,12 +19,12 @@ export default function WalkStart() {
 
   useEffect(() => {
     const messages: {[key: string]: string} = {
-      [RideEvents.PAYMENT_FAILURE]:
+      [WalkEvents.PAYMENT_FAILURE]:
         'O pagamento não foi concluído. Verifique suas informações e tente novamente. Se o problema persistir, entre em contato com o suporte.',
-      [RideEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi aceito com sucesso.',
-      [RideEvents.SERVER_ERROR]:
+      [WalkEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi aceito com sucesso.',
+      [WalkEvents.SERVER_ERROR]:
         'Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.',
-      [RideEvents.INVALID_REQUEST]:
+      [WalkEvents.INVALID_REQUEST]:
         'A solicitação é inválida. Por favor, verifique as informações e tente novamente.',
       default:
         'O passeio foi cancelado. Por favor, tente selecionar outro Dog Walker.',
@@ -39,7 +39,7 @@ export default function WalkStart() {
 
         setIsLoading(false);
 
-        if (data === RideEvents.ACCEPTED_SUCCESSFULLY) {
+        if (data === WalkEvents.ACCEPTED_SUCCESSFULLY) {
           navigation.navigate('WalkInProgress', {requestId});
         }
       });

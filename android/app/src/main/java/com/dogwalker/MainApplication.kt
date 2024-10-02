@@ -1,4 +1,4 @@
-package com.dogwalker
+package com.petStep
 
 import android.app.Application
 import com.facebook.react.PackageList

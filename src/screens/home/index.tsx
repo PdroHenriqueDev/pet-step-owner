@@ -73,10 +73,10 @@ function Home() {
       setIsLoading(true);
       const fetchOwner = async () => {
         try {
-          const ownerData = await getOwner('66b29279044cd2eca1e22adf');
+          const ownerData = await getOwner('66fde3d814cb23cdbb170ab6');
           setOwner(ownerData);
         } catch (error) {
-          console.error('Failed to fetch owner data:', error);
+          console.log('Failed to fetch owner data:', error.response);
         } finally {
           setIsLoading(false);
         }

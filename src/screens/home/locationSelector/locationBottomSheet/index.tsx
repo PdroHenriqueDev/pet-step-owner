@@ -7,7 +7,7 @@ import {
   GooglePlacesAutocomplete,
   GooglePlacesAutocompleteRef,
 } from 'react-native-google-places-autocomplete';
-import {GOOGLE_MAPS_API_KEY} from '@env';
+import Config from 'react-native-config';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import {Location} from '../../../../interfaces/location';
@@ -91,7 +91,7 @@ function LocationBottomSheet({
                 isRowScrollable={false}
                 onPress={(data, detail) => handleLocation(data, detail)}
                 query={{
-                  key: GOOGLE_MAPS_API_KEY,
+                  key: Config.GOOGLE_MAPS_API_KEY,
                   language: 'pt-BR',
                 }}
                 styles={{

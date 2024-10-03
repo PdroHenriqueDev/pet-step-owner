@@ -7,11 +7,11 @@ import {DialogProvider} from './contexts/dialogContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {OwnerProvider} from './contexts/ownerContext';
 import {StripeProvider} from '@stripe/stripe-react-native';
-import {STRIPE_PUBLISHABLE_KEY} from '@env';
+import Config from 'react-native-config';
 
 function App(): React.JSX.Element {
   return (
-    <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+    <StripeProvider publishableKey={Config.STRIPE_PUBLISHABLE_KEY ?? ''}>
       <OwnerProvider>
         <DialogProvider>
           <RequestProvider>

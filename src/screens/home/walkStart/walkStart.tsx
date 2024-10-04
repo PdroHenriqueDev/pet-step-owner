@@ -8,28 +8,35 @@ import {
   disconnectSocket,
   listenToEvent,
 } from '../../../services/socketService';
+
+const messages: {[key: string]: string} = {
+  [WalkEvents.PAYMENT_FAILURE]:
+    'O pagamento não foi concluído. Verifique suas informações e tente novamente. Se o problema persistir, entre em contato com o suporte.',
+  [WalkEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi aceito com sucesso.',
+  [WalkEvents.SERVER_ERROR]:
+    'Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.',
+  [WalkEvents.CANCELLED]:
+  'O passeio foi cancelado. Por favor, tente selecionar outro Dog Walker.',
+  [WalkEvents.REQUEST_DENIED]:
+  'O Dog Walker selecionado não está disponível no momento. Por favor, tente novamente mais tarde ou escolha outro Dog Walker para o passeio.',
+  default:
+    'Estamos notificando o Dog Walker. Por favor, aguarde alguns instantes.',
+};
+
 import {WalkEvents} from '../../../enums/walk';
+import { getWalkStatus } from '../../../services/walkService';
+import { useDialog } from '../../../contexts/dialogContext';
+import { AxiosError } from 'axios';
 
 export default function WalkStart() {
   const {route, navigation} = useAppNavigation();
+  const {showDialog, hideDialog} = useDialog();
   const {requestId} = route.params ?? {};
 
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const messages: {[key: string]: string} = {
-      [WalkEvents.PAYMENT_FAILURE]:
-        'O pagamento não foi concluído. Verifique suas informações e tente novamente. Se o problema persistir, entre em contato com o suporte.',
-      [WalkEvents.ACCEPTED_SUCCESSFULLY]: 'O passeio foi aceito com sucesso.',
-      [WalkEvents.SERVER_ERROR]:
-        'Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.',
-      [WalkEvents.INVALID_REQUEST]:
-        'A solicitação é inválida. Por favor, verifique as informações e tente novamente.',
-      default:
-        'O passeio foi cancelado. Por favor, tente selecionar outro Dog Walker.',
-    };
-
     if (requestId) {
       setIsLoading(true);
       connectSocket(requestId);
@@ -50,6 +57,47 @@ export default function WalkStart() {
       };
     }
   }, [navigation, requestId]);
+
+  useEffect(() => {
+    const getStatus = async () => {
+      if (!requestId) return;
+      try {
+        const status = await getWalkStatus(requestId);
+        console.log('got here status', status)
+        if (status) {
+          setMessage(messages[status] || messages.default);
+
+          if (status !== WalkEvents.ACCEPTED_SUCCESSFULLY) {
+            setIsLoading(false);
+          }
+
+          if (status === WalkEvents.ACCEPTED_SUCCESSFULLY) {
+            navigation.navigate('WalkInProgress', {requestId});
+          }
+        }
+      } catch (error) {
+        const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
+
+        showDialog({
+          title: errorMessage,
+          description: 'Tente novamente.',
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: () => {
+              hideDialog();
+            },
+          },
+        });
+      }
+    }
+
+    const intervalId = setInterval(getStatus, 30000);
+    return () => clearInterval(intervalId);
+  }, [requestId])
 
   const notificationMessage =
     message ||

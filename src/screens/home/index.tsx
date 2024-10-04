@@ -63,9 +63,11 @@ function Home() {
 
   const handleWalk = () => {
     const {requestId} = owner?.currentWalk ?? {};
-    owner?.currentWalk.status === WalkEvents.IN_PROGRESS
-      ? navigation.navigate('WalkInProgress', {requestId}) 
-      : navigation.navigate('WalkStart', {requestId});
+    if (requestId) {
+      owner?.currentWalk.status === WalkEvents.IN_PROGRESS
+        ? navigation.navigate('WalkInProgress', {requestId}) 
+        : navigation.navigate('WalkStart', {requestId});
+    }
   };
 
   useFocusEffect(
@@ -141,6 +143,10 @@ function Home() {
       requestLocationPermission();
     }
   }, [hideDialog, locationPermission, onLocationReceived, showDialog]);
+
+  useEffect(() => {
+    handleWalk();
+  }, [])
 
   return (
     <ScrollView style={styles.scrollViewContainer}>

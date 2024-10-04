@@ -17,6 +17,7 @@ import Spinner from '../../../../components/spinner/spinner';
 import {useDialog} from '../../../../contexts/dialogContext';
 import {useAppNavigation} from '../../../../hooks/useAppNavigation';
 import {calculateCost, requestWalk} from '../../../../services/walkService';
+import { AxiosError } from 'axios';
 
 const stepsConfig = [
   {
@@ -59,7 +60,7 @@ function RequestBottomSheet() {
 
   const {navigation} = useAppNavigation();
 
-  const snapPoints = useMemo(() => [340, '90%'], []);
+  const snapPoints = useMemo(() => [250, '85%'], []);
 
   const [recommededDogWalkers, setRecommededDogWalkers] = useState<DogWalker[]>(
     [],
@@ -105,6 +106,7 @@ function RequestBottomSheet() {
           latitude: receivedLocation!.latitude,
           longitude: receivedLocation!.longitude,
         });
+
         if (dogWalkers.length > 0 && !selectedDogWalkerId) {
           onselectedDogWalker(dogWalkers[0]._id);
         }
@@ -150,8 +152,14 @@ function RequestBottomSheet() {
       setCostData(data as unknown as CostDataProps);
       setCurrentStep(currentStep + 1);
     } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
+
       showDialog({
-        title: 'Algo de errado',
+        title: errorMessage,
         description: 'Tente novamente.',
         confirm: {
           confirmLabel: 'Entendi',
@@ -171,8 +179,14 @@ function RequestBottomSheet() {
       const {requestId} = await requestWalk(calculation);
       navigation.navigate('WalkStart', {requestId});
     } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
+
       showDialog({
-        title: 'Algo de errado',
+        title: errorMessage,
         description: 'Tente novamente.',
         confirm: {
           confirmLabel: 'Entendi',

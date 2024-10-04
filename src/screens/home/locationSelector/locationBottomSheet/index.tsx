@@ -30,7 +30,7 @@ function LocationBottomSheet({
     setShowInputPlaces(index !== 0);
   }, []);
 
-  const snapPoints = useMemo(() => [140, '85%'], []);
+  const snapPoints = useMemo(() => [160, '85%'], []);
 
   const handleLocation = (
     data: GooglePlaceData,
@@ -68,7 +68,6 @@ function LocationBottomSheet({
   };
 
   return (
-    <View style={styles.container}>
       <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
@@ -144,7 +143,6 @@ function LocationBottomSheet({
           )}
         </BottomSheetView>
       </BottomSheet>
-    </View>
   );
 }
 

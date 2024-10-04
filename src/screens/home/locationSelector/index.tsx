@@ -98,6 +98,7 @@ function LocationSelector() {
         onRegionChangeComplete={handleRegionChangeComplete}
         onPanDrag={startAnimation}
         showsUserLocation={true}
+        scrollEnabled={true}
       />
       <Marker />
 

@@ -1,9 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import colors from '../../../styles/colors';
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    [Platform.OS === 'ios' ? 'padding'  : 'paddingHorizontal']: 16,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,

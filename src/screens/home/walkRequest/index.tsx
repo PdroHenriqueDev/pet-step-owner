@@ -24,7 +24,7 @@ function WalkRequest() {
         scrollEnabled={false}
         zoomEnabled={false}
         rotateEnabled={false}
-        showsUserLocation={false}
+        showsUserLocation={true}
       />
       <View style={styles.markerFixed}>
         <Icon

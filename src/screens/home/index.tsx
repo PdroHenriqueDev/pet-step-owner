@@ -63,9 +63,9 @@ function Home() {
 
   const handleWalk = () => {
     const {requestId} = owner?.currentWalk ?? {};
-    owner?.currentWalk.status === WalkEvents.PENDING
-      ? navigation.navigate('WalkStart', {requestId})
-      : navigation.navigate('WalkInProgress', {requestId});
+    owner?.currentWalk.status === WalkEvents.IN_PROGRESS
+      ? navigation.navigate('WalkInProgress', {requestId}) 
+      : navigation.navigate('WalkStart', {requestId});
   };
 
   useFocusEffect(

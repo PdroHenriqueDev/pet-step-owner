@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import colors from '../../styles/colors';
 
 const styles = StyleSheet.create({
@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     backgroundColor: colors.primary,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: Platform.OS === 'ios' ? 60 : 20,
   },
   iconContainer: {
     position: 'relative',
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   },
   headerInvisible: {
     padding: 10,
+    paddingVertical: Platform.OS === 'ios' ? 40 : 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },

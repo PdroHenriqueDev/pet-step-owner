@@ -7,14 +7,12 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    height: '50%',
-    width: '100%',
   },
   markerFixed: {
-    left: '47%',
-    top: '26%',
-    marginLeft: -12,
-    marginTop: -24,
+    left: '50%',
+    top: '55%',
+    marginLeft: -24,
+    marginTop: -36,
     position: 'absolute',
   },
   marker: {
@@ -22,7 +20,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   bottomSheetContainer: {
-    ...StyleSheet.absoluteFillObject,
+    flexGrow: 1,
     justifyContent: 'flex-end',
   },
 });

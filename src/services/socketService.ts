@@ -1,5 +1,6 @@
 import {io, Socket} from 'socket.io-client';
-import {API_BASE_URL} from '@env';
+import Config from 'react-native-config';
+import { Platform } from 'react-native';
 
 let socket: Socket | null = null;
 let isTryingToReconnect = false;
@@ -10,14 +11,14 @@ export const connectSocket = (requestId: string) => {
     console.log('Socket.IO já conectado.');
     return;
   }
-
   try {
-    socket = io(API_BASE_URL ?? 'http://10.0.2.2:3000', {
+    socket = io(Platform.OS === 'ios' ? Config.API_BASE_URL : 'http://10.0.2.2:3000', {
       query: {request_id: requestId},
     });
 
     socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.IO com requestId:', requestId);
+      emitEvent('joinRoom', requestId); 
       isTryingToReconnect = false;
     });
 
@@ -59,7 +60,7 @@ export const listenToEvent = (
     console.error('Socket.IO not connected. Cannot listen to event:', event);
     return;
   }
-
+  
   socket.on(event, callback);
 };
 

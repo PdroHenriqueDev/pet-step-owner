@@ -16,24 +16,24 @@ const messages: {[key: string]: string} = {
   [WalkEvents.SERVER_ERROR]:
     'Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.',
   [WalkEvents.CANCELLED]:
-  'O passeio foi cancelado. Por favor, tente selecionar outro Dog Walker.',
+    'O passeio foi cancelado. Por favor, tente selecionar outro Dog Walker.',
   [WalkEvents.REQUEST_DENIED]:
-  'O Dog Walker selecionado não está disponível no momento. Por favor, tente novamente mais tarde ou escolha outro Dog Walker para o passeio.',
+    'O Dog Walker selecionado não está disponível no momento. Por favor, tente novamente mais tarde ou escolha outro Dog Walker para o passeio.',
   default:
     'Estamos notificando o Dog Walker. Por favor, aguarde alguns instantes.',
 };
 
 import {WalkEvents} from '../../../enums/walk';
-import { getWalkStatus } from '../../../services/walkService';
-import { useDialog } from '../../../contexts/dialogContext';
-import { AxiosError } from 'axios';
+import {getWalkStatus} from '../../../services/walkService';
+import {useDialog} from '../../../contexts/dialogContext';
+import {AxiosError} from 'axios';
 
 export default function WalkStart() {
   const {route, navigation} = useAppNavigation();
   const {showDialog, hideDialog} = useDialog();
   const {requestId} = route.params ?? {};
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(messages.default);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,6 @@ export default function WalkStart() {
       connectSocket(requestId);
 
       listenToEvent('walk', data => {
-        console.log('got here walk', data)
         setMessage(messages[data] || messages.default);
 
         setIsLoading(false);
@@ -60,10 +59,11 @@ export default function WalkStart() {
 
   useEffect(() => {
     const getStatus = async () => {
-      if (!requestId) return;
+      if (!requestId) {
+        return;
+      }
       try {
-        const status = await getWalkStatus(requestId);
-        console.log('got here status', status)
+        const status: WalkEvents = await getWalkStatus(requestId);
         if (status) {
           setMessage(messages[status] || messages.default);
 
@@ -77,10 +77,10 @@ export default function WalkStart() {
         }
       } catch (error) {
         const errorMessage =
-        error instanceof AxiosError &&
-        typeof error.response?.data?.data === 'string'
-          ? error.response?.data?.data
-          : 'Ocorreu um erro inesperado';
+          error instanceof AxiosError &&
+          typeof error.response?.data?.data === 'string'
+            ? error.response?.data?.data
+            : 'Ocorreu um erro inesperado';
 
         showDialog({
           title: errorMessage,
@@ -93,19 +93,15 @@ export default function WalkStart() {
           },
         });
       }
-    }
+    };
 
     const intervalId = setInterval(getStatus, 30000);
     return () => clearInterval(intervalId);
-  }, [requestId])
-
-  const notificationMessage =
-    message ||
-    'Estamos notificando o Dog Walker. Por favor, aguarde alguns instantes';
+  }, [hideDialog, navigation, requestId, showDialog]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.notificationMessage}>{notificationMessage}</Text>
+      <Text style={styles.notificationMessage}>{message}</Text>
       {isLoading && <Spinner />}
     </View>
   );

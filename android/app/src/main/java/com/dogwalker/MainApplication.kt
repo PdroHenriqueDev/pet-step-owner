@@ -1,4 +1,4 @@
-package com.petStep
+package com.petStep.owner
 
 import android.app.Application
 import com.facebook.react.PackageList

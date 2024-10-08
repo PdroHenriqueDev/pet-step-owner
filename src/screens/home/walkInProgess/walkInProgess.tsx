@@ -16,6 +16,9 @@ import {
 } from '../../../services/socketService';
 import {walkById} from '../../../services/walkService';
 import {DogWalker} from '../../../interfaces/dogWalker';
+import messaging from '@react-native-firebase/messaging';
+import {ref, update} from 'firebase/database';
+import {database} from '../../../../firebaseConfig';
 
 export default function WalkInProgress() {
   const {route, navigation} = useAppNavigation();
@@ -58,6 +61,26 @@ export default function WalkInProgress() {
         disconnectSocket();
       };
     }
+  }, [requestId]);
+
+  useEffect(() => {
+    const updateNotificationToken = async () => {
+      console.log('got here updateNotificationToken');
+      try {
+        const token = await messaging().getToken();
+        const tokenRef = ref(database, `chats/${requestId}`);
+
+        await update(tokenRef, {
+          userToken: token,
+        });
+
+        console.log('Token de notificação atualizado:', token);
+      } catch (error) {
+        console.log('Erro ao atualizar o token:', error);
+      }
+    };
+
+    updateNotificationToken();
   }, [requestId]);
 
   const navigateToChat = () => {

@@ -9,19 +9,25 @@ import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
 import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigationState} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
 import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
+import messaging from '@react-native-firebase/messaging';
 
 function Home() {
   const {setOwner, owner} = useOwner();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
   const [isLoading, setIsLoading] = useState(false);
+
+  const currentRouteName = useNavigationState(state => {
+    const route = state.routes[state.index];
+    return route.name;
+  });
 
   const {navigation} = useAppNavigation() as any;
 
@@ -65,7 +71,7 @@ function Home() {
     const {requestId} = owner?.currentWalk ?? {};
     if (requestId) {
       owner?.currentWalk.status === WalkEvents.IN_PROGRESS
-        ? navigation.navigate('WalkInProgress', {requestId}) 
+        ? navigation.navigate('WalkInProgress', {requestId})
         : navigation.navigate('WalkStart', {requestId});
     }
   };
@@ -146,7 +152,37 @@ function Home() {
 
   useEffect(() => {
     handleWalk();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
+      const chatId = remoteMessage?.data?.chatId as string;
+
+      if (chatId && currentRouteName !== 'Chat') {
+        showDialog({
+          title: 'Nova mensagem',
+          description: remoteMessage?.notification?.body,
+          confirm: {
+            confirmLabel: 'Ir para o chat',
+            onConfirm: () => {
+              navigation.navigate('Chat');
+              hideDialog();
+            },
+          },
+          cancel: {
+            cancelLabel: 'Fechar',
+            onCancel: () => {
+              hideDialog();
+            },
+          },
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeOnMessage();
+    };
+  }, [currentRouteName, hideDialog, navigation, showDialog]);
 
   return (
     <ScrollView style={styles.scrollViewContainer}>

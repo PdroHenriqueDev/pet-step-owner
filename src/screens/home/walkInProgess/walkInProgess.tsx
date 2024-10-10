@@ -101,7 +101,7 @@ export default function WalkInProgress() {
         const tokenRef = ref(database, `chats/${requestId}`);
 
         await update(tokenRef, {
-          userToken: token,
+          ownerToken: token,
         });
 
         storedTokens.push(token);

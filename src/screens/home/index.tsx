@@ -184,7 +184,13 @@ function Home() {
     return () => {
       unsubscribeOnMessage();
     };
-  }, [currentRouteName, hideDialog, navigation, showDialog]);
+  }, [
+    currentRouteName,
+    hideDialog,
+    navigation,
+    owner?.currentWalk.requestId,
+    showDialog,
+  ]);
 
   return (
     <ScrollView style={styles.scrollViewContainer}>

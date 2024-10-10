@@ -41,6 +41,19 @@ export default function WalkInProgress() {
     durationMinutes: number;
   }>();
 
+  const navigateToChat = () => {
+    if (!requestId) {
+      return;
+    }
+
+    if (walkInformation?.dogWalker) {
+      navigation.navigate('Chat', {
+        dogWalkerId: walkInformation.dogWalker._id,
+        requestId,
+      });
+    }
+  };
+
   useEffect(() => {
     if (requestId) {
       setComponentMounted(true);
@@ -68,16 +81,34 @@ export default function WalkInProgress() {
 
   useEffect(() => {
     const updateNotificationToken = async () => {
-      // console.log('got here updateNotificationToken');
       try {
+        const storedTokensRaw = await EncryptedStorage.getItem(
+          'notificationTokens',
+        );
+        const storedTokens = storedTokensRaw ? JSON.parse(storedTokensRaw) : [];
+
+        if (storedTokens.length > 1) {
+          storedTokens.shift();
+        }
+
         const token = await messaging().getToken();
+
+        const isAlreadyStored = storedTokens.includes(token);
+        if (isAlreadyStored) {
+          return;
+        }
+
         const tokenRef = ref(database, `chats/${requestId}`);
 
         await update(tokenRef, {
           userToken: token,
         });
 
-        // console.log('Token de notificação atualizado:', token);
+        storedTokens.push(token);
+        await EncryptedStorage.setItem(
+          'notificationTokens',
+          JSON.stringify(storedTokens),
+        );
       } catch (error) {
         console.log('Erro ao atualizar o token:', error);
       }
@@ -85,19 +116,6 @@ export default function WalkInProgress() {
 
     updateNotificationToken();
   }, [requestId]);
-
-  const navigateToChat = () => {
-    if (!requestId) {
-      return;
-    }
-
-    if (walkInformation?.dogWalker) {
-      navigation.navigate('Chat', {
-        dogWalkerId: walkInformation.dogWalker._id,
-        requestId,
-      });
-    }
-  };
 
   useEffect(() => {
     const fetchWalkData = async () => {
@@ -130,7 +148,7 @@ export default function WalkInProgress() {
       const storedRequests = storedRequestsRaw
         ? JSON.parse(storedRequestsRaw)
         : [];
-      if (storedRequests.length >= 2) {
+      if (storedRequests.length > 1) {
         storedRequests.shift();
       }
 

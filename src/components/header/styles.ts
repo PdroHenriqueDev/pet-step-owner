@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   headerInvisible: {
     padding: 10,
-    paddingVertical: Platform.OS === 'ios' ? 40 : 0,
+    paddingVertical: Platform.OS === 'ios' ? 50 : 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },

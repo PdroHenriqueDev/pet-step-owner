@@ -19,9 +19,12 @@ import {DogWalker} from '../../../interfaces/dogWalker';
 import messaging from '@react-native-firebase/messaging';
 import {ref, update} from 'firebase/database';
 import {database} from '../../../../firebaseConfig';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {useDialog} from '../../../contexts/dialogContext';
 
 export default function WalkInProgress() {
   const {route, navigation} = useAppNavigation();
+  const {showDialog, hideDialog} = useDialog();
   const {requestId} = route.params ?? {};
 
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +68,7 @@ export default function WalkInProgress() {
 
   useEffect(() => {
     const updateNotificationToken = async () => {
-      console.log('got here updateNotificationToken');
+      // console.log('got here updateNotificationToken');
       try {
         const token = await messaging().getToken();
         const tokenRef = ref(database, `chats/${requestId}`);
@@ -74,7 +77,7 @@ export default function WalkInProgress() {
           userToken: token,
         });
 
-        console.log('Token de notificação atualizado:', token);
+        // console.log('Token de notificação atualizado:', token);
       } catch (error) {
         console.log('Erro ao atualizar o token:', error);
       }
@@ -115,6 +118,45 @@ export default function WalkInProgress() {
 
     fetchWalkData();
   }, [requestId]);
+
+  useEffect(() => {
+    const checkAndShowDialog = async () => {
+      if (isLoading || !requestId) {
+        return;
+      }
+      const storedRequestsRaw = await EncryptedStorage.getItem(
+        'modalShownRequests',
+      );
+      const storedRequests = storedRequestsRaw
+        ? JSON.parse(storedRequestsRaw)
+        : [];
+      if (storedRequests.length >= 2) {
+        storedRequests.shift();
+      }
+
+      const isAlreadyShown = storedRequests.includes(requestId);
+      if (!isAlreadyShown) {
+        showDialog({
+          title: 'Atenção!',
+          description:
+            'Alguns dispositivos podem não atualizar a localização em tempo real quando o aplicativo está em segundo plano. Isso significa que a localização do dog walker pode não ser exibida imediatamente enquanto ele não estiver com o aplicativo aberto. A localização será atualizada assim que o dog walker voltar a usá-lo.',
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: async () => {
+              storedRequests.push(requestId);
+              await EncryptedStorage.setItem(
+                'modalShownRequests',
+                JSON.stringify(storedRequests),
+              );
+              hideDialog();
+            },
+          },
+        });
+      }
+    };
+
+    checkAndShowDialog();
+  }, [hideDialog, showDialog, requestId, isLoading]);
 
   return isLoading ? (
     <View style={styles.loadingContainer}>

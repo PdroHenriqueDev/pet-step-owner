@@ -166,7 +166,7 @@ function Home() {
             confirmLabel: 'Ir para o chat',
             onConfirm: () => {
               navigation.navigate('Chat', {
-                requestId: owner?.currentWalk.requestId,
+                requestId: owner?.currentWalk?.requestId,
               });
               hideDialog();
             },
@@ -188,7 +188,7 @@ function Home() {
     currentRouteName,
     hideDialog,
     navigation,
-    owner?.currentWalk.requestId,
+    owner?.currentWalk?.requestId,
     showDialog,
   ]);
 

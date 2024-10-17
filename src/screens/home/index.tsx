@@ -17,6 +17,7 @@ import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import messaging from '@react-native-firebase/messaging';
+import {AxiosError} from 'axios';
 
 function Home() {
   const {setOwner, owner} = useOwner();
@@ -81,17 +82,32 @@ function Home() {
       setIsLoading(true);
       const fetchOwner = async () => {
         try {
-          const ownerData = await getOwner('66fde3d814cb23cdbb170ab6');
+          const ownerData = await getOwner('670d974b3efe00c83e153eee');
           setOwner(ownerData);
         } catch (error) {
-          console.log('Failed to fetch owner data:', error.response);
+          console.log('Failed to fetch owner data:', error);
+          const errorMessage =
+            error instanceof AxiosError &&
+            typeof error.response?.data?.data === 'string'
+              ? error.response?.data?.data
+              : 'Ocorreu um erro inesperado';
+
+          showDialog({
+            title: errorMessage,
+            confirm: {
+              confirmLabel: 'Entendi',
+              onConfirm: () => {
+                hideDialog();
+              },
+            },
+          });
         } finally {
           setIsLoading(false);
         }
       };
 
       fetchOwner();
-    }, [setOwner]),
+    }, [hideDialog, setOwner, showDialog]),
   );
 
   useEffect(() => {

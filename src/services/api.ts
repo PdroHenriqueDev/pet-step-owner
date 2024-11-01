@@ -4,11 +4,15 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {logoutSerivce} from './auth';
 import {UserRole} from '../enums/role';
 import {Platform} from 'react-native';
+import {auth} from '../../firebaseConfig';
+import {signInWithCustomToken} from 'firebase/auth';
+
+const apiUrl =
+  Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
+// const apiUrl = Config.API_BASE_URL;
 
 const api = axios.create({
-  // baseURL:
-  //   Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000',
-  baseURL: Config.API_BASE_URL,
+  baseURL: apiUrl,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -52,23 +56,25 @@ api.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post(
-          `${Config.API_BASE_URL}/auth/renew-token`,
-          {
-            refreshToken,
-            role: UserRole.Owner,
-          },
-        );
+        const response = await axios.post(`${apiUrl}/auth/renew-token`, {
+          refreshToken,
+          role: UserRole.Owner,
+        });
 
-        const {accessToken: newAccessToken, refreshToken: newRefreshToken} =
-          response.data.data;
+        const {
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+          firebaseToken,
+        } = response.data.data;
 
         await EncryptedStorage.setItem('accessToken', newAccessToken);
         await EncryptedStorage.setItem('refreshToken', newRefreshToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
+        await signInWithCustomToken(auth, firebaseToken);
+
         return axios(originalRequest);
-      } catch {
+      } catch (err) {
         await logoutSerivce();
       }
     }

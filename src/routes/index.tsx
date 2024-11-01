@@ -1,15 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import HomeTabs from './tabs';
 import {AuthStack} from './authStack';
 import {useAuth} from '../contexts/authContext';
 
 function Routes() {
-  const {accessToken, refreshToken, userId, logout} = useAuth();
+  const {
+    accessToken,
+    refreshToken,
+    userId,
+    setAuthTSession,
+    fetchUser,
+    logout,
+  } = useAuth();
 
   // useEffect(() => {
   //   logout();
   // }, []);
+
+  useEffect(() => {
+    setAuthTSession();
+    fetchUser();
+  }, [fetchUser, setAuthTSession]);
 
   const renderContent = () => {
     // if (isLoading) {

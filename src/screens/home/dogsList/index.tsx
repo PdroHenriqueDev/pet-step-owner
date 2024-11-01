@@ -25,7 +25,7 @@ function DogsList() {
       <Text style={styles.label}>Qual Dog vai passear?</Text>
       <View style={styles.listContainer}>
         <ScrollView>
-          {owner?.dogs.map((item, index) => (
+          {owner?.dogs?.map((item, index) => (
             <TouchableOpacity
               key={item._id}
               style={[

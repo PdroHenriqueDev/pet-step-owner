@@ -18,9 +18,11 @@ import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import messaging from '@react-native-firebase/messaging';
 import {AxiosError} from 'axios';
+import {useAuth} from '../../contexts/authContext';
 
 function Home() {
   const {setOwner, owner} = useOwner();
+  const {userId, user} = useAuth();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
   const [isLoading, setIsLoading] = useState(false);
@@ -81,8 +83,11 @@ function Home() {
     useCallback(() => {
       setIsLoading(true);
       const fetchOwner = async () => {
+        if (!user) {
+          return;
+        }
         try {
-          const ownerData = await getOwner('670d974b3efe00c83e153eee');
+          const ownerData = await getOwner(user._id!);
           setOwner(ownerData);
         } catch (error) {
           console.log('Failed to fetch owner data:', error);

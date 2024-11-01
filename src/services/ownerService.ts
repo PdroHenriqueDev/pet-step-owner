@@ -2,6 +2,16 @@ import api from './api';
 import {Owner} from '../interfaces/owner';
 import {CreditCardProps, PaymentMethodProps} from '../interfaces/payment';
 
+export const registerOwner = async (owner: Owner): Promise<any> => {
+  try {
+    const response = await api.post('/owner', owner);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getOwner = async (ownerId: string): Promise<Owner> => {
   try {
     const response = await api.get<Owner>(`/owner/${ownerId}`);

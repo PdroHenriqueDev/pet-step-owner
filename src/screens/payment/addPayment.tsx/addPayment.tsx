@@ -46,9 +46,9 @@ export default function AddPayment() {
       email: owner.email,
     };
 
-    const {customerStripe} = owner;
+    const {stripeAccountId} = owner;
 
-    const setupIntentData = await getSetupIntent(customerStripe.id);
+    const setupIntentData = await getSetupIntent(stripeAccountId);
     const {setupIntentClientSecret} = setupIntentData;
 
     const {error, setupIntent} = await confirmSetupIntent(

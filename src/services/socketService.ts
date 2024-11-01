@@ -13,7 +13,8 @@ export const connectSocket = (requestId: string) => {
   }
   try {
     socket = io(
-      Platform.OS === 'ios' ? Config.API_BASE_URL : 'http://10.0.2.2:3000',
+      // Config.API_BASE_URL,
+      Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000',
       {
         query: {request_id: requestId},
       },

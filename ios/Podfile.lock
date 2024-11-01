@@ -1289,6 +1289,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (2.0.0):
     - React-Core
+  - RNCPicker (2.9.0):
+    - React-Core
   - RNFBApp (20.5.0):
     - Firebase/CoreOnly (= 10.29.0)
     - React-Core
@@ -1487,6 +1489,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeGetLocation (from `../node_modules/react-native-get-location`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -1645,6 +1648,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-location"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -1738,6 +1743,7 @@ SPEC CHECKSUMS:
   ReactCommon: e5866ad8f7487779853fa3fe33f1c075207c3262
   ReactNativeGetLocation: b4379a01dff72507d9abce5f4d569b98abef7761
   RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
+  RNCPicker: f963e01f78e546a93b98aa201501713dbda14e94
   RNFBApp: 017499cd7ea340963bfac43b4fcb28d2b0b21a09
   RNFBMessaging: 81f9447a3790df25c72753b446247ebeba95b182
   RNGestureHandler: 20a4307fd21cbff339abfcfa68192f3f0a6a518b

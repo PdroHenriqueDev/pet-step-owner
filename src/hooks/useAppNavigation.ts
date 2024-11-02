@@ -17,6 +17,7 @@ type RootStackParamList = {
   CardActionsScreen: {cardId: string};
   UpdateOwnerScreen: {field: FieldOwnerProps};
   ForgotPasswordScreen: undefined;
+  AddDogs: undefined;
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

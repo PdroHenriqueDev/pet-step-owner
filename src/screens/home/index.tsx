@@ -32,7 +32,7 @@ function Home() {
     return route.name;
   });
 
-  const {navigation} = useAppNavigation() as any;
+  const {navigation} = useAppNavigation();
 
   const [locationPermission, setLocationPermission] =
     useState<PermissionStatus | null>(null);
@@ -213,27 +213,47 @@ function Home() {
     user?.currentWalk?.requestId,
   ]);
 
+  const addDogs = () => {
+    navigation.navigate('AddDogs');
+  };
+
   return (
     <ScrollView style={styles.scrollViewContainer}>
-      <View style={styles.container}>
-        <View style={styles.requestContainer}>
-          {user?.currentWalk ? (
-            <>
-              <Text>O passeio do seu Dog</Text>
-              <CustomButton onPress={handleWalk} label="Acompanhe o passeio" />
-            </>
-          ) : (
-            <>
-              <InputAddress />
-              <DogsList />
-              <View style={styles.buttonContainer}>
-                <CustomButton onPress={handleClick} label="Solicitar passeio" />
-              </View>
-            </>
-          )}
+      {user?.dogs ? (
+        <View style={styles.container}>
+          <View style={styles.requestContainer}>
+            {user?.currentWalk ? (
+              <>
+                <Text>O passeio do seu Dog</Text>
+                <CustomButton
+                  onPress={handleWalk}
+                  label="Acompanhe o passeio"
+                />
+              </>
+            ) : (
+              <>
+                <InputAddress />
+                <DogsList />
+                <View style={styles.buttonContainer}>
+                  <CustomButton
+                    onPress={handleClick}
+                    label="Solicitar passeio"
+                  />
+                </View>
+              </>
+            )}
+          </View>
+          <DogWalkerList />
         </View>
-        <DogWalkerList />
-      </View>
+      ) : (
+        <View className="p-5">
+          <Text className="text-dark text-center text-2xl font-bold mb-5">
+            Você precisa adicioner seus Dogs antes de solicitar um passeio.
+          </Text>
+
+          <CustomButton label={'Adicionar meus Dogs'} onPress={addDogs} />
+        </View>
+      )}
     </ScrollView>
   );
 }

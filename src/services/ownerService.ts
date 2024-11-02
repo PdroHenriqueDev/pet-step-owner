@@ -51,3 +51,13 @@ export const updateDefaultPaymentMethod = async ({
     throw error;
   }
 };
+
+export const searchBreeds = async (term: string): Promise<any> => {
+  try {
+    const response = await api.get(`/owner/dogs-breeds/search?query=${term}`);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

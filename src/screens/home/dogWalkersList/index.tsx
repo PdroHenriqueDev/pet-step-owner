@@ -11,6 +11,7 @@ import {useRequest} from '../../../contexts/requestContext';
 import {useDialog} from '../../../contexts/dialogContext';
 import {useNavigation} from '@react-navigation/native';
 import Spinner from '../../../components/spinner/spinner';
+import {AxiosError} from 'axios';
 
 function DogWalkerList() {
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
@@ -36,14 +37,27 @@ function DogWalkerList() {
         });
         setDogWalkers(recommedDogWalkers);
       } catch (error) {
-        console.error('Failed to fetch recommed DogWalkers:', error);
+        const errorMessage =
+          error instanceof AxiosError &&
+          typeof error.response?.data?.data === 'string'
+            ? error.response?.data?.data
+            : 'Ocorreu um erro inesperado';
+        showDialog({
+          title: errorMessage,
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: () => {
+              hideDialog();
+            },
+          },
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchOwner();
-  }, [receivedLocation]);
+  }, [hideDialog, receivedLocation, showDialog]);
 
   const handleSelectDogWalker = (id: string) => {
     if (selectedDogIds.length === 0 || selectedDogIds.length > 3) {

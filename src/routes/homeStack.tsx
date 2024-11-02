@@ -9,6 +9,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import WalkStart from '../screens/home/walkStart/walkStart';
 import WalkInProgress from '../screens/home/walkInProgess/walkInProgess';
 import Chat from '../screens/home/chat/chat';
+import AddDogScreen from '../components/addDog/addDogScreen';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -80,6 +81,14 @@ function HomeStack() {
       <Screen
         name="Chat"
         component={Chat}
+        options={{
+          header: customHeader,
+          headerTransparent: true,
+        }}
+      />
+      <Screen
+        name="AddDogs"
+        component={AddDogScreen}
         options={{
           header: customHeader,
           headerTransparent: true,

@@ -5,27 +5,29 @@ import globalStyles from '../../styles/globalStyles';
 import Spinner from '../../components/spinner/spinner';
 import HistoryCard from './historyCard/historyCard';
 import {listWalks} from '../../services/walkService';
-import {useOwner} from '../../contexts/ownerContext';
+// import {useOwner} from '../../contexts/ownerContext';
 import {WalkProps} from '../../interfaces/walk';
 import {useFocusEffect} from '@react-navigation/native';
 import ItemSeparator from '../../components/itemSeparator/itemSeparator';
+import {useAuth} from '../../contexts/authContext';
 
 const separator = () => <ItemSeparator />;
 
 export default function History() {
   const [isLoading, setIsLoading] = useState(true);
   const [walks, setWalks] = useState<WalkProps[]>([]);
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
 
   useFocusEffect(
     useCallback(() => {
       const getWalks = async () => {
-        if (!owner) {
+        if (!user) {
           return;
         }
 
         try {
-          const list = await listWalks(owner._id, 1);
+          const list = await listWalks(user._id as string, 1);
           setWalks(list);
         } catch (error) {
           console.error('Failed to fetch recommed DogWalkers:', error);
@@ -35,7 +37,7 @@ export default function History() {
       };
 
       getWalks();
-    }, [owner]),
+    }, [user]),
   );
 
   const renderItem = ({item}: {item: WalkProps}) => (

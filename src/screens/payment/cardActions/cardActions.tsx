@@ -6,12 +6,14 @@ import colors from '../../../styles/colors';
 import {useAppNavigation} from '../../../hooks/useAppNavigation';
 import styles from './styles';
 import {updateDefaultPaymentMethod} from '../../../services/ownerService';
-import {useOwner} from '../../../contexts/ownerContext';
+// import {useOwner} from '../../../contexts/ownerContext';
 import {removePaymentMethod} from '../../../services/paymentService';
+import {useAuth} from '../../../contexts/authContext';
 
 export default function CardActions() {
   const {route, navigation} = useAppNavigation();
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
   const {cardId} = route.params;
 
   const [isDefaultLoading, setIsDefaultLoading] = useState(false);
@@ -20,7 +22,7 @@ export default function CardActions() {
   const {showDialog, hideDialog} = useDialog();
 
   const handleMakeDefault = async () => {
-    if (!owner || !cardId) {
+    if (!user || !cardId) {
       return;
     }
 
@@ -28,7 +30,7 @@ export default function CardActions() {
 
     try {
       await updateDefaultPaymentMethod({
-        ownerId: owner._id,
+        ownerId: user._id as string,
         paymentMethodId: cardId,
       });
 
@@ -50,14 +52,17 @@ export default function CardActions() {
   };
 
   const handleDelete = async () => {
-    if (!owner || !cardId) {
+    if (!user || !cardId) {
       return;
     }
 
     setIsRemoveLoading(true);
 
     try {
-      await removePaymentMethod({ownerId: owner._id, paymentMethodId: cardId});
+      await removePaymentMethod({
+        ownerId: user._id as string,
+        paymentMethodId: cardId,
+      });
 
       navigation.goBack();
     } catch (error) {

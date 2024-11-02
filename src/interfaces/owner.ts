@@ -1,3 +1,4 @@
+import {WalkEvents} from '../enums/walk';
 import {Dog} from './dog';
 
 export interface Owner {
@@ -16,7 +17,7 @@ export interface Owner {
   totalRatings?: number;
   currentWalk?: {
     requestId: string;
-    status: string;
+    status: WalkEvents;
   };
   stripeAccountId?: string;
   confirmPassword?: string;

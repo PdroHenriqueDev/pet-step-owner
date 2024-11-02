@@ -5,7 +5,7 @@ import {
 } from '@stripe/stripe-react-native';
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {useOwner} from '../../../contexts/ownerContext';
+// import {useOwner} from '../../../contexts/ownerContext';
 import {getSetupIntent} from '../../../services/paymentService';
 import styles from './styles';
 import CustomButton from '../../../components/customButton';
@@ -13,9 +13,11 @@ import {useDialog} from '../../../contexts/dialogContext';
 import {Details} from '@stripe/stripe-react-native/lib/typescript/src/types/components/CardFieldInput';
 import {useNavigation} from '@react-navigation/native';
 import {updateDefaultPaymentMethod} from '../../../services/ownerService';
+import {useAuth} from '../../../contexts/authContext';
 
 export default function AddPayment() {
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
   const {confirmSetupIntent, loading} = useConfirmSetupIntent();
   const {showDialog, hideDialog} = useDialog();
   const [cardDetails, setCardDetails] = useState<Details>(null!);
@@ -24,7 +26,7 @@ export default function AddPayment() {
   const navigation = useNavigation();
 
   const handlePayPress = async () => {
-    if (!owner) {
+    if (!user) {
       return;
     }
 
@@ -43,12 +45,12 @@ export default function AddPayment() {
     }
 
     const billingDetails: BillingDetails = {
-      email: owner.email,
+      email: user.email,
     };
 
-    const {stripeAccountId} = owner;
+    const {stripeAccountId} = user;
 
-    const setupIntentData = await getSetupIntent(stripeAccountId);
+    const setupIntentData = await getSetupIntent(stripeAccountId as string);
     const {setupIntentClientSecret} = setupIntentData;
 
     const {error, setupIntent} = await confirmSetupIntent(
@@ -95,7 +97,10 @@ export default function AddPayment() {
     if (paymentMethodId) {
       setIsLoading(true);
       try {
-        await updateDefaultPaymentMethod({ownerId: owner._id, paymentMethodId});
+        await updateDefaultPaymentMethod({
+          ownerId: user._id as string,
+          paymentMethodId,
+        });
       } catch {
         showDialog({
           title: 'Erro',

@@ -7,7 +7,7 @@ import DogWalkerList from './dogWalkersList';
 import CustomButton from '../../components/customButton';
 import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
-import {useOwner} from '../../contexts/ownerContext';
+// import {useOwner} from '../../contexts/ownerContext';
 import {getOwner} from '../../services/ownerService';
 import {useFocusEffect, useNavigationState} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
@@ -21,7 +21,7 @@ import {AxiosError} from 'axios';
 import {useAuth} from '../../contexts/authContext';
 
 function Home() {
-  const {setOwner, owner} = useOwner();
+  // const {setOwner, owner} = useOwner();
   const {userId, user} = useAuth();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
@@ -71,49 +71,49 @@ function Home() {
   };
 
   const handleWalk = () => {
-    const {requestId} = owner?.currentWalk ?? {};
+    const {requestId} = user?.currentWalk ?? {};
     if (requestId) {
-      owner?.currentWalk.status === WalkEvents.IN_PROGRESS
+      user?.currentWalk?.status === WalkEvents.IN_PROGRESS
         ? navigation.navigate('WalkInProgress', {requestId})
         : navigation.navigate('WalkStart', {requestId});
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      setIsLoading(true);
-      const fetchOwner = async () => {
-        if (!user) {
-          return;
-        }
-        try {
-          const ownerData = await getOwner(user._id!);
-          setOwner(ownerData);
-        } catch (error) {
-          console.log('Failed to fetch owner data:', error);
-          const errorMessage =
-            error instanceof AxiosError &&
-            typeof error.response?.data?.data === 'string'
-              ? error.response?.data?.data
-              : 'Ocorreu um erro inesperado';
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setIsLoading(true);
+  //     const fetchOwner = async () => {
+  //       if (!user) {
+  //         return;
+  //       }
+  //       try {
+  //         const ownerData = await getOwner(user._id!);
+  //         setOwner(ownerData);
+  //       } catch (error) {
+  //         console.log('Failed to fetch owner data:', error);
+  //         const errorMessage =
+  //           error instanceof AxiosError &&
+  //           typeof error.response?.data?.data === 'string'
+  //             ? error.response?.data?.data
+  //             : 'Ocorreu um erro inesperado';
 
-          showDialog({
-            title: errorMessage,
-            confirm: {
-              confirmLabel: 'Entendi',
-              onConfirm: () => {
-                hideDialog();
-              },
-            },
-          });
-        } finally {
-          setIsLoading(false);
-        }
-      };
+  //         showDialog({
+  //           title: errorMessage,
+  //           confirm: {
+  //             confirmLabel: 'Entendi',
+  //             onConfirm: () => {
+  //               hideDialog();
+  //             },
+  //           },
+  //         });
+  //       } finally {
+  //         setIsLoading(false);
+  //       }
+  //     };
 
-      fetchOwner();
-    }, [hideDialog, setOwner, showDialog]),
-  );
+  //     fetchOwner();
+  //   }, [hideDialog, setOwner, showDialog]),
+  // );
 
   useEffect(() => {
     const showLocationPermissionDeniedDialog = () => {
@@ -187,7 +187,7 @@ function Home() {
             confirmLabel: 'Ir para o chat',
             onConfirm: () => {
               navigation.navigate('Chat', {
-                requestId: owner?.currentWalk?.requestId,
+                requestId: user?.currentWalk?.requestId,
               });
               hideDialog();
             },
@@ -209,15 +209,15 @@ function Home() {
     currentRouteName,
     hideDialog,
     navigation,
-    owner?.currentWalk?.requestId,
     showDialog,
+    user?.currentWalk?.requestId,
   ]);
 
   return (
     <ScrollView style={styles.scrollViewContainer}>
       <View style={styles.container}>
         <View style={styles.requestContainer}>
-          {owner?.currentWalk ? (
+          {user?.currentWalk ? (
             <>
               <Text>O passeio do seu Dog</Text>
               <CustomButton onPress={handleWalk} label="Acompanhe o passeio" />

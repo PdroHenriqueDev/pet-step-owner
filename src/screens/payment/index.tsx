@@ -3,13 +3,14 @@ import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useState} from 'react';
 import {getPaymentsMethods} from '../../services/ownerService';
-import {useOwner} from '../../contexts/ownerContext';
+// import {useOwner} from '../../contexts/ownerContext';
 import {Icon, ListItem} from '@rneui/base';
 import {CardBrand, PaymentMethodProps} from '../../interfaces/payment';
 import globalStyles from '../../styles/globalStyles';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from '../../components/spinner/spinner';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
+import {useAuth} from '../../contexts/authContext';
 
 const icons: Record<CardBrand, {type: string; name: string}> = {
   visa: {
@@ -27,7 +28,8 @@ const icons: Record<CardBrand, {type: string; name: string}> = {
 };
 
 export default function Payment() {
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethodProps[]>(
     [],
   );
@@ -38,7 +40,7 @@ export default function Payment() {
     useCallback(() => {
       setLoading(true);
       const fetchPaymentMethods = async () => {
-        if (!owner) {
+        if (!user) {
           return;
         }
         try {
@@ -62,7 +64,7 @@ export default function Payment() {
       };
 
       fetchPaymentMethods();
-    }, [owner]),
+    }, [user]),
   );
 
   const handlePress = (cardId: string) => {

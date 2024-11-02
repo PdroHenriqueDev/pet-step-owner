@@ -5,10 +5,12 @@ import {CheckBox, Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useRequest} from '../../../contexts/requestContext';
-import {useOwner} from '../../../contexts/ownerContext';
+import {useAuth} from '../../../contexts/authContext';
+// import {useOwner} from '../../../contexts/ownerContext';
 
 function DogsList() {
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
   const {selectedDogIds, onDogSelectionChanged} = useRequest();
 
   const handleCheckBoxPress = (id: string) => {
@@ -25,12 +27,12 @@ function DogsList() {
       <Text style={styles.label}>Qual Dog vai passear?</Text>
       <View style={styles.listContainer}>
         <ScrollView>
-          {owner?.dogs?.map((item, index) => (
+          {user?.dogs?.map((item, index) => (
             <TouchableOpacity
               key={item._id}
               style={[
                 styles.checkBoxContainer,
-                index !== owner?.dogs.length - 1 && styles.itemMargin,
+                index !== user.dogs!.length - 1 && styles.itemMargin,
               ]}
               onPress={() => handleCheckBoxPress(item._id)}>
               <View style={styles.dog}>

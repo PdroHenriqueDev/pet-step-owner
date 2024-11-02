@@ -12,12 +12,13 @@ import CustomButton from '../../../../components/customButton';
 import colors from '../../../../styles/colors';
 import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
-import {useOwner} from '../../../../contexts/ownerContext';
+// import {useOwner} from '../../../../contexts/ownerContext';
 import Spinner from '../../../../components/spinner/spinner';
 import {useDialog} from '../../../../contexts/dialogContext';
 import {useAppNavigation} from '../../../../hooks/useAppNavigation';
 import {calculateCost, requestWalk} from '../../../../services/walkService';
-import { AxiosError } from 'axios';
+import {AxiosError} from 'axios';
+import {useAuth} from '../../../../contexts/authContext';
 
 const stepsConfig = [
   {
@@ -54,7 +55,7 @@ function RequestBottomSheet() {
     selectedDogWalkerId,
     onselectedDogWalker,
   } = useRequest();
-  const {owner} = useOwner();
+  const {user} = useAuth();
 
   const {showDialog, hideDialog} = useDialog();
 
@@ -139,7 +140,7 @@ function RequestBottomSheet() {
     setIsLoading(true);
     try {
       const data = await calculateCost({
-        ownerId: owner!._id,
+        ownerId: user!._id as string,
         dogWalkerId: selectedDogWalkerId,
         walkDurationMinutes: selectedTime,
         numberOfDogs: selectedDogIds.length,

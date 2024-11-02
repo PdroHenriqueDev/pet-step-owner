@@ -2,18 +2,20 @@ import React from 'react';
 import {View, Text, FlatList} from 'react-native';
 import styles from './styles';
 import globalStyles from '../../styles/globalStyles';
-import {useOwner} from '../../contexts/ownerContext';
+// import {useOwner} from '../../contexts/ownerContext';
 import {truncateText} from '../../utils/textUtils';
 import {Icon, ListItem} from '@rneui/base';
 import colors from '../../styles/colors';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import {FieldOwnerProps} from '../../interfaces/owner';
+import {useAuth} from '../../contexts/authContext';
 
 function Account() {
-  const {owner} = useOwner();
+  // const {owner} = useOwner();
+  const {user} = useAuth();
   const {navigation} = useAppNavigation();
 
-  if (!owner) {
+  if (!user) {
     return (
       <View className="flex-1 justify-center">
         <Text style={globalStyles.text}>Faça o login</Text>
@@ -25,33 +27,33 @@ function Account() {
     {
       id: '1',
       label: 'Dogs',
-      value: owner.dogs,
+      value: user.dogs,
       hide: true,
     },
     {
       id: '2',
       label: 'Nome',
-      value: owner.name,
+      value: user.name,
     },
     {
       id: '3',
       label: 'Sobrenome',
-      value: owner.lastName,
+      value: user.lastName,
     },
     {
       id: '4',
       label: 'Número',
-      value: owner.phoneNumber,
+      value: user.phoneNumber,
     },
     {
       id: '5',
       label: 'Email',
-      value: owner.email,
+      value: user.email,
     },
     {
       id: '6',
       label: 'Senha',
-      value: owner.password,
+      value: user.password,
       hide: true,
     },
     {
@@ -86,7 +88,7 @@ function Account() {
       <View className="flex-col items-center mb-5">
         <Text style={globalStyles.headerTitle}>
           {truncateText({
-            text: owner.name || '',
+            text: user.name || '',
             maxLength: 25,
           })}
         </Text>
@@ -94,7 +96,7 @@ function Account() {
           style={styles.rateContainer}
           className="flex-row items-center justify-between">
           <Icon type="feather" name="star" size={16} color={colors.dark} />
-          <Text style={globalStyles.label}>{owner?.rate}</Text>
+          <Text style={globalStyles.label}>{user?.rate}</Text>
         </View>
       </View>
       <FlatList

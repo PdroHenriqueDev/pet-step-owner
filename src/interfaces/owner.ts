@@ -3,7 +3,7 @@ import {Dog} from './dog';
 
 export interface Owner {
   _id?: string;
-  name: string;
+  name?: string;
   lastName?: string;
   email: string;
   phone: string;

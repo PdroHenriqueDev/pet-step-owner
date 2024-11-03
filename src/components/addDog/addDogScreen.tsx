@@ -16,14 +16,22 @@ import CustomTextInput from '../customTextInput/customTextInput';
 import CustomButton from '../customButton';
 import {PlataformEnum} from '../../enums/platform.enum';
 import colors from '../../styles/colors';
-import {searchBreeds} from '../../services/ownerService';
+import {addDog, searchBreeds} from '../../services/ownerService';
 import CustomPicker from '../customPicker/customPicker';
+import {Dog} from '../../interfaces/dog';
+import {AxiosError} from 'axios';
+import {useAppNavigation} from '../../hooks/useAppNavigation';
 
 export default function DogRegistration() {
   const {setIsLoading, isLoading} = useAuth();
   const {showDialog, hideDialog} = useDialog();
+  const {user, handleSetUser} = useAuth();
+  const {navigation} = useAppNavigation();
+
   const [hasBreed, setHasBreed] = useState(false);
-  const [breeds, setBreeds] = useState<{label: string; value: string}[]>([]);
+  const [breeds, setBreeds] = useState<
+    {label: string; value: string; size: string}[]
+  >([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingBreeds, setLoadingBreeds] = useState(false);
   const [selectedBreed, setSelectedBreed] = useState<string>('');
@@ -52,10 +60,13 @@ export default function DogRegistration() {
     try {
       const {data} = await searchBreeds(searchQuery);
 
-      const breedOptions = data.map((breed: {id: number; name: string}) => ({
-        label: breed.name,
-        value: breed.name,
-      }));
+      const breedOptions = data.map(
+        (breed: {id: number; name: string; size: string}) => ({
+          label: breed.name,
+          value: breed.name,
+          size: breed.size,
+        }),
+      );
       setBreeds(breedOptions);
     } catch (error) {
       showDialog({
@@ -77,21 +88,61 @@ export default function DogRegistration() {
     size: string;
   }) => {
     setIsLoading(true);
+
+    const {dogName, breed, size} = data;
+
+    const dog: Dog = {
+      name: dogName,
+      breed: hasBreed ? breed : 'unknown breed',
+      size,
+    };
+
     try {
-      console.log('Dog registered:', data);
+      const {data} = await addDog(dog);
+
+      const dogResult = data?.data as Dog;
+      if (user) {
+        handleSetUser({
+          ...user,
+          dogs: user?.dogs ? [...user.dogs, dogResult] : [dogResult],
+        });
+      }
+
       showDialog({
         title: 'Cadastro realizado com sucesso!',
         confirm: {
-          confirmLabel: 'Ok',
-          onConfirm: hideDialog,
+          confirmLabel: 'Adicionar outro cão',
+          onConfirm: () => {
+            hideDialog();
+            setValue('dogName', '');
+            setValue('breed', '');
+            setValue('size', '');
+            setHasBreed(false);
+            setSelectedBreed('');
+            setSearchQuery('');
+          },
+        },
+        cancel: {
+          cancelLabel: 'Voltar ao início',
+          onCancel: () => {
+            hideDialog();
+            navigation.goBack();
+          },
         },
       });
     } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
       showDialog({
-        title: 'Erro ao cadastrar o cachorro',
+        title: errorMessage,
         confirm: {
           confirmLabel: 'Entendi',
-          onConfirm: hideDialog,
+          onConfirm: () => {
+            hideDialog();
+          },
         },
       });
     } finally {
@@ -141,51 +192,68 @@ export default function DogRegistration() {
       {hasBreed && (
         <>
           <View className="mb-3">
-            <TextInput
-              value={selectedBreed || searchQuery}
-              onChangeText={text => {
-                setSearchQuery(text);
-                setSelectedBreed('');
+            <Controller
+              control={control}
+              name="breed"
+              rules={{
+                required: hasBreed ? 'A raça é obrigatória' : undefined,
               }}
-              placeholder="Digite o nome da raça (mín. 3 caracteres)"
-              style={{
-                borderWidth: 1,
-                borderColor: colors.border,
-                borderRadius: 8,
-                padding: 10,
-                marginBottom: 10,
-              }}
-            />
-            {loadingBreeds && (
-              <ActivityIndicator size="small" color={colors.secondary} />
-            )}
-            {searchQuery.length >= 3 && breeds.length > 0 && (
-              <FlatList
-                data={breeds}
-                keyExtractor={item => item.value}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedBreed(item.value);
-                      setValue('breed', item.value, {shouldValidate: true});
-                      setBreeds([]);
+              render={({field: {value}}) => (
+                <>
+                  <TextInput
+                    value={selectedBreed || searchQuery}
+                    onChangeText={text => {
+                      setSearchQuery(text);
+                      setSelectedBreed('');
                     }}
+                    placeholder="Digite o nome da raça (mín. 3 caracteres)"
                     style={{
+                      borderWidth: 1,
+                      borderColor: colors.border,
+                      borderRadius: 8,
                       padding: 10,
-                      borderBottomWidth: 1,
-                      borderBottomColor: colors.border,
-                    }}>
-                    <Text>{item.label}</Text>
-                  </TouchableOpacity>
-                )}
-                style={{
-                  maxHeight: 150,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  borderRadius: 8,
-                  backgroundColor: 'white',
-                }}
-              />
+                      marginBottom: 10,
+                    }}
+                  />
+                  {loadingBreeds && (
+                    <ActivityIndicator size="small" color={colors.secondary} />
+                  )}
+                  {searchQuery.length >= 3 && breeds.length > 0 && (
+                    <FlatList
+                      data={breeds}
+                      keyExtractor={item => item.value}
+                      renderItem={({item}) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setSelectedBreed(item.value);
+                            setValue('breed', item.value, {
+                              shouldValidate: true,
+                            });
+                            setValue('size', item.size, {shouldValidate: true});
+                            setBreeds([]);
+                          }}
+                          style={{
+                            padding: 10,
+                            borderBottomWidth: 1,
+                            borderBottomColor: colors.border,
+                          }}>
+                          <Text>{item.label}</Text>
+                        </TouchableOpacity>
+                      )}
+                      style={{
+                        maxHeight: 150,
+                        borderWidth: 1,
+                        borderColor: colors.border,
+                        borderRadius: 8,
+                        backgroundColor: 'white',
+                      }}
+                    />
+                  )}
+                </>
+              )}
+            />
+            {errors.breed && (
+              <Text style={{color: 'red'}}>{errors.breed.message}</Text>
             )}
           </View>
         </>
@@ -201,27 +269,13 @@ export default function DogRegistration() {
               isEditable={false}
             />
           </View>
-          {/* <View className="mb-3">
-            <Controller
-              control={control}
-              name="size"
-              render={({field: {value}}) => (
-                <CustomTextInput
-                  value={value}
-                  placeholder="Tamanho (Pequeno, Médio, Grande)"
-                  onChangeText={(text: string) =>
-                    setValue('size', text, {shouldValidate: true})
-                  }
-                  isEditable={!isLoading}
-                />
-              )}
-            />
-          </View> */}
           <View className="mb-3">
             <Controller
               control={control}
               name="size"
-              rules={{required: 'Tamanho é obrigatório'}}
+              rules={{
+                required: !hasBreed ? 'Tamanho é obrigatório' : undefined,
+              }}
               render={({field: {value}}) => (
                 <CustomPicker
                   selectedValue={value}

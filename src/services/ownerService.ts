@@ -61,3 +61,13 @@ export const searchBreeds = async (term: string): Promise<any> => {
     throw error;
   }
 };
+
+export const addDog = async (dog: Dog): Promise<any> => {
+  try {
+    const response = await api.post('/owner/dog', dog);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

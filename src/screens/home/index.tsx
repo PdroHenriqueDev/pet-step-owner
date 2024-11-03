@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import InputAddress from './inputAddress';
@@ -7,9 +7,7 @@ import DogWalkerList from './dogWalkersList';
 import CustomButton from '../../components/customButton';
 import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
-// import {useOwner} from '../../contexts/ownerContext';
-import {getOwner} from '../../services/ownerService';
-import {useFocusEffect, useNavigationState} from '@react-navigation/native';
+import {useNavigationState} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
@@ -17,12 +15,10 @@ import {PERMISSIONS, PermissionStatus, request} from 'react-native-permissions';
 import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import messaging from '@react-native-firebase/messaging';
-import {AxiosError} from 'axios';
 import {useAuth} from '../../contexts/authContext';
 
 function Home() {
-  // const {setOwner, owner} = useOwner();
-  const {userId, user} = useAuth();
+  const {user} = useAuth();
   const {showDialog, hideDialog} = useDialog();
   const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,12 +47,12 @@ function Home() {
       return;
     }
 
-    if (selectedDogIds.length === 0 || selectedDogIds.length > 3) {
+    if (selectedDogIds.length === 0 || selectedDogIds.length > 4) {
       showDialog({
         title:
           selectedDogIds.length === 0
             ? 'É preciso no mínimo 1 dog'
-            : 'Só é permitido no máximo 3 dogs',
+            : 'Só é permitido no máximo 4 dogs',
         confirm: {
           confirmLabel: 'Entendi',
           onConfirm: () => {

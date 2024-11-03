@@ -6,10 +6,8 @@ import colors from '../../../styles/colors';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useRequest} from '../../../contexts/requestContext';
 import {useAuth} from '../../../contexts/authContext';
-// import {useOwner} from '../../../contexts/ownerContext';
 
 function DogsList() {
-  // const {owner} = useOwner();
   const {user} = useAuth();
   const {selectedDogIds, onDogSelectionChanged} = useRequest();
 
@@ -34,7 +32,7 @@ function DogsList() {
                 styles.checkBoxContainer,
                 index !== user.dogs!.length - 1 && styles.itemMargin,
               ]}
-              onPress={() => handleCheckBoxPress(item._id)}>
+              onPress={() => handleCheckBoxPress(item._id!)}>
               <View style={styles.dog}>
                 <View style={styles.checkBoxContainer}>
                   <View className="flex-row items-center">
@@ -43,8 +41,11 @@ function DogsList() {
                     </Text>
                     <Icon type="font-awesome" name="paw" size={10} />
                   </View>
-                  <Text style={styles.dogInfo}>
+                  {/* <Text style={styles.dogInfo}>
                     {item.breed}, {item.age} {item.age === 1 ? 'ano' : 'anos'}
+                  </Text> */}
+                  <Text style={styles.dogInfo}>
+                    {item.breed === 'unknown breed' ? 'SRD' : item.breed}
                   </Text>
                 </View>
                 <View className="items-center">
@@ -52,15 +53,15 @@ function DogsList() {
                     right
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
-                    checked={selectedDogIds.includes(item._id)}
-                    onPress={() => handleCheckBoxPress(item._id)}
+                    checked={selectedDogIds.includes(item._id!)}
+                    onPress={() => handleCheckBoxPress(item._id!)}
                     checkedColor={colors.dark}
                     uncheckedColor={colors.dark}
                     containerStyle={styles.checkBox}
                     size={17}
                   />
                   <Text style={styles.selectedText}>
-                    {selectedDogIds.includes(item._id)
+                    {selectedDogIds.includes(item._id!)
                       ? 'Selecionado'
                       : 'Não selecionado'}
                   </Text>

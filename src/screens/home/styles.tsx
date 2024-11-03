@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 const styles = StyleSheet.create({
   scrollViewContainer: {
     backgroundColor: colors.primary,
+    flex: 1,
   },
   container: {
     ...globalStyles.backgroudContainer,

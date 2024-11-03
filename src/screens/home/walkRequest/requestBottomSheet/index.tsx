@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
@@ -12,7 +12,6 @@ import CustomButton from '../../../../components/customButton';
 import colors from '../../../../styles/colors';
 import {Icon} from '@rneui/base';
 import {CostDataProps} from '../../../../interfaces/costData';
-// import {useOwner} from '../../../../contexts/ownerContext';
 import Spinner from '../../../../components/spinner/spinner';
 import {useDialog} from '../../../../contexts/dialogContext';
 import {useAppNavigation} from '../../../../hooks/useAppNavigation';
@@ -88,7 +87,10 @@ function RequestBottomSheet() {
     calculationId: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [clickedButton, setClickedButton] = useState(false);
   const [calculation, setCalculation] = useState('');
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
     if (selectedDogWalkerId) {
@@ -202,6 +204,11 @@ function RequestBottomSheet() {
   };
 
   const handleConfirm = async () => {
+    if (!clickedButton) {
+      setClickedButton(true);
+      bottomSheetRef.current?.expand();
+      return;
+    }
     if (currentStep === 0 && selectedDogWalkerId) {
       setCurrentStep(currentStep + 1);
     }
@@ -223,6 +230,7 @@ function RequestBottomSheet() {
   return (
     <View style={styles.container}>
       <BottomSheet
+        ref={bottomSheetRef}
         snapPoints={snapPoints}
         index={0}
         enablePanDownToClose={false}
@@ -265,7 +273,13 @@ function RequestBottomSheet() {
       <View style={styles.fixedFooter}>
         <CustomButton
           onPress={handleConfirm}
-          label={currentStep === 2 ? 'Iniciar passeio' : 'Confirmar'}
+          label={
+            !clickedButton
+              ? 'Continuar'
+              : currentStep === 2
+              ? 'Iniciar passeio'
+              : 'Confirmar'
+          }
           disabled={isLoading}
         />
       </View>

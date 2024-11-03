@@ -60,12 +60,12 @@ function DogWalkerList() {
   }, [hideDialog, receivedLocation, showDialog]);
 
   const handleSelectDogWalker = (id: string) => {
-    if (selectedDogIds.length === 0 || selectedDogIds.length > 3) {
+    if (selectedDogIds.length === 0 || selectedDogIds.length > 4) {
       showDialog({
         title:
           selectedDogIds.length === 0
             ? 'É preciso no mínimo 1 dog'
-            : 'Só é permitido no máximo 3 dogs',
+            : 'Só é permitido no máximo 4 dogs',
         confirm: {
           confirmLabel: 'Entendi',
           onConfirm: () => {

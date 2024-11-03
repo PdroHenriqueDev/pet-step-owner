@@ -1,4 +1,5 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
+import {PlataformEnum} from '../../../enums/platform.enum';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,15 +10,12 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   markerFixed: {
-    left: '50%',
-    top: '55%',
-    marginLeft: -24,
-    marginTop: -36,
+    left: '46%',
+    top: Platform.OS === PlataformEnum.IOS ? '49%' : '47.5%',
     position: 'absolute',
   },
   marker: {
-    height: 48,
-    width: 48,
+    margin: 0,
   },
   bottomSheetContainer: {
     flexGrow: 1,

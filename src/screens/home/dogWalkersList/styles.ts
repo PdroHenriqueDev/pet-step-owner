@@ -3,9 +3,9 @@ import globalStyles from '../../../styles/globalStyles';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: '100%',
     marginTop: 20,
+    marginBottom: 60,
   },
   label: {
     ...globalStyles.label,

@@ -27,6 +27,10 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
     setSelectedDogWalkerId(dogWalkerId);
   };
 
+  const cleanSelectedDogWalker = () => {
+    setSelectedDogWalkerId('');
+  };
+
   return (
     <RequestContext.Provider
       value={{
@@ -38,6 +42,7 @@ export const RequestProvider = ({children}: {children: ReactNode}) => {
         onselectedTime,
         selectedDogWalkerId,
         onselectedDogWalker,
+        cleanSelectedDogWalker,
       }}>
       {children}
     </RequestContext.Provider>

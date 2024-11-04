@@ -9,4 +9,5 @@ export interface RequestContextProps {
   onselectedTime: (selectedTime: number) => void;
   selectedDogWalkerId: string;
   onselectedDogWalker: (selectedTime: string) => void;
+  cleanSelectedDogWalker: () => void;
 }

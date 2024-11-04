@@ -20,7 +20,13 @@ import {useAuth} from '../../contexts/authContext';
 function Home() {
   const {user} = useAuth();
   const {showDialog, hideDialog} = useDialog();
-  const {selectedDogIds, receivedLocation, onLocationReceived} = useRequest();
+  const {
+    selectedDogIds,
+    receivedLocation,
+    onLocationReceived,
+    selectedDogWalkerId,
+    cleanSelectedDogWalker,
+  } = useRequest();
   const [isLoading, setIsLoading] = useState(false);
 
   const currentRouteName = useNavigationState(state => {
@@ -61,6 +67,10 @@ function Home() {
         },
       });
       return;
+    }
+
+    if (selectedDogWalkerId) {
+      cleanSelectedDogWalker();
     }
 
     navigation.navigate('WalkRequest');

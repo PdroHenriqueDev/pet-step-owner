@@ -32,15 +32,16 @@ export const getRecommendedDogWalkers = async ({
 export const getNearestsDogWalkers = async ({
   longitude,
   latitude,
+  limit = 10,
+  skip = 0,
 }: CoordinatesProps): Promise<DogWalker[]> => {
   try {
     const response = await api.get<DogWalker[]>(
-      `/dog-walker/nearest?longitude=${longitude}&latitude=${latitude}`,
+      `/dog-walker/nearest?longitude=${longitude}&latitude=${latitude}&limit=${limit}&skip=${skip}`,
     );
     const {data} = response;
     return data;
   } catch (error) {
-    console.error('Error fetching dog walkers:', error);
     throw error;
   }
 };

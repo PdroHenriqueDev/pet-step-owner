@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useRequest} from '../../../../contexts/requestContext';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
@@ -26,11 +26,15 @@ const stepsConfig = [
       recommededDogWalkers: DogWalker[];
       selectedDogWalkerId: string | null;
       handleSelect: (id: string) => void;
+      loadMore: () => void;
+      isLoadingMore: boolean;
     }) => (
       <NearestDogWalkers
         recommededDogWalkers={props.recommededDogWalkers}
         selectedDogWalkerId={props.selectedDogWalkerId}
         handleSelect={props.handleSelect}
+        loadMore={props.loadMore}
+        isLoadingMore={props.isLoadingMore}
       />
     ),
   },
@@ -89,6 +93,9 @@ function RequestBottomSheet() {
   const [isLoading, setIsLoading] = useState(false);
   const [clickedButton, setClickedButton] = useState(false);
   const [calculation, setCalculation] = useState('');
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -101,38 +108,59 @@ function RequestBottomSheet() {
       return;
     }
 
-    const fetchRecommededDogWalkers = async () => {
-      setIsLoading(true);
-
-      try {
-        const dogWalkers = await getNearestsDogWalkers({
-          latitude: receivedLocation!.latitude,
-          longitude: receivedLocation!.longitude,
-        });
-
-        if (dogWalkers.length > 0 && !selectedDogWalkerId) {
-          onselectedDogWalker(dogWalkers[0]._id);
-        }
-        setRecommededDogWalkers(dogWalkers);
-      } catch {
-        showDialog({
-          title: 'Algo de errado',
-          description: 'Tente novamente.',
-          confirm: {
-            confirmLabel: 'Entendi',
-            onConfirm: () => {
-              hideDialog();
-            },
-          },
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecommededDogWalkers();
+    fetchRecommededDogWalkers(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receivedLocation]);
+
+  const fetchRecommededDogWalkers = async (pageToLoad: number) => {
+    setIsLoading(true);
+
+    if (!receivedLocation || !hasMore) {
+      return;
+    }
+
+    setIsLoading(pageToLoad === 0);
+    setIsLoadingMore(pageToLoad > 0);
+
+    try {
+      const dogWalkers = await getNearestsDogWalkers({
+        latitude: receivedLocation!.latitude,
+        longitude: receivedLocation!.longitude,
+        limit: 10,
+        skip: pageToLoad * 10,
+      });
+
+      if (dogWalkers.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setRecommededDogWalkers(prev =>
+        pageToLoad === 0 ? dogWalkers : [...prev, ...dogWalkers],
+      );
+      setPage(pageToLoad + 1);
+    } catch {
+      showDialog({
+        title: 'Algo de errado',
+        description: 'Tente novamente.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const loadMore = () => {
+    if (!isLoadingMore && hasMore) {
+      fetchRecommededDogWalkers(page);
+    }
+  };
 
   const handleSelect = (id: string) => {
     onselectedDogWalker(id);
@@ -257,14 +285,15 @@ function RequestBottomSheet() {
                 )}
                 <Text style={styles.titleText}>{currentConfig.title}</Text>
               </View>
-              <ScrollView>
-                {currentConfig.component({
-                  recommededDogWalkers,
-                  selectedDogWalkerId,
-                  handleSelect,
-                  costData,
-                })}
-              </ScrollView>
+
+              {currentConfig.component({
+                recommededDogWalkers,
+                selectedDogWalkerId,
+                handleSelect,
+                loadMore,
+                isLoadingMore,
+                costData,
+              })}
             </View>
           )}
         </BottomSheetView>

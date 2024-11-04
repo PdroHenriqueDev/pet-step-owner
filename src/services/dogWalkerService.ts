@@ -13,7 +13,7 @@ export const getDogWalkers = async (): Promise<DogWalker[]> => {
   }
 };
 
-export const getRecommedDogWalkers = async ({
+export const getRecommendedDogWalkers = async ({
   longitude,
   latitude,
 }: CoordinatesProps): Promise<DogWalker[]> => {

@@ -10,6 +10,7 @@ import WalkStart from '../screens/home/walkStart/walkStart';
 import WalkInProgress from '../screens/home/walkInProgess/walkInProgess';
 import Chat from '../screens/home/chat/chat';
 import AddDogScreen from '../components/addDog/addDogScreen';
+import RecommendedDogWalkersScreen from '../screens/home/recommendedDogWalkers/recommendedDogWalkers';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -89,6 +90,14 @@ function HomeStack() {
       <Screen
         name="AddDogs"
         component={AddDogScreen}
+        options={{
+          header: customHeader,
+          headerTransparent: true,
+        }}
+      />
+      <Screen
+        name="RecommendedDogWalkersScreen"
+        component={RecommendedDogWalkersScreen}
         options={{
           header: customHeader,
           headerTransparent: true,

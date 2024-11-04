@@ -18,6 +18,7 @@ type RootStackParamList = {
   UpdateOwnerScreen: {field: FieldOwnerProps};
   ForgotPasswordScreen: undefined;
   AddDogs: undefined;
+  RecommendedDogWalkersScreen: undefined;
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

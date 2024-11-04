@@ -4,7 +4,7 @@ import styles from './styles';
 import {Icon} from '@rneui/base';
 import colors from '../../../styles/colors';
 import {DogWalker} from '../../../interfaces/dogWalker';
-import {getRecommedDogWalkers} from '../../../services/dogWalkerService';
+import {getRecommendedDogWalkers} from '../../../services/dogWalkerService';
 import DogWalkerCard from '../../../components/dogWalkerCard';
 import globalStyles from '../../../styles/globalStyles';
 import {useRequest} from '../../../contexts/requestContext';
@@ -12,6 +12,7 @@ import {useDialog} from '../../../contexts/dialogContext';
 import {useNavigation} from '@react-navigation/native';
 import Spinner from '../../../components/spinner/spinner';
 import {AxiosError} from 'axios';
+import {useAppNavigation} from '../../../hooks/useAppNavigation';
 
 function DogWalkerList() {
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
@@ -20,7 +21,7 @@ function DogWalkerList() {
   const {receivedLocation, onselectedDogWalker, selectedDogIds} = useRequest();
   const {showDialog, hideDialog} = useDialog();
 
-  const navigation = useNavigation() as any;
+  const {navigation} = useAppNavigation();
 
   useEffect(() => {
     const fetchDogWalkers = async () => {
@@ -31,11 +32,11 @@ function DogWalkerList() {
       setIsLoading(true);
 
       try {
-        const recommedDogWalkers = await getRecommedDogWalkers({
+        const recommendedDogWalkers = await getRecommendedDogWalkers({
           latitude: receivedLocation?.latitude,
           longitude: receivedLocation?.longitude,
         });
-        setDogWalkers(recommedDogWalkers);
+        setDogWalkers(recommendedDogWalkers);
       } catch (error) {
         const errorMessage =
           error instanceof AxiosError &&
@@ -81,11 +82,17 @@ function DogWalkerList() {
     navigation.navigate('WalkRequest');
   };
 
+  // const seeAllDogWalkers = () => {
+  //   navigation.navigate('RecommendedDogWalkersScreen');
+  // };
+
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Dog Walkers recomendados</Text>
-        <TouchableOpacity style={styles.buttonContainer}>
+        {/* <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={seeAllDogWalkers}>
           <Text style={styles.buttonLabel}>ver todos</Text>
           <Icon
             type="material"
@@ -94,7 +101,7 @@ function DogWalkerList() {
             color={colors.dark}
             style={styles.icon}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {isLoading ? (
         <Spinner />

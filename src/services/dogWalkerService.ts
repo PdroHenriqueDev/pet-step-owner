@@ -18,10 +18,10 @@ export const getRecommedDogWalkers = async ({
   latitude,
 }: CoordinatesProps): Promise<DogWalker[]> => {
   try {
-    const response = await api.get<DogWalker[]>(
+    const response = await api.get(
       `/dog-walker/recommended?longitude=${longitude}&latitude=${latitude}`,
     );
-    const {data} = response;
+    const {data} = response.data;
     return data;
   } catch (error) {
     console.error('Error fetching dog walkers:', error);

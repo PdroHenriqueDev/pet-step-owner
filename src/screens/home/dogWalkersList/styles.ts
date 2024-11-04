@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     marginTop: 20,
-    marginBottom: 60,
+    marginBottom: 80,
   },
   label: {
     ...globalStyles.label,

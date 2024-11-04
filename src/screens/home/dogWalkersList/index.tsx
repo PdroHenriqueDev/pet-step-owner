@@ -23,7 +23,7 @@ function DogWalkerList() {
   const navigation = useNavigation() as any;
 
   useEffect(() => {
-    const fetchOwner = async () => {
+    const fetchDogWalkers = async () => {
       if (!receivedLocation) {
         return;
       }
@@ -56,7 +56,7 @@ function DogWalkerList() {
       }
     };
 
-    fetchOwner();
+    fetchDogWalkers();
   }, [hideDialog, receivedLocation, showDialog]);
 
   const handleSelectDogWalker = (id: string) => {

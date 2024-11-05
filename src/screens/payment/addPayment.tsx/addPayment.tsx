@@ -4,19 +4,20 @@ import {
   BillingDetails,
 } from '@stripe/stripe-react-native';
 import React, {useState} from 'react';
-import {View} from 'react-native';
-// import {useOwner} from '../../../contexts/ownerContext';
-import {getSetupIntent} from '../../../services/paymentService';
+import {Platform, View} from 'react-native';
 import styles from './styles';
 import CustomButton from '../../../components/customButton';
 import {useDialog} from '../../../contexts/dialogContext';
 import {Details} from '@stripe/stripe-react-native/lib/typescript/src/types/components/CardFieldInput';
 import {useNavigation} from '@react-navigation/native';
-import {updateDefaultPaymentMethod} from '../../../services/ownerService';
+import {
+  getPaymentIntent,
+  updateDefaultPaymentMethod,
+} from '../../../services/ownerService';
 import {useAuth} from '../../../contexts/authContext';
+import {PlataformEnum} from '../../../enums/platform.enum';
 
 export default function AddPayment() {
-  // const {owner} = useOwner();
   const {user} = useAuth();
   const {confirmSetupIntent, loading} = useConfirmSetupIntent();
   const {showDialog, hideDialog} = useDialog();
@@ -48,9 +49,7 @@ export default function AddPayment() {
       email: user.email,
     };
 
-    const {stripeAccountId} = user;
-
-    const setupIntentData = await getSetupIntent(stripeAccountId as string);
+    const setupIntentData = await getPaymentIntent();
     const {setupIntentClientSecret} = setupIntentData;
 
     const {error, setupIntent} = await confirmSetupIntent(
@@ -64,6 +63,7 @@ export default function AddPayment() {
     );
 
     if (error) {
+      console.log('got here error =>', error);
       showDialog({
         title: 'Algo de errado com o cartão',
         description: 'Tente novamente ou cadastre outro cartão',
@@ -120,7 +120,10 @@ export default function AddPayment() {
     navigation.goBack();
   };
   return (
-    <View style={styles.container}>
+    <View
+      className={`flex-1 bg-primary ${
+        Platform.OS === PlataformEnum.IOS ? 'px-5 py-40' : 'px-5 py-10'
+      }`}>
       <CardField
         postalCodeEnabled={false}
         placeholders={{

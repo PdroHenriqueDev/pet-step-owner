@@ -22,12 +22,10 @@ export const getOwner = async (ownerId: string): Promise<Owner> => {
   }
 };
 
-export const getPaymentsMethods = async (
-  ownerId: string,
-): Promise<PaymentMethodProps[]> => {
+export const getPaymentsMethods = async (): Promise<PaymentMethodProps[]> => {
   try {
-    const response = await api.get<any>(`/owner/payments/${ownerId}`);
-    const {data} = response;
+    const response = await api.get<any>(`/owner/payment`);
+    const {data} = response.data;
     return data;
   } catch (error) {
     throw error;
@@ -66,6 +64,16 @@ export const addDog = async (dog: Dog): Promise<any> => {
   try {
     const response = await api.post('/owner/dog', dog);
     const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPaymentIntent = async (): Promise<any> => {
+  try {
+    const response = await api.get('/owner/payment/set-up-intent');
+    const {data} = response.data;
     return data;
   } catch (error) {
     throw error;

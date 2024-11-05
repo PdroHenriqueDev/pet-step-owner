@@ -1,22 +1,22 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, Platform} from 'react-native';
 import styles from './styles';
 import globalStyles from '../../styles/globalStyles';
 import Spinner from '../../components/spinner/spinner';
 import HistoryCard from './historyCard/historyCard';
 import {listWalks} from '../../services/walkService';
-// import {useOwner} from '../../contexts/ownerContext';
 import {WalkProps} from '../../interfaces/walk';
 import {useFocusEffect} from '@react-navigation/native';
 import ItemSeparator from '../../components/itemSeparator/itemSeparator';
 import {useAuth} from '../../contexts/authContext';
+import {PlataformEnum} from '../../enums/platform.enum';
 
 const separator = () => <ItemSeparator />;
 
 export default function History() {
   const [isLoading, setIsLoading] = useState(true);
   const [walks, setWalks] = useState<WalkProps[]>([]);
-  // const {owner} = useOwner();
+
   const {user} = useAuth();
 
   useFocusEffect(
@@ -45,7 +45,10 @@ export default function History() {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      className={`bg-primary flex-1 ${
+        Platform.OS === PlataformEnum.IOS ? 'px-5 py-20' : 'p-5'
+      }`}>
       <Text style={globalStyles.headerTitle}>Histórico</Text>
       {isLoading ? (
         <Spinner />

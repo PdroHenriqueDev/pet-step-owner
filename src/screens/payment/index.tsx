@@ -1,9 +1,8 @@
 import React, {useCallback} from 'react';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Platform, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {useState} from 'react';
 import {getPaymentsMethods} from '../../services/ownerService';
-// import {useOwner} from '../../contexts/ownerContext';
 import {Icon, ListItem} from '@rneui/base';
 import {CardBrand, PaymentMethodProps} from '../../interfaces/payment';
 import globalStyles from '../../styles/globalStyles';
@@ -11,6 +10,9 @@ import {useFocusEffect} from '@react-navigation/native';
 import Spinner from '../../components/spinner/spinner';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import {useAuth} from '../../contexts/authContext';
+import {PlataformEnum} from '../../enums/platform.enum';
+import {AxiosError} from 'axios';
+import {useDialog} from '../../contexts/dialogContext';
 
 const icons: Record<CardBrand, {type: string; name: string}> = {
   visa: {
@@ -28,12 +30,13 @@ const icons: Record<CardBrand, {type: string; name: string}> = {
 };
 
 export default function Payment() {
-  // const {owner} = useOwner();
   const {user} = useAuth();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethodProps[]>(
     [],
   );
   const [loading, setLoading] = useState(false);
+
+  const {showDialog, hideDialog} = useDialog();
   const {navigation} = useAppNavigation();
 
   useFocusEffect(
@@ -44,7 +47,7 @@ export default function Payment() {
           return;
         }
         try {
-          const response = await getPaymentsMethods(owner._id);
+          const response = await getPaymentsMethods();
           const sortedPaymentMethods = response.sort((a, b) => {
             if (a.isSelected) {
               return -1;
@@ -57,7 +60,20 @@ export default function Payment() {
 
           setPaymentMethods(sortedPaymentMethods);
         } catch (error) {
-          console.error(error);
+          const errorMessage =
+            error instanceof AxiosError &&
+            typeof error.response?.data?.data === 'string'
+              ? error.response?.data?.data
+              : 'Ocorreu um erro inesperado';
+          showDialog({
+            title: errorMessage,
+            confirm: {
+              confirmLabel: 'Entendi',
+              onConfirm: () => {
+                hideDialog();
+              },
+            },
+          });
         } finally {
           setLoading(false);
         }
@@ -121,7 +137,10 @@ export default function Payment() {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      className={`bg-primary flex-1 ${
+        Platform.OS === PlataformEnum.IOS ? 'px-5 py-20' : 'p-5'
+      }`}>
       {loading ? (
         <Spinner />
       ) : (

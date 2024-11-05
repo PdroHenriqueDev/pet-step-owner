@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import CustomButton from '../../../components/customButton';
 import {useDialog} from '../../../contexts/dialogContext';
 import colors from '../../../styles/colors';
@@ -9,6 +9,7 @@ import {updateDefaultPaymentMethod} from '../../../services/ownerService';
 // import {useOwner} from '../../../contexts/ownerContext';
 import {removePaymentMethod} from '../../../services/paymentService';
 import {useAuth} from '../../../contexts/authContext';
+import {PlataformEnum} from '../../../enums/platform.enum';
 
 export default function CardActions() {
   const {route, navigation} = useAppNavigation();
@@ -22,6 +23,7 @@ export default function CardActions() {
   const {showDialog, hideDialog} = useDialog();
 
   const handleMakeDefault = async () => {
+    console.log('got here');
     if (!user || !cardId) {
       return;
     }
@@ -51,7 +53,27 @@ export default function CardActions() {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
+    showDialog({
+      title: 'Tem certeza?',
+      description: 'Deseja realemte excluir esse método de pagamento',
+      confirm: {
+        confirmLabel: 'Não',
+        onConfirm: () => {
+          hideDialog();
+        },
+      },
+      cancel: {
+        cancelLabel: 'Sim',
+        onCancel: async () => {
+          hideDialog();
+          await deleteCard();
+        },
+      },
+    });
+  };
+
+  const deleteCard = async () => {
     if (!user || !cardId) {
       return;
     }
@@ -84,7 +106,10 @@ export default function CardActions() {
   };
 
   return (
-    <View className="flex-col" style={styles.container}>
+    <View
+      className={`flex-1 flex-col bg-primary ${
+        Platform.OS === PlataformEnum.IOS ? 'px-5 py-40' : 'px-5 py-20'
+      }`}>
       <View className="mb-2">
         <CustomButton
           label={'Tornar Padrão'}

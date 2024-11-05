@@ -5,12 +5,6 @@ import {CardFieldInput} from '@stripe/stripe-react-native';
 type CardFieldStyles = CardFieldInput.Styles & ViewStyle;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-    backgroundColor: colors.primary,
-  },
   cardStyle: {
     borderWidth: 1,
     borderColor: colors.border,

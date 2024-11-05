@@ -19,7 +19,7 @@ export interface Owner {
     requestId: string;
     status: WalkEvents;
   };
-  stripeAccountId?: string;
+  customerStripeId?: string;
   confirmPassword?: string;
   address?: {
     zipCode?: string;

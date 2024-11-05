@@ -1,6 +1,7 @@
 import api from './api';
 import {Owner} from '../interfaces/owner';
 import {CreditCardProps, PaymentMethodProps} from '../interfaces/payment';
+import {UploadableFile} from '../interfaces/document';
 
 export const registerOwner = async (owner: Owner): Promise<any> => {
   try {
@@ -73,6 +74,43 @@ export const addDog = async (dog: Dog): Promise<any> => {
 export const getPaymentIntent = async (): Promise<any> => {
   try {
     const response = await api.get('/owner/payment/set-up-intent');
+    const {data} = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUser = async (
+  field: string,
+  newValue: any,
+): Promise<any> => {
+  try {
+    const response = await api.put('/owner/update', {
+      field,
+      newValue,
+    });
+
+    const {data} = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const uploadProfileImage = async (
+  documentFile: UploadableFile,
+): Promise<string> => {
+  try {
+    const formData = new FormData();
+    formData.append('profile', documentFile);
+
+    const response = await api.post('/owner/profile-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
     const {data} = response.data;
     return data;
   } catch (error) {

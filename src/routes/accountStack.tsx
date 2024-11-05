@@ -1,8 +1,9 @@
 import React from 'react';
 import {StackHeaderProps, createStackNavigator} from '@react-navigation/stack';
 import Account from '../screens/account/account';
-import UpdateOwner from '../screens/account/updateOwner/updateOwner';
 import CustomHeader from '../components/header/customHeader';
+import UpdateUser from '../screens/account/updateUser/updateUser';
+import UpdateProfileImgScreen from '../screens/account/uploadProfileImg/uploadProfileImage';
 
 const {Navigator, Screen} = createStackNavigator();
 const customHeader = (props: StackHeaderProps) => <CustomHeader {...props} />;
@@ -18,12 +19,14 @@ function AccountStack() {
         }}
       />
       <Screen
-        name="UpdateOwnerScreen"
-        component={UpdateOwner}
-        options={{
-          header: customHeader,
-          headerTransparent: true,
-        }}
+        name="UpdateUserScreen"
+        component={UpdateUser}
+        options={{header: customHeader, headerTransparent: true}}
+      />
+      <Screen
+        name="UpdateProfileImgScreen"
+        component={UpdateProfileImgScreen}
+        options={{header: customHeader, headerTransparent: true}}
       />
     </Navigator>
   );

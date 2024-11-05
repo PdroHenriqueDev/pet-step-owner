@@ -127,7 +127,7 @@ export default function AddPayment() {
       <CardField
         postalCodeEnabled={false}
         placeholders={{
-          number: '4242 4242 4242 4242',
+          number: '1111 1111 1111 1111',
         }}
         cardStyle={styles.cardStyle}
         style={styles.cardField}

@@ -5,6 +5,7 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 import {FieldOwnerProps} from '../interfaces/owner';
+import {FieldsUser} from '../interfaces/fieldsUser';
 
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -19,6 +20,9 @@ type RootStackParamList = {
   ForgotPasswordScreen: undefined;
   AddDogs: undefined;
   RecommendedDogWalkersScreen: undefined;
+  AccountScreen: undefined;
+  UpdateProfileImgScreen: undefined;
+  UpdateUserScreen: {field: FieldsUser};
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

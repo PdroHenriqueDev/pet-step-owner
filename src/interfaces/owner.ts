@@ -8,6 +8,7 @@ export interface Owner {
   email: string;
   phone: string;
   document: string;
+  profileUrl?: string;
   password?: string | null;
   // longitude: number;
   // latitude: number;

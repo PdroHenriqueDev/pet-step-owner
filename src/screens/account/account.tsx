@@ -62,10 +62,9 @@ export default function Account() {
   ];
 
   const handlePress = (field: FieldsUser) => {
-    // field.fieldType === 'bank'
-    //   ? navigation.navigate('BankFlowScreen')
-    //   : navigation.navigate('UpdateUserScreen', {field});
-    navigation.navigate('UpdateUserScreen', {field});
+    field.fieldType === 'dog'
+      ? navigation.navigate('DogListScreen')
+      : navigation.navigate('UpdateUserScreen', {field});
   };
 
   const handleLogout = () => {

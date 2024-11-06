@@ -16,7 +16,12 @@ import CustomTextInput from '../customTextInput/customTextInput';
 import CustomButton from '../customButton';
 import {PlataformEnum} from '../../enums/platform.enum';
 import colors from '../../styles/colors';
-import {addDog, searchBreeds} from '../../services/ownerService';
+import {
+  addDog,
+  deleteDog,
+  searchBreeds,
+  updateDog,
+} from '../../services/ownerService';
 import CustomPicker from '../customPicker/customPicker';
 import {Dog} from '../../interfaces/dog';
 import {AxiosError} from 'axios';
@@ -26,15 +31,21 @@ export default function DogRegistration() {
   const {setIsLoading, isLoading} = useAuth();
   const {showDialog, hideDialog} = useDialog();
   const {user, handleSetUser} = useAuth();
-  const {navigation} = useAppNavigation();
+  const {navigation, route} = useAppNavigation();
 
-  const [hasBreed, setHasBreed] = useState(false);
+  const dogToEdit = route.params?.dog as Dog;
+
+  const [hasBreed, setHasBreed] = useState(
+    !!dogToEdit?.breed && dogToEdit.breed !== 'unknown breed',
+  );
   const [breeds, setBreeds] = useState<
     {label: string; value: string; size: string}[]
   >([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingBreeds, setLoadingBreeds] = useState(false);
-  const [selectedBreed, setSelectedBreed] = useState<string>('');
+  const [selectedBreed, setSelectedBreed] = useState<string>(
+    dogToEdit?.breed || '',
+  );
 
   const {
     control,
@@ -43,9 +54,9 @@ export default function DogRegistration() {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      dogName: '',
-      breed: '',
-      size: '',
+      dogName: dogToEdit?.name || '',
+      breed: dogToEdit?.breed || '',
+      size: dogToEdit?.size || '',
     },
   });
 
@@ -95,36 +106,93 @@ export default function DogRegistration() {
       name: dogName,
       breed: hasBreed ? breed : 'unknown breed',
       size,
+      _id: dogToEdit?._id,
     };
 
     try {
-      const {data} = await addDog(dog);
+      const {data} = dogToEdit ? await updateDog(dog) : await addDog(dog);
 
       const dogResult = data?.data as Dog;
       if (user) {
+        const updatedDogs = dogToEdit
+          ? user.dogs!.map(d => (d._id === dog._id ? dog : d))
+          : [...(user?.dogs || []), dog];
+
         handleSetUser({
           ...user,
-          dogs: user?.dogs ? [...user.dogs, dogResult] : [dogResult],
+          dogs: updatedDogs,
         });
       }
 
       showDialog({
-        title: 'Cadastro realizado com sucesso!',
+        title: dogToEdit
+          ? 'Cão atualizado com sucesso!'
+          : 'Cadastro realizado com sucesso!',
         confirm: {
-          confirmLabel: 'Adicionar outro cão',
+          confirmLabel: dogToEdit ? 'OK' : 'Adicionar outro cão',
           onConfirm: () => {
             hideDialog();
-            setValue('dogName', '');
-            setValue('breed', '');
-            setValue('size', '');
-            setHasBreed(false);
-            setSelectedBreed('');
-            setSearchQuery('');
+            if (!dogToEdit) {
+              setValue('dogName', '');
+              setValue('breed', '');
+              setValue('size', '');
+              setHasBreed(false);
+              setSelectedBreed('');
+              setSearchQuery('');
+            }
+
+            if (dogToEdit) {
+              navigation.goBack();
+            }
           },
         },
-        cancel: {
-          cancelLabel: 'Voltar ao início',
-          onCancel: () => {
+        cancel: dogToEdit
+          ? undefined
+          : {
+              cancelLabel: 'Voltar ao início',
+              onCancel: () => {
+                hideDialog();
+                navigation.goBack();
+              },
+            },
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
+      showDialog({
+        title: errorMessage,
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!dogToEdit._id || !user) return;
+
+    setIsLoading(true);
+    try {
+      await deleteDog(dogToEdit._id);
+
+      handleSetUser({
+        ...user,
+        dogs: user?.dogs?.filter(dog => dog._id !== dogToEdit!._id),
+      });
+
+      showDialog({
+        title: 'Cão excluído com sucesso!',
+        confirm: {
+          confirmLabel: 'OK',
+          onConfirm: () => {
             hideDialog();
             navigation.goBack();
           },
@@ -156,7 +224,7 @@ export default function DogRegistration() {
         Platform.OS === PlataformEnum.IOS ? 'px-5 py-20' : 'p-5'
       }`}>
       <Text className="text-dark text-center text-2xl font-bold my-5">
-        Adicione seu Dog
+        {dogToEdit ? 'Atualize seu Dog' : 'Adicione seu Dog'}
       </Text>
 
       <View className="mb-3">
@@ -297,10 +365,21 @@ export default function DogRegistration() {
       )}
 
       <CustomButton
-        label="Cadastrar"
+        label={dogToEdit ? 'Atualizar' : 'Cadastrar'}
         onPress={handleSubmit(onSubmit)}
         isLoading={isLoading}
       />
+      {dogToEdit && (
+        <View className="mt-2">
+          <CustomButton
+            label="Excluir"
+            onPress={handleDelete}
+            isLoading={isLoading}
+            backgroundColor={colors.danger}
+            textColor={colors.primary}
+          />
+        </View>
+      )}
     </View>
   );
 }

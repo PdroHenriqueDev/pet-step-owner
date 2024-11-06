@@ -2,6 +2,7 @@ import api from './api';
 import {Owner} from '../interfaces/owner';
 import {CreditCardProps, PaymentMethodProps} from '../interfaces/payment';
 import {UploadableFile} from '../interfaces/document';
+import {Dog} from '../interfaces/dog';
 
 export const registerOwner = async (owner: Owner): Promise<any> => {
   try {
@@ -90,6 +91,29 @@ export const updateUser = async (
       field,
       newValue,
     });
+
+    const {data} = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateDog = async (dog: Dog): Promise<any> => {
+  const {_id, name, size, breed} = dog;
+  try {
+    const response = await api.put(`/owner/dog/${_id}`, {name, size, breed});
+
+    const {data} = response;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteDog = async (dogId: string): Promise<any> => {
+  try {
+    const response = await api.delete(`/owner/dog/${dogId}`);
 
     const {data} = response.data;
     return data;

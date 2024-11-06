@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
-import {Icon} from '@rneui/base';
-import colors from '../../../styles/colors';
 import {DogWalker} from '../../../interfaces/dogWalker';
 import {getRecommendedDogWalkers} from '../../../services/dogWalkerService';
 import DogWalkerCard from '../../../components/dogWalkerCard';
 import globalStyles from '../../../styles/globalStyles';
 import {useRequest} from '../../../contexts/requestContext';
 import {useDialog} from '../../../contexts/dialogContext';
-import {useNavigation} from '@react-navigation/native';
 import Spinner from '../../../components/spinner/spinner';
 import {AxiosError} from 'axios';
 import {useAppNavigation} from '../../../hooks/useAppNavigation';
+import {useAuth} from '../../../contexts/authContext';
 
 function DogWalkerList() {
   const [dogWalkers, setDogWalkers] = useState<DogWalker[]>([]);
@@ -20,8 +18,8 @@ function DogWalkerList() {
 
   const {receivedLocation, onselectedDogWalker, selectedDogIds} = useRequest();
   const {showDialog, hideDialog} = useDialog();
-
   const {navigation} = useAppNavigation();
+  const {user} = useAuth();
 
   useEffect(() => {
     const fetchDogWalkers = async () => {
@@ -61,6 +59,19 @@ function DogWalkerList() {
   }, [hideDialog, receivedLocation, showDialog]);
 
   const handleSelectDogWalker = (id: string) => {
+    if (!user?.defaultPayment) {
+      showDialog({
+        title: 'É preciso selecionar um meio de pagamento',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+
     if (selectedDogIds.length === 0 || selectedDogIds.length > 4) {
       showDialog({
         title:

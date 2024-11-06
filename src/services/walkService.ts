@@ -16,14 +16,14 @@ export const calculateCost = async ({
   receivedLocation: Location;
 }): Promise<CostDataProps> => {
   try {
-    const response = await api.post<CostDataProps>('/walk/calculate-cost', {
+    const response = await api.post('/walk/calculate-cost', {
       ownerId,
       dogWalkerId,
       numberOfDogs,
       walkDurationMinutes,
       receivedLocation,
     });
-    const {data} = response;
+    const {data} = response.data;
     return data;
   } catch (error) {
     throw error;

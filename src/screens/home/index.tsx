@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Platform, ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import InputAddress from './inputAddress';
@@ -7,7 +7,7 @@ import DogWalkerList from './dogWalkersList';
 import CustomButton from '../../components/customButton';
 import {useDialog} from '../../contexts/dialogContext';
 import {useRequest} from '../../contexts/requestContext';
-import {useNavigationState} from '@react-navigation/native';
+import {useFocusEffect, useNavigationState} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
 import {getLocationData} from '../../services/map';
 import {PlataformEnum} from '../../enums/platform.enum';
@@ -18,7 +18,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useAuth} from '../../contexts/authContext';
 
 function Home() {
-  const {user} = useAuth();
+  const {user, refreshUserData} = useAuth();
   const {showDialog, hideDialog} = useDialog();
   const {
     selectedDogIds,
@@ -39,7 +39,26 @@ function Home() {
   const [locationPermission, setLocationPermission] =
     useState<PermissionStatus | null>(null);
 
+  useFocusEffect(
+    useCallback(() => {
+      refreshUserData();
+    }, [refreshUserData]),
+  );
+
   const handleClick = () => {
+    if (!user?.defaultPayment) {
+      showDialog({
+        title: 'É preciso selecionar um meio de pagamento',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+      return;
+    }
+
     if (!receivedLocation) {
       showDialog({
         title: 'É preciso selecionar o início do passeio',

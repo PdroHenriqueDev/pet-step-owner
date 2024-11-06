@@ -139,10 +139,14 @@ function RequestBottomSheet() {
         pageToLoad === 0 ? dogWalkers : [...prev, ...dogWalkers],
       );
       setPage(pageToLoad + 1);
-    } catch {
+    } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
       showDialog({
-        title: 'Algo de errado',
-        description: 'Tente novamente.',
+        title: errorMessage,
         confirm: {
           confirmLabel: 'Entendi',
           onConfirm: () => {
@@ -150,6 +154,7 @@ function RequestBottomSheet() {
           },
         },
       });
+      navigation.goBack();
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);

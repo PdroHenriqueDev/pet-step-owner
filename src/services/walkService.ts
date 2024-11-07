@@ -5,13 +5,13 @@ import {Location} from '../interfaces/location';
 export const calculateCost = async ({
   ownerId,
   dogWalkerId,
-  numberOfDogs,
+  dogs,
   walkDurationMinutes,
   receivedLocation,
 }: {
   ownerId: string;
   dogWalkerId: string;
-  numberOfDogs: number;
+  dogs: string[];
   walkDurationMinutes: number;
   receivedLocation: Location;
 }): Promise<CostDataProps> => {
@@ -19,7 +19,7 @@ export const calculateCost = async ({
     const response = await api.post('/walk/calculate-cost', {
       ownerId,
       dogWalkerId,
-      numberOfDogs,
+      dogs,
       walkDurationMinutes,
       receivedLocation,
     });
@@ -33,7 +33,7 @@ export const calculateCost = async ({
 export const requestWalk = async (calculationId: string): Promise<any> => {
   try {
     const response = await api.post(`/walk/request/${calculationId}`);
-    const {data} = response;
+    const {data} = response.data;
     return data;
   } catch (error) {
     throw error;

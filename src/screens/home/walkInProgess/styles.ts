@@ -7,18 +7,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  loadingContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-  },
-  infomessage: {
-    ...globalStyles.label,
-    textAlign: 'center',
-  },
   map: {
     ...StyleSheet.absoluteFillObject,
     flex: 1,

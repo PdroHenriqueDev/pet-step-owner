@@ -6,14 +6,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 80,
+    paddingVertical: 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.primary,
-  },
-  notificationMessage: {
-    ...globalStyles.label,
-    textAlign: 'center',
   },
 });
 

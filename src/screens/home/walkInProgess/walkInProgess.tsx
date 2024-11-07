@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Platform, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import styles from './styles';
 import colors from '../../../styles/colors';
@@ -21,11 +21,15 @@ import {ref, update} from 'firebase/database';
 import {database} from '../../../../firebaseConfig';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDialog} from '../../../contexts/dialogContext';
+import {useAuth} from '../../../contexts/authContext';
+import {PlataformEnum} from '../../../enums/platform.enum';
+import CustomButton from '../../../components/customButton';
 
 export default function WalkInProgress() {
+  const {user} = useAuth();
   const {route, navigation} = useAppNavigation();
   const {showDialog, hideDialog} = useDialog();
-  const {requestId} = route.params ?? {};
+  const {requestId} = route.params ?? user?.currentWalk?.requestId;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingWalk, setIsFetchingWalk] = useState(true);
@@ -177,11 +181,22 @@ export default function WalkInProgress() {
   }, [hideDialog, showDialog, requestId, isLoading]);
 
   return isLoading ? (
-    <View style={styles.loadingContainer}>
-      <Text style={styles.infomessage}>
-        Conectando ao Dog Walker. Por favor, aguarde alguns instantes.
+    <View
+      className={`bg-primary flex-1 ${
+        Platform.OS === PlataformEnum.IOS ? 'px-5 py-40' : 'px-5 py-20'
+      }`}>
+      <Text className="text-dark text-center font-semibold text-2xl">
+        O Dog Walker está a caminho! Prepare seu cão para o passeio, com coleira
+        e focinheira (se necessário) e tudo mais que ele precisar para um
+        passeio agradável 🐾
       </Text>
-      <Spinner />
+
+      <View className="mt-5">
+        <CustomButton
+          label={'Conversar com o Dog Walker'}
+          onPress={navigateToChat}
+        />
+      </View>
     </View>
   ) : (
     <View style={styles.container}>

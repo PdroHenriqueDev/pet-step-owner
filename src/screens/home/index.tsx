@@ -96,49 +96,17 @@ function Home() {
   };
 
   const handleWalk = () => {
-    const {requestId} = user?.currentWalk ?? {};
-    if (requestId) {
-      user?.currentWalk?.status === WalkEvents.IN_PROGRESS
-        ? navigation.navigate('WalkInProgress', {requestId})
-        : navigation.navigate('WalkStart', {requestId});
+    if (user?.currentWalk?.requestId) {
+      user?.currentWalk?.status === WalkEvents.IN_PROGRESS ||
+      user?.currentWalk?.status === WalkEvents.ACCEPTED_SUCCESSFULLY
+        ? navigation.navigate('WalkInProgress', {
+            requestId: user?.currentWalk?.requestId,
+          })
+        : navigation.navigate('WalkStart', {
+            requestId: user?.currentWalk?.requestId,
+          });
     }
   };
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setIsLoading(true);
-  //     const fetchOwner = async () => {
-  //       if (!user) {
-  //         return;
-  //       }
-  //       try {
-  //         const ownerData = await getOwner(user._id!);
-  //         setOwner(ownerData);
-  //       } catch (error) {
-  //         console.log('Failed to fetch owner data:', error);
-  //         const errorMessage =
-  //           error instanceof AxiosError &&
-  //           typeof error.response?.data?.data === 'string'
-  //             ? error.response?.data?.data
-  //             : 'Ocorreu um erro inesperado';
-
-  //         showDialog({
-  //           title: errorMessage,
-  //           confirm: {
-  //             confirmLabel: 'Entendi',
-  //             onConfirm: () => {
-  //               hideDialog();
-  //             },
-  //           },
-  //         });
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     };
-
-  //     fetchOwner();
-  //   }, [hideDialog, setOwner, showDialog]),
-  // );
 
   useEffect(() => {
     const showLocationPermissionDeniedDialog = () => {
@@ -242,31 +210,45 @@ function Home() {
     navigation.navigate('AddDogs');
   };
 
+  // {user?.currentWalk ? (
+  //   <>
+  // <View className="flex-1 items-center">
+  //   <Text className="text-2xl font-bold text-dark mb-2 text-center">
+  //     Seu Dog está em um passeio
+  //   </Text>
+  //   <CustomButton
+  //     label={'Acompanhe o passei'}
+  //     onPress={handleWalk}
+  //   />
+  // </View>
+  //   </>
+  // ) : (
+  //   <>
+
+  //   </>
+  // )}
+
+  if (user?.currentWalk) {
+    return (
+      <View className="flex-1 bg-primary items-center p-5">
+        <Text className="text-2xl font-bold text-dark mb-4 text-center">
+          O passeio do seu Dog
+        </Text>
+        <CustomButton label={'Acompanhe o passeio'} onPress={handleWalk} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.scrollViewContainer}>
       {user?.dogs ? (
         <View style={styles.container}>
           <View style={styles.requestContainer}>
-            {user?.currentWalk ? (
-              <>
-                <Text>O passeio do seu Dog</Text>
-                <CustomButton
-                  onPress={handleWalk}
-                  label="Acompanhe o passeio"
-                />
-              </>
-            ) : (
-              <>
-                <InputAddress />
-                <DogsList />
-                <View style={styles.buttonContainer}>
-                  <CustomButton
-                    onPress={handleClick}
-                    label="Solicitar passeio"
-                  />
-                </View>
-              </>
-            )}
+            <InputAddress />
+            <DogsList />
+            <View style={styles.buttonContainer}>
+              <CustomButton onPress={handleClick} label="Solicitar passeio" />
+            </View>
           </View>
           <DogWalkerList />
         </View>

@@ -18,6 +18,7 @@ import {useAppNavigation} from '../../../../hooks/useAppNavigation';
 import {calculateCost, requestWalk} from '../../../../services/walkService';
 import {AxiosError} from 'axios';
 import {useAuth} from '../../../../contexts/authContext';
+import {WalkEvents} from '../../../../enums/walk';
 
 const stepsConfig = [
   {
@@ -58,7 +59,7 @@ function RequestBottomSheet() {
     selectedDogWalkerId,
     onselectedDogWalker,
   } = useRequest();
-  const {user} = useAuth();
+  const {user, handleSetUser} = useAuth();
 
   const {showDialog, hideDialog} = useDialog();
 
@@ -178,7 +179,7 @@ function RequestBottomSheet() {
         ownerId: user!._id as string,
         dogWalkerId: selectedDogWalkerId,
         walkDurationMinutes: selectedTime,
-        numberOfDogs: selectedDogIds.length,
+        dogs: selectedDogIds,
         receivedLocation: receivedLocation!,
       });
 
@@ -213,6 +214,13 @@ function RequestBottomSheet() {
     setIsLoading(true);
     try {
       const {requestId} = await requestWalk(calculation);
+      handleSetUser({
+        ...user!,
+        currentWalk: {
+          requestId,
+          status: WalkEvents.IN_PROGRESS,
+        },
+      });
       navigation.navigate('WalkStart', {requestId});
     } catch (error) {
       const errorMessage =

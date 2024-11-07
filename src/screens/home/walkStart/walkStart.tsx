@@ -27,27 +27,44 @@ import {WalkEvents} from '../../../enums/walk';
 import {getWalkStatus} from '../../../services/walkService';
 import {useDialog} from '../../../contexts/dialogContext';
 import {AxiosError} from 'axios';
+import {useAuth} from '../../../contexts/authContext';
+import CustomButton from '../../../components/customButton';
+import colors from '../../../styles/colors';
+
+const THIRTY_SECONDS = 30000;
+
+const shouldReturnHome = [
+  WalkEvents.CANCELLED,
+  WalkEvents.INVALID_REQUEST,
+  WalkEvents.PAYMENT_FAILURE,
+  WalkEvents.REQUEST_DENIED,
+  WalkEvents.SERVER_ERROR,
+];
 
 export default function WalkStart() {
+  const {user} = useAuth();
   const {route, navigation} = useAppNavigation();
   const {showDialog, hideDialog} = useDialog();
-  const {requestId} = route.params ?? {};
 
   const [message, setMessage] = useState(messages.default);
   const [isLoading, setIsLoading] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [remainingTime, setRemainingTime] = useState(0);
 
   useEffect(() => {
-    if (requestId) {
-      setIsLoading(true);
-      connectSocket(requestId);
+    if (user?.currentWalk?.requestId) {
+      connectSocket(user?.currentWalk?.requestId);
 
       listenToEvent('walk', data => {
         setMessage(messages[data] || messages.default);
 
-        setIsLoading(false);
-
         if (data === WalkEvents.ACCEPTED_SUCCESSFULLY) {
-          navigation.navigate('WalkInProgress', {requestId});
+          navigation.navigate('WalkInProgress', {
+            requestId: user?.currentWalk?.requestId!,
+          });
+        }
+        if (shouldReturnHome.includes(data)) {
+          navigation.navigate('HomeScreen');
         }
       });
 
@@ -55,54 +72,111 @@ export default function WalkStart() {
         disconnectSocket();
       };
     }
-  }, [navigation, requestId]);
+  }, []);
+
+  const getStatus = async () => {
+    if (!user?.currentWalk?.requestId) {
+      return;
+    }
+
+    const now = new Date();
+    if (lastUpdate && now.getTime() - lastUpdate.getTime() < THIRTY_SECONDS) {
+      showDialog({
+        title: 'Aguarde',
+        description: 'Você só pode atualizar o status a cada 30 segundos.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => hideDialog(),
+        },
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const status: WalkEvents = await getWalkStatus(
+        user?.currentWalk?.requestId,
+      );
+      if (status) {
+        setMessage(messages[status] || messages.default);
+
+        if (status === WalkEvents.IN_PROGRESS) {
+          navigation.navigate('WalkInProgress', {
+            requestId: user?.currentWalk?.requestId,
+          });
+        }
+
+        if (shouldReturnHome.includes(status)) {
+          setIsLoading(false);
+          navigation.navigate('HomeScreen');
+        }
+
+        setLastUpdate(now);
+        setRemainingTime(THIRTY_SECONDS / 1000);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError &&
+        typeof error.response?.data?.data === 'string'
+          ? error.response?.data?.data
+          : 'Ocorreu um erro inesperado';
+
+      showDialog({
+        title: errorMessage,
+        description: 'Tente novamente.',
+        confirm: {
+          confirmLabel: 'Entendi',
+          onConfirm: () => {
+            hideDialog();
+          },
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getStatus = async () => {
-      if (!requestId) {
-        return;
-      }
-      try {
-        const status: WalkEvents = await getWalkStatus(requestId);
-        if (status) {
-          setMessage(messages[status] || messages.default);
+    getStatus();
+  }, []);
 
-          if (status !== WalkEvents.ACCEPTED_SUCCESSFULLY) {
-            setIsLoading(false);
-          }
+  useEffect(() => {
+    if (remainingTime <= 0) return;
 
-          if (status === WalkEvents.ACCEPTED_SUCCESSFULLY) {
-            navigation.navigate('WalkInProgress', {requestId});
-          }
+    const intervalId = setInterval(() => {
+      setRemainingTime(prev => {
+        if (prev <= 1) {
+          clearInterval(intervalId);
+          return 0;
         }
-      } catch (error) {
-        const errorMessage =
-          error instanceof AxiosError &&
-          typeof error.response?.data?.data === 'string'
-            ? error.response?.data?.data
-            : 'Ocorreu um erro inesperado';
+        return prev - 1;
+      });
+    }, 1000);
 
-        showDialog({
-          title: errorMessage,
-          description: 'Tente novamente.',
-          confirm: {
-            confirmLabel: 'Entendi',
-            onConfirm: () => {
-              hideDialog();
-            },
-          },
-        });
-      }
-    };
-
-    const intervalId = setInterval(getStatus, 30000);
     return () => clearInterval(intervalId);
-  }, [hideDialog, navigation, requestId, showDialog]);
+  }, [remainingTime]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.notificationMessage}>{message}</Text>
+      <Text className="text-dark text-2xl text-center font-semibold">
+        {message}
+      </Text>
       {isLoading && <Spinner />}
+
+      {!isLoading && (
+        <View className="mt-5 w-full">
+          <CustomButton
+            label={`Atualizar status ${
+              remainingTime > 0 ? `(${remainingTime}s)` : ''
+            }`}
+            onPress={getStatus}
+            disabled={remainingTime > 0}
+            backgroundColor={
+              remainingTime > 0 ? colors.accent : colors.secondary
+            }
+          />
+        </View>
+      )}
     </View>
   );
 }

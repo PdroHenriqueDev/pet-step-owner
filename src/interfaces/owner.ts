@@ -10,8 +10,6 @@ export interface Owner {
   document: string;
   profileUrl?: string;
   password?: string | null;
-  // longitude: number;
-  // latitude: number;
   dogs?: Dog[];
   rate?: number;
   defaultPayment?: string;
@@ -19,7 +17,7 @@ export interface Owner {
   currentWalk?: {
     requestId: string;
     status: WalkEvents;
-  };
+  } | null;
   customerStripeId?: string;
   confirmPassword?: string;
   address?: {

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Platform, Text, View} from 'react-native';
+import {Alert, Platform, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import styles from './styles';
 import colors from '../../../styles/colors';
@@ -14,7 +14,7 @@ import {
   listenToEvent,
   setComponentMounted,
 } from '../../../services/socketService';
-import {walkById} from '../../../services/walkService';
+import {getWalkStatus, walkById} from '../../../services/walkService';
 import {DogWalker} from '../../../interfaces/dogWalker';
 import messaging from '@react-native-firebase/messaging';
 import {ref, update} from 'firebase/database';
@@ -24,14 +24,24 @@ import {useDialog} from '../../../contexts/dialogContext';
 import {useAuth} from '../../../contexts/authContext';
 import {PlataformEnum} from '../../../enums/platform.enum';
 import CustomButton from '../../../components/customButton';
+import {WalkEvents} from '../../../enums/walk';
+import {AxiosError} from 'axios';
+import {SocketResponse} from '../../../enums/socketResponse';
+
+const shouldReturnHome = [
+  WalkEvents.CANCELLED,
+  WalkEvents.INVALID_REQUEST,
+  WalkEvents.PAYMENT_FAILURE,
+  WalkEvents.REQUEST_DENIED,
+  WalkEvents.SERVER_ERROR,
+];
 
 export default function WalkInProgress() {
-  const {user} = useAuth();
-  const {route, navigation} = useAppNavigation();
+  const {user, handleSetUser} = useAuth();
+  const {navigation} = useAppNavigation();
   const {showDialog, hideDialog} = useDialog();
-  const {requestId} = route.params ?? user?.currentWalk?.requestId;
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [walkStarted, setWalkStarted] = useState(false);
   const [isFetchingWalk, setIsFetchingWalk] = useState(true);
   const [region, setRegion] = useState({
     longitude: -23.5505,
@@ -46,24 +56,24 @@ export default function WalkInProgress() {
   }>();
 
   const navigateToChat = () => {
-    if (!requestId) {
+    if (!user?.currentWalk?.requestId) {
       return;
     }
 
     if (walkInformation?.dogWalker) {
       navigation.navigate('Chat', {
         dogWalkerId: walkInformation.dogWalker._id,
-        requestId,
+        requestId: user?.currentWalk?.requestId,
       });
     }
   };
 
   useEffect(() => {
-    if (requestId) {
+    if (user?.currentWalk?.requestId) {
       setComponentMounted(true);
-      connectSocket(requestId);
+      connectSocket(user?.currentWalk?.requestId);
 
-      listenToEvent('dogWalkerLocation', data => {
+      listenToEvent(SocketResponse.DogWalkerLocation, data => {
         const {longitude, latitude} = data;
 
         if (longitude && latitude) {
@@ -73,7 +83,21 @@ export default function WalkInProgress() {
             latitude: latitude,
           }));
         }
-        setIsLoading(false);
+        setWalkStarted(true);
+      });
+
+      listenToEvent(SocketResponse.Walk, status => {
+        if (status === WalkEvents.IN_PROGRESS) {
+          setWalkStarted(true);
+        }
+
+        if (status === WalkEvents.COMPLETED) {
+          handleSetUser({
+            ...user,
+            currentWalk: null,
+          });
+          navigation.navigate('HomeScreen');
+        }
       });
 
       return () => {
@@ -81,7 +105,7 @@ export default function WalkInProgress() {
         disconnectSocket();
       };
     }
-  }, [requestId]);
+  }, [user?.currentWalk?.requestId]);
 
   useEffect(() => {
     const updateNotificationToken = async () => {
@@ -102,7 +126,7 @@ export default function WalkInProgress() {
           return;
         }
 
-        const tokenRef = ref(database, `chats/${requestId}`);
+        const tokenRef = ref(database, `chats/${user?.currentWalk?.requestId}`);
 
         await update(tokenRef, {
           ownerToken: token,
@@ -113,37 +137,34 @@ export default function WalkInProgress() {
           'notificationTokens',
           JSON.stringify(storedTokens),
         );
-      } catch (error) {
-        console.log('Erro ao atualizar o token:', error);
-      }
+      } catch (error) {}
     };
 
     updateNotificationToken();
-  }, [requestId]);
+  }, [user?.currentWalk?.requestId]);
 
   useEffect(() => {
     const fetchWalkData = async () => {
-      if (!requestId) {
+      if (!user?.currentWalk?.requestId) {
         setIsFetchingWalk(false);
         return;
       }
 
       try {
-        const walkData = await walkById(requestId);
+        const walkData = await walkById(user?.currentWalk?.requestId);
         setWalkInformation(walkData);
       } catch (error) {
-        console.error('Failed to fetch walk info:', error);
       } finally {
         setIsFetchingWalk(false);
       }
     };
 
     fetchWalkData();
-  }, [requestId]);
+  }, [user?.currentWalk?.requestId]);
 
   useEffect(() => {
     const checkAndShowDialog = async () => {
-      if (isLoading || !requestId) {
+      if (!walkStarted || !user?.currentWalk?.requestId) {
         return;
       }
       const storedRequestsRaw = await EncryptedStorage.getItem(
@@ -156,20 +177,64 @@ export default function WalkInProgress() {
         storedRequests.shift();
       }
 
-      const isAlreadyShown = storedRequests.includes(requestId);
+      const isAlreadyShown = storedRequests.includes(
+        user?.currentWalk?.requestId,
+      );
       if (!isAlreadyShown) {
+        Alert.alert(
+          'Atenção!',
+          'Alguns dispositivos podem não atualizar a localização em tempo real quando o aplicativo está em segundo plano. Isso significa que a localização do dog walker pode não ser exibida imediatamente enquanto ele não estiver com o aplicativo aberto. A localização será atualizada assim que o dog walker voltar a usá-lo.',
+          [
+            {
+              text: 'Entendi',
+              onPress: async () => {
+                storedRequests.push(user?.currentWalk?.requestId);
+                await EncryptedStorage.setItem(
+                  'modalShownRequests',
+                  JSON.stringify(storedRequests),
+                );
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    };
+
+    checkAndShowDialog();
+  }, [hideDialog, showDialog, user?.currentWalk?.requestId]);
+
+  useEffect(() => {
+    const getStatus = async () => {
+      if (!user?.currentWalk?.requestId) {
+        return;
+      }
+      try {
+        const status: WalkEvents = await getWalkStatus(
+          user?.currentWalk?.requestId,
+        );
+        if (status) {
+          if (status === WalkEvents.IN_PROGRESS) {
+            setWalkStarted(true);
+          }
+
+          if (shouldReturnHome.includes(status)) {
+            navigation.navigate('HomeScreen');
+          }
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof AxiosError &&
+          typeof error.response?.data?.data === 'string'
+            ? error.response?.data?.data
+            : 'Ocorreu um erro inesperado';
+
         showDialog({
-          title: 'Atenção!',
-          description:
-            'Alguns dispositivos podem não atualizar a localização em tempo real quando o aplicativo está em segundo plano. Isso significa que a localização do dog walker pode não ser exibida imediatamente enquanto ele não estiver com o aplicativo aberto. A localização será atualizada assim que o dog walker voltar a usá-lo.',
+          title: errorMessage,
+          description: 'Tente novamente.',
           confirm: {
             confirmLabel: 'Entendi',
-            onConfirm: async () => {
-              storedRequests.push(requestId);
-              await EncryptedStorage.setItem(
-                'modalShownRequests',
-                JSON.stringify(storedRequests),
-              );
+            onConfirm: () => {
               hideDialog();
             },
           },
@@ -177,10 +242,10 @@ export default function WalkInProgress() {
       }
     };
 
-    checkAndShowDialog();
-  }, [hideDialog, showDialog, requestId, isLoading]);
+    getStatus();
+  }, []);
 
-  return isLoading ? (
+  return !walkStarted ? (
     <View
       className={`bg-primary flex-1 ${
         Platform.OS === PlataformEnum.IOS ? 'px-5 py-40' : 'px-5 py-20'
@@ -199,7 +264,7 @@ export default function WalkInProgress() {
       </View>
     </View>
   ) : (
-    <View style={styles.container}>
+    <View className="flex-1 justify-end">
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -217,7 +282,10 @@ export default function WalkInProgress() {
           />
         </Marker>
       </MapView>
-      <View style={styles.infoContainer}>
+      <View
+        className={`bg-primary border border-border ${
+          Platform.OS === PlataformEnum.IOS ? 'px-4 pb-12 pt-4' : 'p-4'
+        }`}>
         <Text style={globalStyles.label}>Dog Walker em rota...</Text>
         {isFetchingWalk ? (
           <View style={styles.spinnerContainer}>
@@ -237,11 +305,10 @@ export default function WalkInProgress() {
                 onPress={navigateToChat}
               />
             </View>
-            <View className="flex-row items-center">
-              <Text style={globalStyles.label}>Tempo do passeio:</Text>
-              <Text style={styles.time}>
-                {' '}
-                {walkInformation?.durationMinutes}
+            <View className="flex-row my-2">
+              <Text className="text-base text-dark">Tempo do passeio: </Text>
+              <Text className="text-base text-accent">
+                {walkInformation?.durationMinutes} min
               </Text>
             </View>
           </>

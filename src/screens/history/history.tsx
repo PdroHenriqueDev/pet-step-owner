@@ -55,7 +55,7 @@ export default function History() {
       ) : (
         <View style={styles.contentContainer}>
           {walks.length === 0 ? (
-            <Text style={globalStyles.infoText}>
+            <Text className="text-accent text-base">
               Não há histórico disponível.
             </Text>
           ) : (

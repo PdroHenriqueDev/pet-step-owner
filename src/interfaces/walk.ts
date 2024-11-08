@@ -2,8 +2,11 @@ export interface WalkProps {
   _id: string;
   dogWalker: {
     name: string;
-    profileUrl: string;
+    profileUrl?: string;
   };
-  price: number;
+  walk: {
+    totalCost: number;
+    durationMinutes: number;
+  };
   startDate: Date | string;
 }

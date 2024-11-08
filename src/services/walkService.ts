@@ -69,3 +69,13 @@ export const getWalkStatus = async (requestId: string): Promise<any> => {
     throw error;
   }
 };
+
+export const ownerCancelWalk = async (): Promise<any> => {
+  try {
+    const response = await api.delete('/walk/owner/cancel');
+    const {data} = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

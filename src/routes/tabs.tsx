@@ -11,6 +11,8 @@ import HistoryStack from './historyStack';
 import HistorytIcon from '../components/icons/history';
 import AccountStack from './accountStack';
 import AccountIcon from '../components/icons/account';
+import HelpStack from './helpStack';
+import HelpIcon from '../components/icons/support';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
@@ -69,6 +71,23 @@ function HomeTabs() {
 
           return {
             tabBarIcon: PaymentIcon,
+            headerShown: false,
+            tabBarStyle: {
+              ...globalStyles.tabar,
+              display: isHiddenRoute ? 'none' : 'flex',
+            },
+          };
+        }}
+      />
+      <Screen
+        name="Ajuda"
+        component={HelpStack}
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'HelpScreen';
+          const isHiddenRoute = routeName !== 'HelpScreen';
+
+          return {
+            tabBarIcon: HelpIcon,
             headerShown: false,
             tabBarStyle: {
               ...globalStyles.tabar,

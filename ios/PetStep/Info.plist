@@ -31,12 +31,16 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Precisamos de acesso à sua câmera para você tirar foto de perfil.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>O aplicativo precisa da sua localização para mostrar o mapa corretamente.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>O aplicativo precisa da sua localização sempre para mostrar o mapa corretamente.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Precisamos da sua localização para listar os passeadores perto de você.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Precisamos de acesso à sua biblioteca de fotos para você selecionar uma foto de perfil.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

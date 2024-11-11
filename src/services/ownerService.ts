@@ -3,6 +3,7 @@ import {Owner} from '../interfaces/owner';
 import {CreditCardProps, PaymentMethodProps} from '../interfaces/payment';
 import {UploadableFile} from '../interfaces/document';
 import {Dog} from '../interfaces/dog';
+import {UserRole} from '../enums/role';
 
 export const registerOwner = async (owner: Owner): Promise<any> => {
   try {
@@ -133,6 +134,20 @@ export const uploadProfileImage = async (
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+    });
+
+    const {data} = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateDeviceToken = async (deviceToken: string): Promise<any> => {
+  try {
+    const response = await api.put('/notification', {
+      role: UserRole.Owner,
+      deviceToken,
     });
 
     const {data} = response.data;

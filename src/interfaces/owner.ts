@@ -8,6 +8,7 @@ export interface Owner {
   email: string;
   phone: string;
   document: string;
+  deviceToken?: string;
   profileUrl?: string;
   password?: string | null;
   dogs?: Dog[];

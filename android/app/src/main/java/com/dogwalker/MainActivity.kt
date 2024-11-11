@@ -1,4 +1,4 @@
-package com.petStep.owner
+package com.softwarecastle.petstep.owner
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

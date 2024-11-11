@@ -16,6 +16,7 @@ import {WalkEvents} from '../../enums/walk';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
 import messaging from '@react-native-firebase/messaging';
 import {useAuth} from '../../contexts/authContext';
+import ReviewComponent from '../../components/review/reviewComponent';
 
 function Home() {
   const {user, refreshUserData} = useAuth();
@@ -241,6 +242,7 @@ function Home() {
 
   return (
     <ScrollView style={styles.scrollViewContainer}>
+      {user?.pendingReview && <ReviewComponent />}
       {user?.dogs ? (
         <View style={styles.container}>
           <View style={styles.requestContainer}>

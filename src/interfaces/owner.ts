@@ -28,6 +28,11 @@ export interface Owner {
     city: string;
     state: string;
   };
+  pendingReview?: {
+    reviewedId: string;
+    profileUrl: string;
+    requestId: string;
+  } | null;
 }
 
 export interface FieldOwnerProps {

@@ -167,42 +167,45 @@ export default function WalkInProgress() {
       if (!walkStarted || !user?.currentWalk?.requestId) {
         return;
       }
-      const storedRequestsRaw = await EncryptedStorage.getItem(
-        'modalShownRequests',
-      );
-      const storedRequests = storedRequestsRaw
-        ? JSON.parse(storedRequestsRaw)
-        : [];
-      if (storedRequests.length > 1) {
-        storedRequests.shift();
-      }
 
-      const isAlreadyShown = storedRequests.includes(
-        user?.currentWalk?.requestId,
-      );
-      if (!isAlreadyShown) {
-        Alert.alert(
-          'Atenção!',
-          'Alguns dispositivos podem não atualizar a localização em tempo real quando o aplicativo está em segundo plano. Isso significa que a localização do dog walker pode não ser exibida imediatamente enquanto ele não estiver com o aplicativo aberto. A localização será atualizada assim que o dog walker voltar a usá-lo.',
-          [
-            {
-              text: 'Entendi',
-              onPress: async () => {
-                storedRequests.push(user?.currentWalk?.requestId);
-                await EncryptedStorage.setItem(
-                  'modalShownRequests',
-                  JSON.stringify(storedRequests),
-                );
-              },
-            },
-          ],
-          {cancelable: false},
+      try {
+        const storedRequestsRaw = await EncryptedStorage.getItem(
+          'modalShownRequests',
         );
-      }
+        const storedRequests = storedRequestsRaw
+          ? JSON.parse(storedRequestsRaw)
+          : [];
+        if (storedRequests.length > 1) {
+          storedRequests.shift();
+        }
+
+        const isAlreadyShown = storedRequests.includes(
+          user?.currentWalk?.requestId,
+        );
+        if (!isAlreadyShown) {
+          Alert.alert(
+            'Atenção!',
+            'Alguns dispositivos podem não atualizar a localização em tempo real quando o aplicativo está em segundo plano. Isso significa que a localização do dog walker pode não ser exibida imediatamente enquanto ele não estiver com o aplicativo aberto. A localização será atualizada assim que o dog walker voltar a usá-lo.',
+            [
+              {
+                text: 'Entendi',
+                onPress: async () => {
+                  storedRequests.push(user?.currentWalk?.requestId);
+                  await EncryptedStorage.setItem(
+                    'modalShownRequests',
+                    JSON.stringify(storedRequests),
+                  );
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } catch {}
     };
 
     checkAndShowDialog();
-  }, [hideDialog, showDialog, user?.currentWalk?.requestId]);
+  }, [user?.currentWalk?.requestId, walkStarted]);
 
   useEffect(() => {
     const getStatus = async () => {

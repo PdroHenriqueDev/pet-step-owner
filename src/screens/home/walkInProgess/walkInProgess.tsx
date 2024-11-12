@@ -107,41 +107,41 @@ export default function WalkInProgress() {
     }
   }, [user?.currentWalk?.requestId]);
 
-  useEffect(() => {
-    const updateNotificationToken = async () => {
-      try {
-        const storedTokensRaw = await EncryptedStorage.getItem(
-          'notificationTokens',
-        );
-        const storedTokens = storedTokensRaw ? JSON.parse(storedTokensRaw) : [];
+  // useEffect(() => {
+  //   const updateNotificationToken = async () => {
+  //     try {
+  //       const storedTokensRaw = await EncryptedStorage.getItem(
+  //         'notificationTokens',
+  //       );
+  //       const storedTokens = storedTokensRaw ? JSON.parse(storedTokensRaw) : [];
 
-        if (storedTokens.length > 1) {
-          storedTokens.shift();
-        }
+  //       if (storedTokens.length > 1) {
+  //         storedTokens.shift();
+  //       }
 
-        const token = await messaging().getToken();
+  //       const token = await messaging().getToken();
 
-        const isAlreadyStored = storedTokens.includes(token);
-        if (isAlreadyStored) {
-          return;
-        }
+  //       const isAlreadyStored = storedTokens.includes(token);
+  //       if (isAlreadyStored) {
+  //         return;
+  //       }
 
-        const tokenRef = ref(database, `chats/${user?.currentWalk?.requestId}`);
+  //       const tokenRef = ref(database, `chats/${user?.currentWalk?.requestId}`);
 
-        await update(tokenRef, {
-          ownerToken: token,
-        });
+  //       await update(tokenRef, {
+  //         ownerToken: token,
+  //       });
 
-        storedTokens.push(token);
-        await EncryptedStorage.setItem(
-          'notificationTokens',
-          JSON.stringify(storedTokens),
-        );
-      } catch (error) {}
-    };
+  //       storedTokens.push(token);
+  //       await EncryptedStorage.setItem(
+  //         'notificationTokens',
+  //         JSON.stringify(storedTokens),
+  //       );
+  //     } catch (error) {}
+  //   };
 
-    updateNotificationToken();
-  }, [user?.currentWalk?.requestId]);
+  //   updateNotificationToken();
+  // }, [user?.currentWalk?.requestId]);
 
   useEffect(() => {
     const fetchWalkData = async () => {

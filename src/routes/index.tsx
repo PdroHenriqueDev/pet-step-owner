@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import HomeTabs from './tabs';
 import {AuthStack} from './authStack';
 import {useAuth} from '../contexts/authContext';
+import SplashScreen from '../components/splash/splash';
 
 function Routes() {
   const {
@@ -11,12 +12,8 @@ function Routes() {
     userId,
     setAuthTSession,
     fetchUser,
-    logout,
+    isLoading,
   } = useAuth();
-
-  // useEffect(() => {
-  //   logout();
-  // }, []);
 
   useEffect(() => {
     setAuthTSession();
@@ -24,17 +21,13 @@ function Routes() {
   }, [fetchUser, setAuthTSession]);
 
   const renderContent = () => {
-    // if (isLoading) {
-    //   return <SplashScreen />;
-    // }
+    if (isLoading) {
+      return <SplashScreen />;
+    }
 
     if (!accessToken || !refreshToken || !userId) {
       return <AuthStack />;
     }
-
-    // if (user?.status === DogWalkerApplicationStatus.PendingTerms) {
-    //   return <TermsOfService />;
-    // }
 
     return <HomeTabs />;
   };

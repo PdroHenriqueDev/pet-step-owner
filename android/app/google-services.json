@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:267971645685:android:a1d05dca0456d8af9335bc",
+        "mobilesdk_app_id": "1:267971645685:android:9a48fa9631e1c8219335bc",
         "android_client_info": {
-          "package_name": "com.softwarecastle.petstep.dogwalker"
+          "package_name": "com.softwarecastle.petstep.owner"
         }
       },
       "oauth_client": [],

@@ -7,6 +7,7 @@ import {
 import {FieldOwnerProps} from '../interfaces/owner';
 import {FieldsUser} from '../interfaces/fieldsUser';
 import {Dog} from '../interfaces/dog';
+import {Notification} from '../interfaces/notification';
 
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -26,6 +27,8 @@ type RootStackParamList = {
   UpdateUserScreen: {field: FieldsUser};
   DogListScreen: undefined;
   DogUpdate: {dog: Dog};
+  NotificationList: undefined;
+  NotificationDetail: {notification: Notification};
 };
 
 type AppNavigationProp = NavigationProp<RootStackParamList>;

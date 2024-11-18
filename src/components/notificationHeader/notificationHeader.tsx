@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, Platform, TouchableOpacity} from 'react-native';
+import {View, Platform, TouchableOpacity} from 'react-native';
 import {Icon} from '@rneui/base';
 import {getUnreadNotificationStatus} from '../../services/notification';
 import {useFocusEffect} from '@react-navigation/native';

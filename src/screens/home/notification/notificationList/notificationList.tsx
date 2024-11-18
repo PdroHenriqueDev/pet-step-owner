@@ -15,7 +15,6 @@ import {
 } from '../../../../services/notification';
 import {Notification} from '../../../../interfaces/notification';
 import {PlataformEnum} from '../../../../enums/platform.enum';
-import NotificationDetail from '../notificationDetail/notificationDetail';
 import {useAppNavigation} from '../../../../hooks/useAppNavigation';
 import {AxiosError} from 'axios';
 import {useDialog} from '../../../../contexts/dialogContext';
@@ -100,7 +99,7 @@ export default function NotificationList() {
       className={` border-b border-border ${
         item.read ? 'bg-primary' : 'bg-accent'
       }`}>
-      <View className="flex-row items-center p-4">
+      <View className="flex-row items-center py-4 pr-4 pl-0">
         <Icon
           name={
             item.type === 'message'
@@ -115,14 +114,21 @@ export default function NotificationList() {
           containerStyle={{marginRight: 12}}
         />
         <View className="flex-1">
-          <Text className="font-bold text-dark">{item.title}</Text>
+          <View className="flex-row justify-between mb-1">
+            <Text className="font-bold text-dark">{item.title}</Text>
+            <Text
+              className={`${item.read ? 'text-accent' : 'text-dark'} text-sm`}>
+              {new Date(item.createdAt).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Text>
+          </View>
+
           <Text className={`${item.read ? 'text-accent' : 'text-dark'}`}>
             {item.message}
           </Text>
         </View>
-        <Text className={`${item.read ? 'text-accent' : 'text-dark'} text-sm`}>
-          {new Date(item.createdAt).toLocaleTimeString()}
-        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -130,7 +136,7 @@ export default function NotificationList() {
   return (
     <View
       className={`flex-1 bg-primary ${
-        Platform.OS === PlataformEnum.IOS ? 'pt-32 px-5' : 'p-5'
+        Platform.OS === PlataformEnum.IOS ? 'pt-32 px-5' : 'pt-16 px-5'
       } `}>
       <View className="flex flex-row justify-between items-end  mb-4">
         <Text className="text-3xl font-bold text-dark">Notificações</Text>

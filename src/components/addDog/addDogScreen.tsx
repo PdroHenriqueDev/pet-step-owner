@@ -269,6 +269,8 @@ export default function DogRegistration() {
               render={({field: {value}}) => (
                 <>
                   <TextInput
+                    className="border border-border rounded-lg p-3 text-dark"
+                    placeholderTextColor="#0000004D"
                     value={selectedBreed || searchQuery}
                     onChangeText={text => {
                       setSearchQuery(text);

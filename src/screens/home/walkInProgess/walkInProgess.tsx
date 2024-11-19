@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Platform, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, Platform, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import styles from './styles';
 import colors from '../../../styles/colors';
@@ -16,9 +16,6 @@ import {
 } from '../../../services/socketService';
 import {getWalkStatus, walkById} from '../../../services/walkService';
 import {DogWalker} from '../../../interfaces/dogWalker';
-import messaging from '@react-native-firebase/messaging';
-import {ref, update} from 'firebase/database';
-import {database} from '../../../../firebaseConfig';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDialog} from '../../../contexts/dialogContext';
 import {useAuth} from '../../../contexts/authContext';
@@ -42,6 +39,7 @@ export default function WalkInProgress() {
   const {showDialog, hideDialog} = useDialog();
 
   const [walkStarted, setWalkStarted] = useState(false);
+  const [locationExists, setLocationExists] = useState(true);
   const [isFetchingWalk, setIsFetchingWalk] = useState(true);
   const [region, setRegion] = useState({
     longitude: -23.5505,
@@ -84,6 +82,7 @@ export default function WalkInProgress() {
           }));
         }
         setWalkStarted(true);
+        setLocationExists(false);
       });
 
       listenToEvent(SocketResponse.Walk, status => {
@@ -268,23 +267,32 @@ export default function WalkInProgress() {
     </View>
   ) : (
     <View className="flex-1 justify-end">
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={region}
-        scrollEnabled={true}
-        zoomEnabled={true}
-        rotateEnabled={true}
-        showsUserLocation={false}>
-        <Marker coordinate={region}>
-          <Icon
-            type="font-awesome-5"
-            name="dog"
-            size={30}
-            color={colors.dark}
-          />
-        </Marker>
-      </MapView>
+      {locationExists ? (
+        <View className="flex flex-col items-center justify-center flex-1">
+          <ActivityIndicator color={colors.secondary} size="large" />
+          <Text className="text-base text-dark mt-4">
+            Localizando Dog Walker...
+          </Text>
+        </View>
+      ) : (
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={region}
+          scrollEnabled={true}
+          zoomEnabled={true}
+          rotateEnabled={true}
+          showsUserLocation={false}>
+          <Marker coordinate={region}>
+            <Icon
+              type="font-awesome-5"
+              name="dog"
+              size={30}
+              color={colors.dark}
+            />
+          </Marker>
+        </MapView>
+      )}
       <View
         className={`bg-primary border border-border ${
           Platform.OS === PlataformEnum.IOS ? 'px-4 pb-12 pt-4' : 'p-4'

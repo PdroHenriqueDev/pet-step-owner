@@ -32,6 +32,7 @@ function InputAddress() {
           maxLength: 40,
         })}
         style={styles.input}
+        placeholderTextColor="#0000004D"
         maxLength={40}
       />
     </TouchableOpacity>

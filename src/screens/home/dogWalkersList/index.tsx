@@ -59,19 +59,6 @@ function DogWalkerList() {
   }, [hideDialog, receivedLocation, showDialog]);
 
   const handleSelectDogWalker = (id: string) => {
-    if (!user?.defaultPayment) {
-      showDialog({
-        title: 'É preciso selecionar um meio de pagamento',
-        confirm: {
-          confirmLabel: 'Entendi',
-          onConfirm: () => {
-            hideDialog();
-          },
-        },
-      });
-      return;
-    }
-
     if (selectedDogIds.length === 0 || selectedDogIds.length > 4) {
       showDialog({
         title:

@@ -47,19 +47,6 @@ function Home() {
   );
 
   const handleClick = () => {
-    if (!user?.defaultPayment) {
-      showDialog({
-        title: 'É preciso selecionar um meio de pagamento',
-        confirm: {
-          confirmLabel: 'Entendi',
-          onConfirm: () => {
-            hideDialog();
-          },
-        },
-      });
-      return;
-    }
-
     if (!receivedLocation) {
       showDialog({
         title: 'É preciso selecionar o início do passeio',

@@ -258,6 +258,19 @@ function RequestBottomSheet() {
     }
 
     if (currentStep === 2) {
+      if (!user?.defaultPayment) {
+        showDialog({
+          title: 'É preciso selecionar um meio de pagamento',
+          confirm: {
+            confirmLabel: 'Entendi',
+            onConfirm: () => {
+              hideDialog();
+            },
+          },
+        });
+        return;
+      }
+
       await handleRequest();
     }
   };

@@ -137,7 +137,7 @@ function Home() {
       const requestResponse = await request(
         Platform.OS === PlataformEnum.IOS
           ? PERMISSIONS.IOS.LOCATION_ALWAYS
-          : PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
 
       setLocationPermission(requestResponse);

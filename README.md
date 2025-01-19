@@ -1,7 +1,5 @@
 # Pet Step - Owner App
 
-![Pet Step Logo](./src//assets/logo.ts)
-
 ## About the Project
 
 **Pet Step - Owner App** was a personal project designed to facilitate seamless interactions between pet owners and dog walkers. As part of the **Pet Step** platform, this app allowed pet owners to connect with trusted dog walkers, monitor walks in real-time, and ensure their pets were in safe hands.

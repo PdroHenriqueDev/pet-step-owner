@@ -15,7 +15,8 @@ This application was built using **React Native** to provide a responsive and us
 - **React Native**: Cross-platform development for iOS and Android.
 - **TypeScript**: Strongly-typed JavaScript for robust development.
 - **Context API**: State management.
-- **Axios**: HTTP requests to the backend API.
+- **Context API**: State management.
+- **NativeWind**: To style.
 - **Firebase Cloud Messaging (FCM)**: Push notifications for real-time updates.
 - **Firebase Realtime Database**: Managed real-time chat between pet owners and dog walkers.
 - **Stripe SDK**: Payment integration for service transactions.

@@ -7,9 +7,9 @@ import {Platform} from 'react-native';
 import {auth} from '../../firebaseConfig';
 import {signInWithCustomToken} from 'firebase/auth';
 
-const apiUrl =
-  Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
-// const apiUrl = Config.API_BASE_URL;
+// const apiUrl =
+//   Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
+const apiUrl = Config.API_BASE_URL;
 
 const api = axios.create({
   baseURL: apiUrl,
